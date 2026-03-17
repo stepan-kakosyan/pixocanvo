@@ -1,0 +1,165 @@
+canvas {
+    image-rendering: pixelated;
+    cursor: crosshair;
+    display: block;
+    background: #ffffff;
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+@font-face {
+    font-family: 'pixelatefont';
+    src: url('/static/pixelwar/fonts/arcadclassic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+#headerLogo {
+    font-family: 'pixelatefont', monospace;
+    font-size: 2.5rem;
+}
+
+#page-content.htmx-request {
+    opacity: 0.45;
+    transition: opacity 140ms ease;
+}
+
+@keyframes page-content-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#page-content.htmx-settling > * {
+    animation: page-content-in 200ms ease-out both;
+}
+
+#pixelOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    image-rendering: pixelated;
+    background: transparent;
+    cursor: default;
+}
+
+#chatPanel.pinned {
+    top: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    height: auto;
+}
+
+#chatPanel.pinned #chatMessages {
+    height: calc(100vh - 13.5rem);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    padding: 0.6rem 0.75rem;
+}
+
+.community-tab {
+    position: relative;
+    transition: transform 160ms ease, box-shadow 200ms ease,
+        background-color 200ms ease, color 200ms ease;
+}
+
+.community-tab:hover {
+    transform: translateY(-1px);
+}
+
+.community-tab.active {
+    background: linear-gradient(120deg, #d946ef, #ec4899);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35);
+    border-color: transparent;
+    outline: 0;
+}
+
+.community-tab.active:hover {
+    background: linear-gradient(120deg, #c026d3, #db2777);
+}
+
+.chat-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.chat-group-tab {
+    border: 1px solid #f5d0fe;
+    border-radius: 9999px;
+    background: #fdf4ff;
+    color: #a21caf;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.24rem 0.6rem;
+    transition: all 160ms ease;
+}
+
+.chat-group-tab:hover {
+    border-color: #f0abfc;
+    background: #fae8ff;
+}
+
+.chat-group-tab.active {
+    border-color: transparent;
+    background: linear-gradient(120deg, #d946ef, #ec4899);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.32);
+}
+
+@media (max-width: 640px) {
+    .community-tabs {
+        overflow-x: auto;
+    }
+
+    .community-tabs > div {
+        width: max-content;
+        flex-wrap: nowrap;
+    }
+
+    #chatPanel {
+        left: 0.5rem;
+        right: 0.5rem;
+        width: auto;
+        max-width: none;
+    }
+
+    #chatPanel.pinned {
+        top: 0.5rem;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        left: 0.5rem;
+    }
+
+    #chatPanel.pinned #chatMessages {
+        height: calc(100vh - 12.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"],
+    textarea {
+        font-size: 16px;
+    }
+}

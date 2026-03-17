@@ -1,0 +1,153 @@
+{% extends "pixelwar/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Communities" %} | Pixo Canvo{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-4xl px-4 py-8 md:px-6">
+    <section class="rounded-3xl border border-cyan-200 bg-white p-6 shadow-xl">
+        <h1 class="text-3xl font-black tracking-tight text-slate-900">
+            {% trans "Communities" %}
+        </h1>
+        <p class="mt-2 text-sm text-slate-600">
+            {% blocktrans trimmed %}
+            Create your own community or join one using an invitation link.
+            Each community has its own canvas, leaderboard, and chat.
+            {% endblocktrans %}
+        </p>
+
+        {% if messages %}
+            <div class="mt-4 space-y-2">
+                {% for message in messages %}
+                    <div class="rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700 ring-1 ring-slate-200">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            {% if not owns_community %}
+                <form method="post" action="{% url 'create-community' %}" class="mt-5 flex flex-wrap gap-2">
+                    {% csrf_token %}
+                    <input type="text" name="name" maxlength="64" required
+                           class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm md:w-80"
+                           placeholder="{% trans 'New community name' %}">
+                    <button type="submit"
+                            class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                        {% trans "Create community" %}
+                    </button>
+                </form>
+            {% else %}
+                <div class="mt-5 rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-600">
+                    {% trans "You already own a community, so you cannot create another one." %}
+                </div>
+            {% endif %}
+
+            <div class="mt-6">
+                <h2 class="text-lg font-bold text-slate-900">{% trans "Your active communities" %}</h2>
+                {% if memberships %}
+                    <div class="mt-3 grid gap-3 md:grid-cols-2">
+                        {% for membership in memberships %}
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                <p class="font-semibold text-slate-900">{{ membership.community.name }}</p>
+                                <p class="mt-1 text-xs text-slate-500">{% trans "Slug" %}: {{ membership.community.slug }}</p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <a href="{% url 'community-canvas' membership.community.slug %}"
+                                       class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                        {% trans "Open canvas" %}
+                                    </a>
+                                    <a href="{% url 'community-detail' membership.community.slug %}"
+                                       class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                        {% trans "Community details" %}
+                                    </a>
+                                    <button type="button"
+                                            class="invitation-link-btn rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100"
+                                            data-invite-url="{{ request.scheme }}://{{ request.get_host }}{% url 'invitation' membership.community.invite_token %}">
+                                        {% trans "Invitation link" %}
+                                    </button>
+                                    {% if membership.community.owner_id == request.user.id %}
+                                        <button type="button"
+                                                class="delete-community-btn rounded-lg bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-200"
+                                                data-community-slug="{{ membership.community.slug }}"
+                                                data-community-name="{{ membership.community.name }}"
+                                                data-delete-url="{% url 'delete-community' membership.community.slug %}">
+                                            {% trans "Delete community" %}
+                                        </button>
+                                    {% else %}
+                                        <button type="button"
+                                                class="leave-community-btn rounded-lg bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                                                data-community-slug="{{ membership.community.slug }}"
+                                                data-community-name="{{ membership.community.name }}"
+                                                data-leave-url="{% url 'leave-community' membership.community.slug %}">
+                                            {% trans "Leave community" %}
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="mt-2 text-sm text-slate-600">
+                        {% trans "You have not joined any communities yet." %}
+                    </p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="mt-5 flex flex-wrap gap-2">
+                <a href="{% url 'register' %}"
+                   class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                    {% trans "Register" %}
+                </a>
+                <a href="{% url 'login' %}"
+                   class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">
+                    {% trans "Login" %}
+                </a>
+            </div>
+        {% endif %}
+    </section>
+</main>
+
+<div id="modal-backdrop" class="fixed inset-0 z-50 hidden bg-black/40"></div>
+
+<div id="invitation-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-slate-900">{% trans "Community Invitation Link" %}</h3>
+    <p class="mb-2 text-sm text-slate-600">
+        {% blocktrans trimmed %}
+        Share this link to invite others to your community.
+        Anyone with the link can join.
+        {% endblocktrans %}
+    </p>
+    <input id="invitation-link-input" type="text" readonly class="mb-3 w-full rounded border border-slate-300 px-2 py-1 text-sm" value="">
+    <button id="copy-invite-link-btn" type="button" class="mb-2 w-full rounded bg-fuchsia-500 px-3 py-2 text-sm font-semibold text-white hover:bg-fuchsia-400">{% trans "Copy URL" %}</button>
+    <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Close" %}</button>
+</div>
+
+<div id="leave-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-slate-900">{% trans "Leave Community" %}</h3>
+    <p id="leave-modal-text" class="mb-4 text-sm text-slate-600">
+        {% trans "Are you sure you want to leave this community?" %}
+    </p>
+    <form id="leave-community-form" method="post" action="">
+        {% csrf_token %}
+        <button type="submit" class="mb-2 w-full rounded bg-rose-500 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-400">{% trans "Yes, leave" %}</button>
+        <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Cancel" %}</button>
+    </form>
+</div>
+
+<div id="delete-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-rose-700">{% trans "Delete Community" %}</h3>
+    <p id="delete-modal-text" class="mb-4 text-sm text-rose-600">
+        {% trans "This action cannot be undone. All information will be deleted and cannot be restored." %}
+    </p>
+    <form id="delete-community-form" method="post" action="">
+        {% csrf_token %}
+        <button type="submit" class="mb-2 w-full rounded bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500">{% trans "Yes, delete permanently" %}</button>
+        <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Cancel" %}</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'pixelwar/js/community_lobby.js' %}"></script>
+{% endblock %}

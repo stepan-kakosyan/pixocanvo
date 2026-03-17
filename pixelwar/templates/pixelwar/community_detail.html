@@ -1,0 +1,256 @@
+{% extends "pixelwar/base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ community.name }} | {% trans "Community Details" %}{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-4xl px-4 py-8 md:px-6">
+    <section class="rounded-3xl border border-cyan-200 bg-white p-6 shadow-xl">
+        <h1 class="text-3xl font-black tracking-tight text-slate-900">
+            {{ community.name }}
+        </h1>
+        <p class="mt-1 text-sm text-slate-600">{% trans "Community details, members, and quick actions." %}</p>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Slug" %}</p>
+                <p class="mt-1 text-sm font-semibold text-slate-900">{{ community.slug }}</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Members" %}</p>
+                <p class="mt-1 text-sm font-semibold text-slate-900">{{ member_count }}</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Created" %}</p>
+                <p class="mt-1 text-sm font-semibold text-slate-900">{{ community.created_at|date:"Y-m-d H:i" }}</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Owner" %}</p>
+                <p class="mt-1 text-sm font-semibold text-slate-900">{{ community.owner.username }}</p>
+            </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+            <a href="{% url 'community-canvas' community.slug %}" class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                {% trans "Open canvas" %}
+            </a>
+            <button type="button"
+                    class="invitation-link-btn rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100"
+                    data-invite-url="{{ request.scheme }}://{{ request.get_host }}{% url 'invitation' community.invite_token %}">
+                {% trans "Invitation link" %}
+            </button>
+            {% if is_owner %}
+                <button type="button"
+                        class="delete-community-btn rounded-lg bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-200"
+                        data-community-slug="{{ community.slug }}"
+                        data-community-name="{{ community.name }}"
+                        data-delete-url="{% url 'delete-community' community.slug %}">
+                    {% trans "Delete community" %}
+                </button>
+            {% else %}
+                <button type="button"
+                        class="leave-community-btn rounded-lg bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                        data-community-slug="{{ community.slug }}"
+                        data-community-name="{{ community.name }}"
+                        data-leave-url="{% url 'leave-community' community.slug %}">
+                    {% trans "Leave community" %}
+                </button>
+            {% endif %}
+            <a href="{% url 'communities' %}" class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                {% trans "Back to communities" %}
+            </a>
+        </div>
+    </section>
+
+    <section class="mt-5 rounded-3xl border border-sky-200 bg-white p-4 shadow-xl shadow-sky-100/60">
+        <h2 class="mb-3 text-xl font-black tracking-tight text-slate-900">{% trans "Canvas preview" %}</h2>
+        <div id="canvas-preview-wrap" class="relative flex justify-center overflow-hidden rounded-xl border border-sky-100 bg-slate-100">
+            <canvas id="detailCanvas"
+                    title="{% trans 'Click to enlarge' %}"
+                    style="image-rendering: pixelated; image-rendering: crisp-edges; display: block; max-width: 100%; height: auto; cursor: pointer;"
+                    data-grid-size="{{ canvas_grid_size }}">
+            </canvas>
+            <span class="pointer-events-none absolute bottom-2 right-2 rounded-full bg-black/40 px-2 py-0.5 text-[10px] font-semibold text-white">&#x26F6; {% trans "click to enlarge" %}</span>
+        </div>
+        <script type="application/json" id="canvas-pixel-data">{{ canvas_pixels_json|safe }}</script>
+    </section>
+
+    <!-- Canvas lightbox -->
+    <div id="canvas-lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 p-4" role="dialog" aria-modal="true" aria-label="Canvas full view">
+        <button id="canvas-lightbox-close" type="button"
+                class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40"
+                aria-label="Close">
+            &#x2715;
+        </button>
+        <canvas id="detailCanvasLarge"
+                style="image-rendering: pixelated; image-rendering: crisp-edges; display: block; max-width: 90vw; max-height: 90vh;">
+        </canvas>
+    </div>
+
+    <section class="mt-5 rounded-3xl border border-amber-200 bg-white p-6 shadow-xl shadow-amber-100/60">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-xl font-black tracking-tight text-slate-900">{% trans "Community members" %}</h2>
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="font-semibold uppercase tracking-wide text-slate-500">{% trans "Sort" %}</span>
+                <a href="?sort=joined&dir={% if sort == 'joined' and dir == 'asc' %}desc{% else %}asc{% endif %}"
+                   class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'joined' %}bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
+                    {% trans "Join date" %} {% if sort == 'joined' %}({{ dir }}){% endif %}
+                </a>
+                <a href="?sort=pixels&dir={% if sort == 'pixels' and dir == 'desc' %}asc{% else %}desc{% endif %}"
+                   class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'pixels' %}bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
+                    {% trans "Pixel count" %} {% if sort == 'pixels' %}({{ dir }}){% endif %}
+                </a>
+            </div>
+        </div>
+
+        {% if member_rows %}
+            <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 bg-white text-sm">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Member" %}</th>
+                            <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Joined" %}</th>
+                            <th class="px-4 py-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">{% trans "Pixel count" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for row in member_rows %}
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        {% if row.avatar_url %}
+                                            <img src="{{ row.avatar_url }}" alt="avatar" class="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200">
+                                        {% else %}
+                                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-xs font-black text-white">
+                                                {{ row.user.username|slice:":1"|upper }}
+                                            </div>
+                                        {% endif %}
+                                        <span class="font-semibold text-slate-900">{{ row.user.username }}</span>
+                                        {% if row.user.id == community.owner_id %}
+                                            <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">{% trans "Owner" %}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-slate-600">{{ row.joined_at|date:"Y-m-d H:i" }}</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-800">{{ row.pixel_count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="mt-4 text-sm text-slate-600">{% trans "No active members found." %}</p>
+        {% endif %}
+    </section>
+</main>
+
+<div id="modal-backdrop" class="fixed inset-0 z-50 hidden bg-black/40"></div>
+
+<div id="invitation-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-slate-900">{% trans "Community Invitation Link" %}</h3>
+    <p class="mb-2 text-sm text-slate-600">
+        {% blocktrans trimmed %}
+        Share this link to invite others to your community.
+        Anyone with the link can join.
+        {% endblocktrans %}
+    </p>
+    <input id="invitation-link-input" type="text" readonly class="mb-3 w-full rounded border border-slate-300 px-2 py-1 text-sm" value="">
+    <button id="copy-invite-link-btn" type="button" class="mb-2 w-full rounded bg-fuchsia-500 px-3 py-2 text-sm font-semibold text-white hover:bg-fuchsia-400">{% trans "Copy URL" %}</button>
+    <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Close" %}</button>
+</div>
+
+<div id="leave-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-slate-900">{% trans "Leave Community" %}</h3>
+    <p id="leave-modal-text" class="mb-4 text-sm text-slate-600">
+        {% trans "Are you sure you want to leave this community?" %}
+    </p>
+    <form id="leave-community-form" method="post" action="">
+        {% csrf_token %}
+        <button type="submit" class="mb-2 w-full rounded bg-rose-500 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-400">{% trans "Yes, leave" %}</button>
+        <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Cancel" %}</button>
+    </form>
+</div>
+
+<div id="delete-modal" class="fixed left-1/2 top-1/2 z-50 hidden w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl">
+    <h3 class="mb-2 text-lg font-bold text-rose-700">{% trans "Delete Community" %}</h3>
+    <p id="delete-modal-text" class="mb-4 text-sm text-rose-600">
+        {% trans "This action cannot be undone. All information will be deleted and cannot be restored." %}
+    </p>
+    <form id="delete-community-form" method="post" action="">
+        {% csrf_token %}
+        <button type="submit" class="mb-2 w-full rounded bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500">{% trans "Yes, delete permanently" %}</button>
+        <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Cancel" %}</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'pixelwar/js/community_lobby.js' %}"></script>
+<script>
+(function () {
+    const canvas = document.getElementById('detailCanvas');
+    if (!canvas) return;
+    const gridSize = parseInt(canvas.dataset.gridSize, 10) || 200;
+    canvas.width = gridSize;
+    canvas.height = gridSize;
+
+    const wrap = document.getElementById('canvas-preview-wrap');
+    const maxDisplayPx = Math.min(wrap ? wrap.clientWidth : window.innerWidth, 640);
+    const displaySize = Math.min(maxDisplayPx, gridSize);
+    canvas.style.width = displaySize + 'px';
+    canvas.style.height = displaySize + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, gridSize, gridSize);
+
+    const raw = document.getElementById('canvas-pixel-data');
+    if (!raw) return;
+    let pixels;
+    try { pixels = JSON.parse(raw.textContent); } catch (e) { return; }
+    for (const px of pixels) {
+        ctx.fillStyle = px.color;
+        ctx.fillRect(px.x, px.y, 1, 1);
+    }
+
+    // Lightbox
+    const lightbox = document.getElementById('canvas-lightbox');
+    const largeCv = document.getElementById('detailCanvasLarge');
+    const closeBtn = document.getElementById('canvas-lightbox-close');
+
+    function openLightbox() {
+        largeCv.width = gridSize;
+        largeCv.height = gridSize;
+        const maxSide = Math.min(window.innerWidth * 0.90, window.innerHeight * 0.90);
+        const displayLarge = Math.min(maxSide, gridSize * 4);
+        largeCv.style.width = displayLarge + 'px';
+        largeCv.style.height = displayLarge + 'px';
+        const lctx = largeCv.getContext('2d');
+        lctx.fillStyle = '#ffffff';
+        lctx.fillRect(0, 0, gridSize, gridSize);
+        for (const px of pixels) {
+            lctx.fillStyle = px.color;
+            lctx.fillRect(px.x, px.y, 1, 1);
+        }
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    canvas.addEventListener('click', openLightbox);
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+})();
+</script>
+{% endblock %}

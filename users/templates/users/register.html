@@ -1,0 +1,71 @@
+{% extends 'pixelwar/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Register" %} | Pixo Canvo{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-md px-4 py-10">
+    <div class="mt-3 rounded-3xl border border-pink-300 bg-white/90 p-6 shadow-xl shadow-pink-200/60">
+        <h1 class="text-2xl font-black tracking-tight text-slate-900">{% trans "Create account" %}</h1>
+        <p class="mt-1 text-sm text-slate-600">{% trans "Email is required. Avatar is optional." %}</p>
+
+        {% if messages %}
+            <div class="mt-4 space-y-2">
+                {% for message in messages %}
+                    <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-700">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'register' %}" hx-post="{% url 'register' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" enctype="multipart/form-data" class="mt-5 space-y-4">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="rounded-lg bg-rose-100 px-3 py-2 text-sm text-rose-700">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Username" %}</label>
+                {{ form.username }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.username.errors|striptags }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Email" %}</label>
+                {{ form.email }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.email.errors|striptags }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Password" %}</label>
+                {{ form.password1 }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.password1.errors|striptags }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Confirm password" %}</label>
+                {{ form.password2 }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.password2.errors|striptags }}</p>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Avatar image (optional)" %}</label>
+                {{ form.avatar }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.avatar.errors|striptags }}</p>
+            </div>
+
+            <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                {% trans "Register" %}
+            </button>
+        </form>
+
+        <p class="mt-4 text-sm text-slate-600">
+            {% trans "Already have an account?" %}
+            <a class="font-semibold text-sky-700 hover:text-sky-900" href="{% url 'login' %}" hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true">{% trans "Log in" %}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

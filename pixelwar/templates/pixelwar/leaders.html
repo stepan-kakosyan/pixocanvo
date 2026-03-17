@@ -1,0 +1,83 @@
+{% extends "pixelwar/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Ranking" %} | Pixo Canvo{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-3xl px-4 py-8 md:px-6">
+    <div class="mb-6">
+        <h2 class="text-3xl font-black tracking-tight text-slate-900">{% trans "Top Players" %}</h2>
+        <p class="mt-1 text-sm text-slate-500">{% trans "Ranked by accepted pixel placements on the shared canvas." %}</p>
+    </div>
+    {% if memberships %}
+        <section class="community-tabs mb-4 rounded-2xl border border-slate-200 bg-white p-3">
+            <div class="flex flex-wrap items-center gap-2 text-sm">
+                <a href="{% url 'leaders' %}"
+                class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if not current_community %}active{% endif %}">
+                    {% trans "Global" %}
+                </a>
+                {% for membership in memberships %}
+                    <a href="{% url 'community-leaders' membership.community.slug %}"
+                    class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if current_community and membership.community.slug == current_community.slug %}active{% endif %}">
+                        {{ membership.community.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+    <div class="rounded-3xl border border-amber-200 bg-gradient-to-b from-white to-amber-50/60 shadow-xl shadow-amber-100/60">
+
+        <div class="flex items-center justify-between border-b border-amber-100 px-5 py-4">
+            <span class="text-xs font-semibold uppercase tracking-widest text-amber-600">{% trans "Player" %}</span>
+            <span class="text-xs font-semibold uppercase tracking-widest text-amber-600">{% trans "Pixels placed" %}</span>
+        </div>
+
+        {% if top_players %}
+            <ol>
+                {% for player in top_players %}
+                    <li class="flex items-center justify-between border-b border-amber-50 px-5 py-3.5 last:border-b-0
+                               {% if forloop.counter <= 3 %}bg-amber-50/60{% else %}bg-white{% endif %}">
+                        <div class="flex items-center gap-3">
+                            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black
+                                         {% if forloop.counter == 1 %}bg-yellow-300 text-yellow-900
+                                         {% elif forloop.counter == 2 %}bg-slate-300 text-slate-800
+                                         {% elif forloop.counter == 3 %}bg-orange-300 text-orange-900
+                                         {% else %}bg-amber-100 text-amber-800{% endif %}">
+                                {{ forloop.counter }}
+                            </span>
+                            {% if player.avatar_url %}
+                                <img src="{{ player.avatar_url }}" alt="avatar"
+                                     class="h-9 w-9 rounded-full object-cover ring-1 ring-amber-200">
+                            {% else %}
+                                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white">
+                                    {{ player.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                            <span class="{% if forloop.counter == 1 %}text-xl font-black
+                                          {% elif forloop.counter <= 3 %}text-base font-extrabold
+                                          {% else %}text-sm font-semibold{% endif %} text-slate-900">
+                                {{ player.username }}
+                            </span>
+                            {% if forloop.counter == 1 %}
+                                <span class="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-bold text-yellow-800">👑 #1</span>
+                            {% endif %}
+                        </div>
+                        <span class="rounded-full bg-amber-50 px-3 py-1 text-sm font-black text-amber-700 ring-1 ring-amber-200">
+                            {{ player.pixel_count }}&nbsp;px
+                        </span>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <div class="px-5 py-10 text-center">
+                <p class="text-2xl">🖼️</p>
+                <p class="mt-2 text-sm font-semibold text-slate-600">{% trans "No ranked players yet." %}</p>
+                <p class="mt-1 text-sm text-slate-400">{% trans "Start drawing to become the first legend." %}</p>
+                <a href="{{ canvas_url }}" class="mt-4 inline-block rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:from-fuchsia-400 hover:to-pink-400">
+                    {% trans "Go to Canvas" %}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

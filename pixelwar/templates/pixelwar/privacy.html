@@ -1,0 +1,126 @@
+{% extends "pixelwar/base.html" %}
+
+{% block title %}Privacy Policy | Pixo Canvo{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-3xl px-4 py-8 md:px-6">
+
+    <div class="mb-6">
+        <h2 class="text-3xl font-black tracking-tight text-slate-900">Privacy Policy</h2>
+        <p class="mt-1 text-sm text-slate-500">Last updated: March 2026</p>
+    </div>
+
+    <div class="space-y-4">
+
+        <div class="rounded-3xl border border-cyan-200 bg-white p-5 shadow-lg shadow-cyan-100/60">
+            <p class="text-sm leading-relaxed text-slate-700">
+                Pixo Canvo ("<strong>the service</strong>") is operated as a personal / community project.
+                This privacy policy explains what data we collect, why we collect it, and how it is handled.
+                By using the service you agree to the practices described here.
+            </p>
+        </div>
+
+        <!-- 1 -->
+        <div class="overflow-hidden rounded-3xl border border-cyan-200 bg-white shadow-lg shadow-cyan-100/60">
+            <div class="border-b border-cyan-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">1. Information we collect</h3>
+            </div>
+            <div class="divide-y divide-cyan-50 text-sm text-slate-700">
+                <div class="px-5 py-4">
+                    <p class="font-bold text-slate-900">Account data</p>
+                    <p class="mt-1">When you register you provide a <strong>username</strong> and <strong>password</strong>. Passwords are stored as cryptographic hashes — the plaintext is never retained. You may optionally upload an <strong>avatar image</strong>.</p>
+                </div>
+                <div class="px-5 py-4">
+                    <p class="font-bold text-slate-900">Pixel activity</p>
+                    <p class="mt-1">Every pixel placement is stored as a <strong>UserAction</strong> record containing your user identifier, the pixel coordinates, the chosen color, and a timestamp. Accepted placements are also persisted as <strong>Pixel</strong> records and used to compute leaderboard rankings.</p>
+                </div>
+                <div class="px-5 py-4">
+                    <p class="font-bold text-slate-900">Chat messages</p>
+                    <p class="mt-1">Messages you send in the global canvas or inside a community are stored in the database linked to your account. Chat is publicly visible to all members of the relevant canvas or community.</p>
+                </div>
+                <div class="px-5 py-4">
+                    <p class="font-bold text-slate-900">IP addresses</p>
+                    <p class="mt-1">Your IP address is logged alongside each pixel placement for rate-limiting and abuse-prevention purposes. It is not displayed to other users.</p>
+                </div>
+                <div class="px-5 py-4">
+                    <p class="font-bold text-slate-900">Session cookies</p>
+                    <p class="mt-1">We use a standard Django session cookie to keep you logged in. No third-party tracking cookies are set.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="overflow-hidden rounded-3xl border border-sky-200 bg-white shadow-lg shadow-sky-100/60">
+            <div class="border-b border-sky-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">2. How we use your data</h3>
+            </div>
+            <ul class="divide-y divide-sky-50 text-sm text-slate-700">
+                <li class="px-5 py-3">To operate the service — authenticate you, process pixel placements, display the canvas and leaderboard.</li>
+                <li class="px-5 py-3">To enforce the 60-second cooldown and prevent abusive placement patterns.</li>
+                <li class="px-5 py-3">To display your username and avatar to other players within communities you belong to.</li>
+                <li class="px-5 py-3">To calculate and display per-user pixel counts on the leaderboard and community detail pages.</li>
+            </ul>
+        </div>
+
+        <!-- 3 -->
+        <div class="overflow-hidden rounded-3xl border border-fuchsia-200 bg-white shadow-lg shadow-fuchsia-100/60">
+            <div class="border-b border-fuchsia-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">3. Data sharing</h3>
+            </div>
+            <div class="px-5 py-4 text-sm text-slate-700 leading-relaxed">
+                We do <strong>not</strong> sell, rent, or share your personal data with third parties for marketing purposes.
+                Data may be disclosed only if required by law or to protect the security of the service.
+                The service relies on self-hosted or provider-managed infrastructure (Docker, PostgreSQL, Redis, Kafka);
+                service operators may access logs for debugging and maintenance.
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="overflow-hidden rounded-3xl border border-amber-200 bg-white shadow-lg shadow-amber-100/60">
+            <div class="border-b border-amber-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">4. Data retention</h3>
+            </div>
+            <div class="px-5 py-4 text-sm text-slate-700 leading-relaxed">
+                <ul class="space-y-2">
+                    <li>• <strong>Account data</strong> — retained as long as your account exists. You may request deletion by contacting the service administrator.</li>
+                    <li>• <strong>UserAction records</strong> — retained indefinitely for audit and leaderboard history.</li>
+                    <li>• <strong>Chat messages</strong> — retained indefinitely; deleted if the associated community is deleted.</li>
+                    <li>• <strong>Avatar images</strong> — deleted from storage when you replace or remove them.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="overflow-hidden rounded-3xl border border-pink-200 bg-white shadow-lg shadow-pink-100/60">
+            <div class="border-b border-pink-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">5. Your rights</h3>
+            </div>
+            <div class="px-5 py-4 text-sm text-slate-700 leading-relaxed">
+                You can update your username, password, and avatar at any time via the
+                <a href="{% url 'profile-settings' %}" class="font-semibold text-fuchsia-600 hover:text-fuchsia-800">Profile Settings</a> page.
+                To request full account deletion or a copy of your data please contact the site administrator directly.
+                Because this is a community / hobby project there is no formal data-protection officer; requests are
+                handled on a best-effort basis.
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg shadow-slate-100/60">
+            <h3 class="font-black text-slate-900">6. Changes to this policy</h3>
+            <p class="mt-2 text-sm text-slate-700 leading-relaxed">
+                This policy may be updated at any time. Continued use of the service after a change constitutes
+                acceptance of the revised policy. The "Last updated" date at the top of this page reflects the
+                most recent revision.
+            </p>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ canvas_url }}"
+               class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-fuchsia-300/40 transition hover:from-fuchsia-400 hover:to-pink-400">
+                Back to Canvas →
+            </a>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

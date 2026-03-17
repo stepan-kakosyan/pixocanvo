@@ -1,0 +1,143 @@
+{% extends "pixelwar/base.html" %}
+{% load static %}
+
+{% block title %}Pixo Canvo{% endblock %}
+
+{% block content %}
+<div class="app mx-auto max-w-7xl px-4 py-6 md:px-6"
+     data-grid-size="{{ grid_size }}"
+     data-filled-pixels="{{ filled_pixels }}"
+     data-fill-ratio="{{ fill_ratio }}"
+     data-user-key="{{ current_user_key }}"
+     data-authenticated="{% if request.user.is_authenticated %}1{% else %}0{% endif %}"
+     data-pixel-snapshot-url="{{ pixel_snapshot_url }}"
+     data-my-pixels-url="{{ my_pixels_url }}"
+     data-pixel-update-url="{{ pixel_update_url }}"
+     data-chat-messages-url="{{ chat_messages_url }}"
+    data-chat-all-messages-url="{{ chat_all_messages_url|default:'' }}"
+     data-chat-send-url="{{ chat_send_url }}"
+    data-chat-grouped="{% if chat_grouped %}1{% else %}0{% endif %}"
+    data-chat-default-group="{{ chat_default_group_slug|default:'global' }}"
+     data-pixels-ws-url="{{ pixels_ws_url }}"
+     data-chat-ws-url="{{ chat_ws_url }}">
+
+    {% if memberships %}
+        <section class="community-tabs mb-4 rounded-2xl border border-slate-200 bg-white p-3">
+            <div class="flex flex-wrap items-center gap-2 text-sm">
+                <a href="{% url 'index' %}"
+                    class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if not current_community %}active{% endif %}">
+                    Global
+                </a>
+                {% for membership in memberships %}
+                    <a href="{% url 'community-canvas' membership.community.slug %}"
+                       class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if current_community and membership.community.slug == current_community.slug %}active{% endif %}">
+                        {{ membership.community.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="mb-4 w-full rounded-2xl border border-pink-300 bg-white/80 px-3 py-2 shadow-xl shadow-pink-200/50 backdrop-blur">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="shrink-0 text-sm font-semibold text-slate-700">Palette</span>
+
+            <div id="colorPalette" class="flex flex-wrap gap-0.5 rounded-xl border border-pink-200 bg-white p-1.5 shadow-inner">
+                <button type="button" data-color="#000000" class="h-6 w-6 rounded border border-slate-300" style="background-color: #000000;"></button>
+                <button type="button" data-color="#f8fafc" class="h-6 w-6 rounded border border-slate-300" style="background-color: #f8fafc;"></button>
+                <button type="button" data-color="#e2e8f0" class="h-6 w-6 rounded border border-slate-300" style="background-color: #e2e8f0;"></button>
+                <button type="button" data-color="#94a3b8" class="h-6 w-6 rounded border border-slate-300" style="background-color: #94a3b8;"></button>
+                <button type="button" data-color="#475569" class="h-6 w-6 rounded border border-slate-300" style="background-color: #475569;"></button>
+                <button type="button" data-color="#ef4444" class="h-6 w-6 rounded border border-slate-300" style="background-color: #ef4444;"></button>
+                <button type="button" data-color="#f97316" class="h-6 w-6 rounded border border-slate-300" style="background-color: #f97316;"></button>
+                <button type="button" data-color="#f59e0b" class="h-6 w-6 rounded border border-slate-300" style="background-color: #f59e0b;"></button>
+                <button type="button" data-color="#eab308" class="h-6 w-6 rounded border border-slate-300" style="background-color: #eab308;"></button>
+                <button type="button" data-color="#84cc16" class="h-6 w-6 rounded border border-slate-300" style="background-color: #84cc16;"></button>
+                <button type="button" data-color="#22c55e" class="h-6 w-6 rounded border border-slate-300" style="background-color: #22c55e;"></button>
+                <button type="button" data-color="#10b981" class="h-6 w-6 rounded border border-slate-300" style="background-color: #10b981;"></button>
+                <button type="button" data-color="#14b8a6" class="h-6 w-6 rounded border border-slate-300" style="background-color: #14b8a6;"></button>
+                <button type="button" data-color="#06b6d4" class="h-6 w-6 rounded border border-slate-300" style="background-color: #06b6d4;"></button>
+                <button type="button" data-color="#0ea5e9" class="h-6 w-6 rounded border border-slate-300" style="background-color: #0ea5e9;"></button>
+                <button type="button" data-color="#3b82f6" class="h-6 w-6 rounded border border-slate-300" style="background-color: #3b82f6;"></button>
+                <button type="button" data-color="#6366f1" class="h-6 w-6 rounded border border-slate-300" style="background-color: #6366f1;"></button>
+                <button type="button" data-color="#8b5cf6" class="h-6 w-6 rounded border border-slate-300" style="background-color: #8b5cf6;"></button>
+                <button type="button" data-color="#d946ef" class="h-6 w-6 rounded border border-slate-300" style="background-color: #d946ef;"></button>
+                <button type="button" data-color="#ec4899" class="h-6 w-6 rounded border border-slate-300" style="background-color: #ec4899;"></button>
+            </div>
+
+            <label for="customColorPicker" class="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                Custom
+                <input id="customColorPicker" type="color" value="#000000" class="h-8 w-10 cursor-pointer rounded-md border border-slate-300 bg-white p-0.5">
+            </label>
+
+            <div class="h-7 w-px shrink-0 bg-slate-200" aria-hidden="true"></div>
+{% if request.user.is_authenticated %}
+            <button id="highlightMine" type="button" class="shrink-0 rounded-xl bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">Highlight My Pixels</button>
+        {% endif %}
+            <div class="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+                <button id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-fuchsia-50">+</button>
+                <button id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-sky-50">-</button>
+                <button id="canvasFullscreen" type="button" aria-label="Full screen" title="Full screen" class="flex h-9 w-9 items-center justify-center text-base font-bold text-slate-700 transition hover:bg-slate-100">⛶</button>
+            </div>
+        
+        </div>
+
+        <p id="status" class="mt-2 text-sm font-medium text-slate-700">Loading pixels...</p>
+    </section>
+
+    <section class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
+        <div class="max-h-[72vh] overflow-x-auto overflow-y-auto rounded-xl border border-sky-100 bg-white p-2">
+            <div class="relative w-fit">
+                <canvas id="pixelCanvas"></canvas>
+                <canvas id="pixelOverlay"></canvas>
+            </div>
+        </div>
+        <p id="gridMeta" class="mt-3 text-xs text-slate-600 md:text-sm">
+            Grid: {{ grid_size }}x{{ grid_size }}. Scroll horizontally and vertically on smaller screens.
+        </p>
+    </section>
+
+    <p class="mt-4 text-xs text-slate-600 md:text-sm">
+        Tip: zoom in before placing a pixel to avoid missing your target.
+    </p>
+</div>
+
+<button id="chatToggle" type="button" class="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white shadow-xl shadow-fuchsia-300/50 hover:from-fuchsia-400 hover:to-sky-400 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14">
+    <span class="text-[10px] font-bold uppercase tracking-wide sm:text-xs">Chat</span>
+    <span id="chatUnreadBadge" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-rose-500 px-1.5 py-0.5 text-center text-xs font-bold text-white">0</span>
+</button>
+
+<aside id="chatPanel" class="fixed bottom-20 right-2 z-40 hidden h-[70vh] w-[calc(100vw-1rem)] max-w-[22rem] rounded-2xl border border-pink-200 bg-white/95 shadow-2xl shadow-pink-200/60 backdrop-blur sm:bottom-24 sm:right-6 sm:h-[28rem] sm:w-[22rem] sm:max-w-[calc(100vw-2rem)]">
+    <div class="flex items-center justify-between border-b border-pink-100 px-4 py-3">
+        <h2 class="text-sm font-black uppercase tracking-wide text-fuchsia-700">Messenger</h2>
+        <div class="flex items-center gap-2">
+            <button id="chatMute" type="button" class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200">Sound On</button>
+            <button id="chatPin" type="button" class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200">Pin</button>
+            <button id="chatClose" type="button" class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200">Close</button>
+        </div>
+    </div>
+    {% if chat_grouped %}
+        <div id="chatGroups" class="chat-groups border-b border-pink-100 px-3 py-2"></div>
+    {% endif %}
+    <div id="chatMessages" class="h-[19.5rem] overflow-y-auto px-3 py-2"></div>
+    <div class="border-t border-pink-100 p-3">
+        <p id="chatNotice" class="mb-2 min-h-4 text-xs font-medium text-slate-500"></p>
+        {% if request.user.is_authenticated %}
+            <form id="chatForm" class="space-y-2">
+                <textarea id="chatInput" rows="2" maxlength="500" class="w-full resize-none rounded-xl border border-pink-200 px-3 py-2 text-sm outline-none focus:border-fuchsia-400" placeholder="Write a message..."></textarea>
+                <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">Send Message</button>
+            </form>
+        {% else %}
+            <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
+                Login to send messages.
+                <a href="{% url 'login' %}" class="font-semibold text-sky-700 hover:text-sky-900">Open login</a>
+            </div>
+        {% endif %}
+    </div>
+</aside>
+{% endblock %}
+
+{% block scripts %}
+{{ chat_groups|json_script:"chat-groups-data" }}
+<script src="{% static 'pixelwar/js/pixelwar.js' %}"></script>
+{% endblock %}

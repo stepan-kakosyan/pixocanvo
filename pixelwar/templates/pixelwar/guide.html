@@ -1,0 +1,191 @@
+{% extends "pixelwar/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Rules" %} | Pixo Canvo{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-3xl px-4 py-8 md:px-6">
+
+    <div class="mb-6">
+        <h2 class="text-3xl font-black tracking-tight text-slate-900">{% trans "Rules" %}</h2>
+        <p class="mt-1 text-sm text-slate-500">{% trans "Everything you need to know to play Pixo Canvo." %}</p>
+    </div>
+
+    <div class="space-y-4">
+
+        <!-- intro -->
+        <div class="rounded-3xl border border-cyan-200 bg-white p-5 shadow-lg shadow-cyan-100/60">
+            <p class="text-sm leading-relaxed text-slate-700">
+                {% blocktrans trimmed %}
+                <strong class="text-slate-900">Pixo Canvo</strong> is a real-time collaborative canvas.
+                Each registered player can place <strong class="text-slate-900">one pixel every 60 seconds</strong>.
+                Every placement is queued, validated, and then broadcast live via WebSocket to every connected player.
+                Work together — or compete — to claim space on the shared canvas.
+                {% endblocktrans %}
+            </p>
+        </div>
+
+        <!-- placing pixels -->
+        <div class="overflow-hidden rounded-3xl border border-cyan-200 bg-white shadow-lg shadow-cyan-100/60">
+            <div class="border-b border-cyan-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">🎨 {% trans "Placing pixels" %}</h3>
+            </div>
+            <ol class="divide-y divide-cyan-50">
+                <li class="flex items-start gap-4 px-5 py-4">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">1</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Pick a color from the palette" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Choose from the 21-color palette at the top of the Canvas page. Use the <strong>Custom Color</strong> picker next to the palette for any hex color you like. Your active selection is highlighted with a ring.{% endblocktrans %}</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-4 px-5 py-4">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">2</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Zoom and navigate" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Use the <strong>+</strong> and <strong>−</strong> buttons to zoom. Pan by scrolling or dragging. The ⛶ button enters full-screen mode for a distraction-free experience. Zoom in before placing to avoid missing your target cell.{% endblocktrans %}</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-4 px-5 py-4">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">3</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Click to place" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% trans "Click any cell on the canvas while a color is selected. Your placement is sent to the server, validated (cooldown, bounds, auth), and if accepted it appears on every connected player's screen within milliseconds." %}</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-4 px-5 py-4">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">4</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Wait out the cooldown" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}After each accepted placement you must wait <strong>60 seconds</strong> before placing again. The status bar shows how long remains. Rejected attempts do not reset the cooldown.{% endblocktrans %}</p>
+                    </div>
+                </li>
+                <li class="flex items-start gap-4 px-5 py-4">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">5</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Highlight your pixels" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Press <strong>Highlight My Pixels</strong> to dim everything else and see exactly which pixels you own on the current canvas.{% endblocktrans %}</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <!-- canvas growth -->
+        <div class="overflow-hidden rounded-3xl border border-sky-200 bg-white shadow-lg shadow-sky-100/60">
+            <div class="border-b border-sky-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">📐 {% trans "Dynamic canvas size" %}</h3>
+            </div>
+            <div class="px-5 py-4 text-sm text-slate-700 leading-relaxed">
+                {% blocktrans trimmed %}
+                The canvas starts at a fixed size and <strong>automatically grows</strong> as more pixels are placed.
+                Once 80 % of cells are filled the grid expands by a set number of rows and columns,
+                up to a configured maximum. This keeps the canvas competitive — there is always new space to claim.
+                {% endblocktrans %}
+            </div>
+        </div>
+
+        <!-- communities -->
+        <div class="overflow-hidden rounded-3xl border border-amber-200 bg-white shadow-lg shadow-amber-100/60">
+            <div class="border-b border-amber-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">🏘 {% trans "Communities" %}</h3>
+            </div>
+            <div class="divide-y divide-amber-50">
+                <div class="px-5 py-4 text-sm text-slate-700 leading-relaxed">
+                    {% blocktrans trimmed %}
+                    Beyond the global canvas you can play inside <strong>private communities</strong>.
+                    Each community has its own independent canvas, leaderboard, and chat room.
+                    Go to the <a href="{{ communities_url }}" class="font-semibold text-amber-600 hover:text-amber-800">Communities</a> page to manage yours.
+                    {% endblocktrans %}
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">✏️</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Creating a community" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Any logged-in user can create <strong>one community</strong>. Enter a name and click <em>Create community</em>. A URL-friendly slug is generated automatically. You become the owner and are added as the first member.{% endblocktrans %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">🔗</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Inviting members" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Click <em>Invitation link</em> on any community card to open a popup with a shareable URL. Anyone who opens that link and is logged in will be added to the community immediately.{% endblocktrans %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">🚪</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Leaving a community" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Members can leave any community they did not create. Click <em>Leave community</em> and confirm. The owner cannot leave — they must delete the community instead.{% endblocktrans %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">🗑️</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Deleting a community" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Only the owner can delete a community. Click <em>Delete community</em> and confirm. This permanently removes the community, all its pixels, chat messages, and membership records — it cannot be undone.{% endblocktrans %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">📊</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Community details page" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Click <em>Community details</em> on any card to open a dedicated page showing: community info, a live canvas preview (click to enlarge), and a sortable member table with each member's join date and pixel count.{% endblocktrans %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- leaderboard & chat -->
+        <div class="overflow-hidden rounded-3xl border border-fuchsia-200 bg-white shadow-lg shadow-fuchsia-100/60">
+            <div class="border-b border-fuchsia-100 px-5 py-4">
+                <h3 class="font-black text-slate-900">🏆 {% trans "Leaderboard & chat" %}</h3>
+            </div>
+            <div class="divide-y divide-fuchsia-50">
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">🥇</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Ranking" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}The <a href="{{ leaders_url }}" class="font-semibold text-fuchsia-600 hover:text-fuchsia-800">Ranking</a> page ranks every contributor by the number of accepted pixels currently on the canvas. The list is available for the global canvas and for each community you belong to.{% endblocktrans %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <span class="mt-0.5 shrink-0 text-lg">💬</span>
+                    <div>
+                        <p class="font-bold text-slate-900">{% trans "Live chat" %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% trans "Each canvas has a live chat sidebar. Toggle it with the floating button in the bottom-right corner. Logged-in users can send messages; everyone can read them. Community chat is scoped — messages in one community are not visible in another." %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- account -->
+        <div class="rounded-3xl border border-pink-200 bg-pink-50/50 p-5 shadow-lg shadow-pink-100/50">
+            <h3 class="font-black text-pink-900">👤 {% trans "Your account" %}</h3>
+            <ul class="mt-3 space-y-2 text-sm text-slate-700">
+                <li>• {% blocktrans trimmed %}Click your <strong>avatar</strong> in the top navigation to open Profile Settings.{% endblocktrans %}</li>
+                <li>• {% blocktrans trimmed %}Change your <strong>username</strong>, upload a custom <strong>avatar</strong>, or update your <strong>password</strong> at any time.{% endblocktrans %}</li>
+                <li>• {% trans "You must be logged in to place pixels, send chat messages, create or join communities." %}</li>
+            </ul>
+            {% if not request.user.is_authenticated %}
+                <div class="mt-4 flex gap-2">
+                    <a href="{% url 'register' %}"
+                       class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:from-fuchsia-400 hover:to-pink-400">
+                        {% trans "Create account" %}
+                    </a>
+                    <a href="{% url 'login' %}"
+                       class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50">
+                        {% trans "Log in" %}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center">
+            <a href="{{ canvas_url }}"
+               class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-fuchsia-300/40 transition hover:from-fuchsia-400 hover:to-pink-400">
+                {% trans "Go to Canvas" %} →
+            </a>
+        </div>
+
+    </div>
+</main>
+{% endblock %}
