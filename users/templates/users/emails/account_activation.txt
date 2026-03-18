@@ -1,0 +1,9 @@
+{% load i18n %}
+{% blocktrans with username=username %}Hello {{ username }},{% endblocktrans %}
+
+{% trans "Thanks for registering. Please confirm your email address to activate your account." %}
+
+{% trans "Activate account:" %}
+{{ activation_url }}
+
+{% blocktrans with hours=expires_in_hours %}This link expires in {{ hours }} hours.{% endblocktrans %}

@@ -1,0 +1,12 @@
+{
+  "name": "pixel-war-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./pixelwar/static/pixelwar/css/tailwind.input.css -o ./pixelwar/static/pixelwar/css/tailwind.generated.css --minify",
+    "watch:css": "tailwindcss -i ./pixelwar/static/pixelwar/css/tailwind.input.css -o ./pixelwar/static/pixelwar/css/tailwind.generated.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

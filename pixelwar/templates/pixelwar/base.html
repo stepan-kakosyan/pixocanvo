@@ -8,8 +8,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Pixo Canvo{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
+    <link rel="stylesheet" href="{% static 'pixelwar/css/tailwind.generated.css' %}">
+    <link rel="stylesheet" href="{% static 'pixelwar/css/flag-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'pixelwar/css/site.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js" crossorigin="anonymous"></script>
     {% block extra_head %}{% endblock %}
@@ -38,12 +38,19 @@
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 {% trans "Canvas" %}
             </a>
+            <a href="{% url 'communities' %}"
+                    hx-get="{% url 'communities' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
+             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
+                      {% if active_tab == 'communities' %}bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white shadow-lg shadow-fuchsia-500/30
+                      {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
+                {% trans "Communities" %}
+            </a>
             <a href="{% url 'leaders' %}"
                     hx-get="{% url 'leaders' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
              class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
                       {% if active_tab == 'leaders' %}bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white shadow-lg shadow-fuchsia-500/30
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
-                <span class="hidden sm:inline">{% trans "Top" %}&nbsp;</span>{% trans "Players" %}
+                {% trans "Ranking" %}
             </a>
             <a href="{% url 'guide' %}"
                     hx-get="{% url 'guide' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
@@ -52,71 +59,14 @@
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 <span class="hidden sm:inline">{% trans "Rules" %}</span><span class="sm:hidden">{% trans "Rules" %}</span>
             </a>
-            <a href="{% url 'communities' %}"
-                    hx-get="{% url 'communities' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
-                      {% if active_tab == 'communities' %}bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white shadow-lg shadow-fuchsia-500/30
-                      {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
-                {% trans "Communities" %}
-            </a>
+            
         </nav>
 
         <!-- user controls -->
-        {% if request.user.is_authenticated %}
-            <div class="ml-auto flex shrink-0 items-center gap-2.5 sm:ml-0">
-                <a href="{% url 'profile-settings' %}" class="transition hover:scale-105" title="Edit profile">
-                    {% if avatar_url %}
-                        <img src="{{ avatar_url }}" alt="avatar"
-                             class="h-8 w-8 rounded-full object-cover ring-2 ring-fuchsia-500/50 ring-offset-1 ring-offset-white">
-                    {% else %}
-                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow-md">
-                            {{ request.user.username|slice:":1"|upper }}
-                        </div>
-                    {% endif %}
-                </a>
-                <div class="hidden sm:block">
-                    <p class="text-[0.55rem] font-semibold uppercase tracking-widest text-slate-500">{% trans "Signed in as" %}</p>
-                    <a href="{% url 'profile-settings' %}"
-                       class="text-sm font-bold leading-tight text-slate-800 hover:text-fuchsia-600 transition">{{ request.user.username }}</a>
-                </div>
-                <a href="{% url 'logout' %}"
-                   class="rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50">
-                    {% trans "Logout" %}
-                </a>
-            </div>
-        {% else %}
-            <div class="ml-auto flex shrink-0 items-center gap-2 sm:ml-0">
-                <a href="{% url 'login' %}"
-                   hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-                   class="rounded-lg bg-fuchsia-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-fuchsia-500/30 transition hover:bg-fuchsia-500">
-                    {% trans "Login" %}
-                </a>
-            </div>
-        {% endif %}
+        <div id="header-user-controls" class="ml-auto shrink-0 sm:ml-0">
+            {% include "pixelwar/partials/header_user_controls.html" %}
+        </div>
 
-        <details class="relative ml-auto sm:ml-0">
-            <summary class="list-none cursor-pointer rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700">
-                {% if LANGUAGE_SWITCHER_CURRENT %}
-                    <span class="inline-flex items-center gap-2">
-                        <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-3.5 w-5 rounded-sm"></span>
-                        <span>{{ LANGUAGE_SWITCHER_CURRENT.name }}</span>
-                    </span>
-                {% else %}
-                    🌐 {% trans "Language" %}
-                {% endif %}
-            </summary>
-            <div class="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl">
-                <div class="grid grid-cols-2 gap-0.5 max-[380px]:grid-cols-1">
-                    {% for lang in LANGUAGE_SWITCHER_VISIBLE_OPTIONS %}
-                        <a href="{% url 'switch-language' %}?lang={{ lang.code }}&next_url={{ request.get_full_path|urlencode }}"
-                           class="flex min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs hover:bg-slate-100">
-                            <span class="fi fi-{{ lang.flag }} h-3.5 w-5 rounded-sm"></span>
-                            <span class="truncate">{{ lang.name }}</span>
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
-        </details>
     </div>
     <!-- gradient accent line -->
     <div class="h-px bg-gradient-to-r from-transparent via-fuchsia-300/70 to-transparent"></div>
@@ -126,6 +76,9 @@
 {% endif %}
 
 {% block content %}{% endblock %}
+{% if request.user.is_authenticated and layout != "partial" %}
+<script src="{% static 'Notifications/js/notifications.js' %}"></script>
+{% endif %}
 {% block scripts %}{% endblock %}
 
 {% if layout != "partial" %}
@@ -178,4 +131,7 @@
         <span class="hidden sm:inline">{% trans "Rules" %}</span><span class="sm:hidden">{% trans "Rules" %}</span>
     </a>
 </nav>
+<div id="header-user-controls" class="ml-auto shrink-0 sm:ml-0" hx-swap-oob="outerHTML">
+    {% include "pixelwar/partials/header_user_controls.html" %}
+</div>
 {% endif %}

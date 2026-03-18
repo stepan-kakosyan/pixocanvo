@@ -9,6 +9,7 @@ class UserProfile(models.Model):
         related_name="profile",
     )
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    email_confirmed = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"Profile<{self.user.username}>"

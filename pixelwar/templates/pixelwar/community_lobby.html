@@ -27,20 +27,27 @@
         {% endif %}
 
         {% if request.user.is_authenticated %}
-            {% if not owns_community %}
-                <form method="post" action="{% url 'create-community' %}" class="mt-5 flex flex-wrap gap-2">
-                    {% csrf_token %}
-                    <input type="text" name="name" maxlength="64" required
-                           class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm md:w-80"
-                           placeholder="{% trans 'New community name' %}">
-                    <button type="submit"
-                            class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+            {% if not can_create_community %}
+                <div class="mt-5 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-800 ring-1 ring-amber-200">
+                    {% trans "Confirm your email before creating your own community." %}
+                </div>
+            {% elif can_open_create_community %}
+                <div class="mt-5 flex items-center justify-between rounded-2xl border border-fuchsia-200 bg-fuchsia-50/50 px-4 py-3">
+                    <p class="text-sm text-slate-700">
+                        {% blocktrans with current=owned_communities_count max=max_owned_communities %}
+                        You own {{ current }} of {{ max }} communities.
+                        {% endblocktrans %}
+                    </p>
+                    <a href="{% url 'create-community' %}"
+                       class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
                         {% trans "Create community" %}
-                    </button>
-                </form>
+                    </a>
+                </div>
             {% else %}
                 <div class="mt-5 rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-600">
-                    {% trans "You already own a community, so you cannot create another one." %}
+                    {% blocktrans with max=max_owned_communities %}
+                    You already reached the limit of {{ max }} owned communities.
+                    {% endblocktrans %}
                 </div>
             {% endif %}
 
@@ -50,7 +57,14 @@
                     <div class="mt-3 grid gap-3 md:grid-cols-2">
                         {% for membership in memberships %}
                             <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                <p class="font-semibold text-slate-900">{{ membership.community.name }}</p>
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="font-semibold text-slate-900">{{ membership.community.name }}</p>
+                                    {% if membership.community.owner_id == request.user.id and membership.community.is_public %}
+                                        <span class="rounded-full bg-fuchsia-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-fuchsia-700 ring-1 ring-fuchsia-200">
+                                            {% trans "Requests" %}: {{ membership.pending_requests_count|default:0 }}
+                                        </span>
+                                    {% endif %}
+                                </div>
                                 <p class="mt-1 text-xs text-slate-500">{% trans "Slug" %}: {{ membership.community.slug }}</p>
                                 <div class="mt-3 flex flex-wrap gap-2">
                                     <a href="{% url 'community-canvas' membership.community.slug %}"
@@ -93,6 +107,75 @@
                     </p>
                 {% endif %}
             </div>
+
+            <div class="mt-8">
+                <h2 class="text-lg font-black text-slate-900">{% trans "Public communities" %}</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                    {% trans "Discover open communities and request to join." %}
+                </p>
+                {% if public_communities %}
+                    <div class="mt-3 grid gap-3 md:grid-cols-2">
+                        {% for row in public_communities %}
+                            <div class="overflow-hidden rounded-2xl border border-cyan-200 bg-white shadow-sm">
+                                {% if row.community.image %}
+                                    <img src="{{ row.community.image.url }}" alt="cover" class="h-32 w-full object-cover">
+                                {% else %}
+                                    <div class="h-32 w-full bg-gradient-to-r from-fuchsia-200 via-pink-100 to-cyan-200"></div>
+                                {% endif %}
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div>
+                                            <p class="text-sm font-black text-slate-900">{{ row.community.name }}</p>
+                                            <p class="mt-0.5 text-xs text-slate-500">{% trans "Owner" %}: {{ row.community.owner.username }}</p>
+                                        </div>
+                                        <span class="rounded-full bg-cyan-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-700 ring-1 ring-cyan-200">
+                                            {% trans "Public" %}
+                                        </span>
+                                    </div>
+                                    <p class="mt-2 text-xs text-slate-600">
+                                        {{ row.active_count }}/{{ row.community.max_members }} {% trans "members" %}
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a href="{% url 'community-detail' row.community.slug %}"
+                                           class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                            {% trans "Community details" %}
+                                        </a>
+                                        {% if row.is_member %}
+                                            <a href="{% url 'community-canvas' row.community.slug %}"
+                                               class="rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-cyan-400">
+                                                {% trans "Open canvas" %}
+                                            </a>
+                                        {% elif row.is_pending %}
+                                            <span class="rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-800">
+                                                {% trans "Request sent" %}
+                                            </span>
+                                        {% elif row.is_full %}
+                                            <span class="rounded-lg bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700">
+                                                {% trans "Community is full" %}
+                                            </span>
+                                        {% elif row.can_request %}
+                                            <form method="post" action="{% url 'request-join-public-community' row.community.slug %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        class="rounded-lg bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-1.5 text-xs font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                                                    {% trans "Ask Join" %}
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <a href="{% url 'login' %}"
+                                               class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                                {% trans "Login" %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="mt-2 text-sm text-slate-600">{% trans "No public communities yet." %}</p>
+                {% endif %}
+            </div>
         {% else %}
             <div class="mt-5 flex flex-wrap gap-2">
                 <a href="{% url 'register' %}"
@@ -103,6 +186,58 @@
                    class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">
                     {% trans "Login" %}
                 </a>
+            </div>
+
+            <div class="mt-8">
+                <h2 class="text-lg font-black text-slate-900">{% trans "Public communities" %}</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                    {% trans "Discover open communities and request to join." %}
+                </p>
+                {% if public_communities %}
+                    <div class="mt-3 grid gap-3 md:grid-cols-2">
+                        {% for row in public_communities %}
+                            <div class="overflow-hidden rounded-2xl border border-cyan-200 bg-white shadow-sm">
+                                {% if row.community.image %}
+                                    <img src="{{ row.community.image.url }}" alt="cover" class="h-32 w-full object-cover">
+                                {% else %}
+                                    <div class="h-32 w-full bg-gradient-to-r from-fuchsia-200 via-pink-100 to-cyan-200"></div>
+                                {% endif %}
+                                <div class="p-4">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div>
+                                            <p class="text-sm font-black text-slate-900">{{ row.community.name }}</p>
+                                            <p class="mt-0.5 text-xs text-slate-500">{% trans "Owner" %}: {{ row.community.owner.username }}</p>
+                                        </div>
+                                        <span class="rounded-full bg-cyan-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-cyan-700 ring-1 ring-cyan-200">
+                                            {% trans "Public" %}
+                                        </span>
+                                    </div>
+                                    <p class="mt-2 text-xs text-slate-600">
+                                        {{ row.active_count }}/{{ row.community.max_members }} {% trans "members" %}
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a href="{% url 'community-detail' row.community.slug %}"
+                                           class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                            {% trans "Community details" %}
+                                        </a>
+                                        {% if row.is_full %}
+                                            <span class="rounded-lg bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700">
+                                                {% trans "Community is full" %}
+                                            </span>
+                                        {% else %}
+                                            <a href="{% url 'login' %}"
+                                               class="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100">
+                                                {% trans "Login" %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="mt-2 text-sm text-slate-600">{% trans "No public communities yet." %}</p>
+                {% endif %}
             </div>
         {% endif %}
     </section>

@@ -11,6 +11,11 @@ urlpatterns = [
     path("terms/", views.terms_of_service, name="terms"),
     path("communities/", views.communities_lobby, name="communities"),
     path("communities/create/", views.create_community, name="create-community"),
+    path(
+        "communities/public/<slug:slug>/request-join/",
+        views.request_join_public_community,
+        name="request-join-public-community",
+    ),
     path("invite/<uuid:token>/", views.invitation_view, name="invitation"),
     path(
         "invite/<uuid:token>/accept/",
@@ -24,6 +29,21 @@ urlpatterns = [
         name="community-leaders",
     ),
     path("c/<slug:slug>/details/", views.community_detail, name="community-detail"),
+    path(
+        "c/<slug:slug>/members/<int:user_id>/remove/",
+        views.remove_community_member,
+        name="remove-community-member",
+    ),
+    path(
+        "c/<slug:slug>/join-requests/<int:request_id>/approve/",
+        views.approve_join_request,
+        name="approve-join-request",
+    ),
+    path(
+        "c/<slug:slug>/join-requests/<int:request_id>/decline/",
+        views.decline_join_request,
+        name="decline-join-request",
+    ),
     path("c/<slug:slug>/guide/", views.community_guide, name="community-guide"),
     path("c/<slug:slug>/leave/", views.leave_community, name="leave-community"),
     path("c/<slug:slug>/delete/", views.delete_community, name="delete-community"),

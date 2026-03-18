@@ -9,16 +9,6 @@
         <h1 class="text-2xl font-black tracking-tight text-slate-900">{% trans "Create account" %}</h1>
         <p class="mt-1 text-sm text-slate-600">{% trans "Email is required. Avatar is optional." %}</p>
 
-        {% if messages %}
-            <div class="mt-4 space-y-2">
-                {% for message in messages %}
-                    <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-700">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
         <form method="post" action="{% url 'register' %}" hx-post="{% url 'register' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" enctype="multipart/form-data" class="mt-5 space-y-4">
             {% csrf_token %}
             {% if form.non_field_errors %}

@@ -15,14 +15,17 @@ from django.urls import translate_url
 from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
+from Notifications import signals as notification_signals
 from django.views.decorators.http import require_GET, require_POST
 from django_redis import get_redis_connection
 from kafka.errors import KafkaError, NoBrokersAvailable
 
 from .kafka_producer import enqueue_chat_message, enqueue_pixel_update
-from .models import ChatMessage, Community, CommunityMembership, Pixel, UserAction
+from .models import ChatMessage, Community, CommunityJoinRequest
+from .models import CommunityMembership, Pixel, UserAction
 
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
+MAX_OWNED_COMMUNITIES = 5
 
 
 @require_GET
@@ -232,6 +235,13 @@ def _community_for_user(user, slug: str) -> Community | None:
     )
 
 
+def _user_can_use_chat(user) -> bool:
+    if not user.is_authenticated:
+        return False
+    profile = getattr(user, "profile", None)
+    return bool(profile and profile.email_confirmed)
+
+
 def _non_global_memberships_for_user(user) -> list[CommunityMembership]:
     if not user.is_authenticated:
         return []
@@ -244,6 +254,89 @@ def _non_global_memberships_for_user(user) -> list[CommunityMembership]:
         .select_related("community")
         .order_by("community__name")
     )
+
+
+def _owned_communities_count_for_user(user) -> int:
+    if not user or not user.is_authenticated:
+        return 0
+    return Community.objects.filter(owner=user).exclude(slug="global").count()
+
+
+def _community_active_member_count(community: Community) -> int:
+    return CommunityMembership.objects.filter(
+        community=community,
+        active=True,
+    ).count()
+
+
+def _is_public_community_full(community: Community) -> bool:
+    if not community.is_public:
+        return False
+    return _community_active_member_count(community) >= community.max_members
+
+
+def _public_communities_for_lobby(user) -> list[dict]:
+    communities = list(
+        Community.objects.filter(is_public=True)
+        .exclude(slug="global")
+        .select_related("owner")
+        .order_by("name")
+    )
+    if not communities:
+        return []
+
+    community_ids = [c.id for c in communities]
+    member_counts = dict(
+        CommunityMembership.objects.filter(
+            community_id__in=community_ids,
+            active=True,
+        )
+        .values("community_id")
+        .annotate(total=Count("id"))
+        .values_list("community_id", "total")
+    )
+
+    member_community_ids: set[int] = set()
+    pending_request_ids: set[int] = set()
+    if user.is_authenticated:
+        member_community_ids = set(
+            CommunityMembership.objects.filter(
+                user=user,
+                active=True,
+                community_id__in=community_ids,
+            ).values_list("community_id", flat=True)
+        )
+        pending_request_ids = set(
+            CommunityJoinRequest.objects.filter(
+                user=user,
+                status=CommunityJoinRequest.STATUS_PENDING,
+                community_id__in=community_ids,
+            ).values_list("community_id", flat=True)
+        )
+
+    rows: list[dict] = []
+    for community in communities:
+        active_count = int(member_counts.get(community.id, 0))
+        is_full = active_count >= int(community.max_members)
+        is_member = community.id in member_community_ids
+        is_pending = community.id in pending_request_ids
+        can_request = (
+            user.is_authenticated
+            and community.owner_id != getattr(user, "id", None)
+            and not is_member
+            and not is_pending
+            and not is_full
+        )
+        rows.append({
+            "community": community,
+            "active_count": active_count,
+            "is_full": is_full,
+            "is_member": is_member,
+            "is_pending": is_pending,
+            "can_request": can_request,
+        })
+
+    return rows
 
 
 def _global_community(request: HttpRequest) -> Community | None:
@@ -304,6 +397,7 @@ def _chat_groups_for_memberships(
     groups = [{
         "slug": "global",
         "name": "Global",
+        "messages_url": "/api/chat/messages/",
         "send_url": "/api/chat/send/",
     }]
     for membership in memberships:
@@ -311,9 +405,18 @@ def _chat_groups_for_memberships(
         groups.append({
             "slug": slug,
             "name": membership.community.name,
+            "messages_url": f"/c/{slug}/api/chat/messages/",
             "send_url": f"/c/{slug}/api/chat/send/",
         })
     return groups
+
+
+def _pagination_arg(request: HttpRequest, key: str, default: int) -> int:
+    raw = request.GET.get(key, default)
+    try:
+        return int(raw)
+    except (TypeError, ValueError):
+        return default
 
 
 def _community_member_rows(community: Community) -> list[dict]:
@@ -407,6 +510,7 @@ def index(request: HttpRequest) -> HttpResponse:
         "chat_grouped": bool(memberships),
         "chat_groups": chat_groups,
         "chat_default_group_slug": "global",
+        "chat_can_send": _user_can_use_chat(request.user),
     }
     return render(request, "pixelwar/index.html", context)
 
@@ -414,14 +518,52 @@ def index(request: HttpRequest) -> HttpResponse:
 @require_GET
 def communities_lobby(request: HttpRequest) -> HttpResponse:
     memberships = _non_global_memberships_for_user(request.user)
-    owns_community = False
+    public_communities = _public_communities_for_lobby(request.user)
+    can_create_community = False
+    owned_communities_count = 0
     if request.user.is_authenticated:
-        owns_community = Community.objects.filter(
-            owner=request.user).exclude(slug="global").exists()
+        can_create_community = _user_can_use_chat(request.user)
+        owned_communities_count = _owned_communities_count_for_user(request.user)
+
+        owned_public_community_ids = [
+            membership.community_id
+            for membership in memberships
+            if (
+                membership.community.owner_id == request.user.id
+                and membership.community.is_public
+            )
+        ]
+        pending_counts: dict[int, int] = {}
+        if owned_public_community_ids:
+            pending_counts = dict(
+                CommunityJoinRequest.objects.filter(
+                    community_id__in=owned_public_community_ids,
+                    status=CommunityJoinRequest.STATUS_PENDING,
+                )
+                .values("community_id")
+                .annotate(total=Count("id"))
+                .values_list("community_id", "total")
+            )
+
+        for membership in memberships:
+            membership.pending_requests_count = int(
+                pending_counts.get(membership.community_id, 0)
+            )
+
+    can_open_create_community = (
+        request.user.is_authenticated
+        and can_create_community
+        and owned_communities_count < MAX_OWNED_COMMUNITIES
+    )
+
     context = {
         **_base_nav_context(request, active_tab="communities", community=None),
         "memberships": memberships,
-        "owns_community": owns_community,
+        "public_communities": public_communities,
+        "can_create_community": can_create_community,
+        "can_open_create_community": can_open_create_community,
+        "owned_communities_count": owned_communities_count,
+        "max_owned_communities": MAX_OWNED_COMMUNITIES,
     }
     return render(request, "pixelwar/community_lobby.html", context)
 
@@ -466,25 +608,219 @@ def terms_of_service(request: HttpRequest) -> HttpResponse:
     )
 
 
-@require_POST
 @login_required
 def create_community(request: HttpRequest) -> HttpResponse:
-    if Community.objects.filter(owner=request.user).exclude(slug="global").exists():
-        messages.error(request, "You can create only one community.")
-        return redirect("communities")
+    owned_communities_count = _owned_communities_count_for_user(request.user)
+
+    if request.method == "GET":
+        context = {
+            **_base_nav_context(request, active_tab="communities", community=None),
+            "can_create_community": _user_can_use_chat(request.user),
+            "owned_communities_count": owned_communities_count,
+            "max_owned_communities": MAX_OWNED_COMMUNITIES,
+        }
+        return render(request, "pixelwar/create_community.html", context)
+
+    if not _user_can_use_chat(request.user):
+        messages.error(
+            request,
+            "Confirm your email before creating your own community.",
+        )
+        return redirect("create-community")
+
+    if owned_communities_count >= MAX_OWNED_COMMUNITIES:
+        messages.error(
+            request,
+            "You can create up to 5 communities.",
+        )
+        return redirect("create-community")
 
     name = str(request.POST.get("name", "")).strip()
     if not name:
         messages.error(request, "Community name is required.")
-        return redirect("communities")
+        return redirect("create-community")
     if len(name) < 3:
         messages.error(request, "Community name must be at least 3 characters.")
-        return redirect("communities")
+        return redirect("create-community")
+    description = str(request.POST.get("description", "")).strip()
+    description = description[:280]
+    visibility = str(request.POST.get("visibility", "private")).strip().lower()
+    is_public = visibility == "public"
+    max_members_raw = str(request.POST.get("max_members", "50")).strip()
+    allowed_max_members = {5, 10, 20, 30, 50}
+    try:
+        max_members = int(max_members_raw)
+    except ValueError:
+        max_members = 50
+    if max_members not in allowed_max_members:
+        max_members = 50
+    image = request.FILES.get("image")
+
     slug = _new_unique_slug(name)
-    community = Community.objects.create(owner=request.user,
-                                         name=name[:64], slug=slug)
+    community = Community.objects.create(
+        owner=request.user,
+        name=name[:64],
+        description=description,
+        slug=slug,
+        image=image,
+        is_public=is_public,
+        max_members=max_members if is_public else 50,
+    )
     _join_community(request.user, community)
     return redirect("community-detail", slug=community.slug)
+
+
+@require_POST
+@login_required
+def request_join_public_community(request: HttpRequest, slug: str) -> HttpResponse:
+    community = Community.objects.filter(slug=slug, is_public=True).first()
+    if community is None:
+        messages.error(request, "Public community was not found.")
+        return redirect("communities")
+
+    if community.owner_id == request.user.id:
+        messages.info(request, "You already own this community.")
+        return redirect("communities")
+
+    is_member = CommunityMembership.objects.filter(
+        community=community,
+        user=request.user,
+        active=True,
+    ).exists()
+    if is_member:
+        messages.info(request, "You are already a member of this community.")
+        return redirect("communities")
+
+    if _is_public_community_full(community):
+        messages.error(request, "This community is full.")
+        return redirect("communities")
+
+    join_request, created = CommunityJoinRequest.objects.get_or_create(
+        community=community,
+        user=request.user,
+        defaults={"status": CommunityJoinRequest.STATUS_PENDING},
+    )
+
+    if created:
+        notification_signals.community_join_requested.send_robust(
+            sender=type(community),
+            requester=request.user,
+            community=community,
+        )
+        messages.success(request, "Join request sent.")
+        return redirect("communities")
+
+    if join_request.status == CommunityJoinRequest.STATUS_PENDING:
+        messages.info(request, "You already have a pending join request.")
+        return redirect("communities")
+
+    if join_request.status == CommunityJoinRequest.STATUS_APPROVED:
+        join_request.status = CommunityJoinRequest.STATUS_PENDING
+        join_request.reviewed_at = None
+        join_request.save(update_fields=["status", "reviewed_at"])
+        notification_signals.community_join_requested.send_robust(
+            sender=type(community),
+            requester=request.user,
+            community=community,
+        )
+        messages.success(request, "Join request sent.")
+        return redirect("communities")
+
+    join_request.status = CommunityJoinRequest.STATUS_PENDING
+    join_request.reviewed_at = None
+    join_request.save(update_fields=["status", "reviewed_at"])
+    notification_signals.community_join_requested.send_robust(
+        sender=type(community),
+        requester=request.user,
+        community=community,
+    )
+    messages.success(request, "Join request re-sent.")
+    return redirect("communities")
+
+
+@require_POST
+@login_required
+def approve_join_request(
+    request: HttpRequest,
+    slug: str,
+    request_id: int,
+) -> HttpResponse:
+    community = Community.objects.filter(slug=slug).first()
+    if community is None:
+        messages.error(request, "Community was not found.")
+        return redirect("communities")
+    if community.owner_id != request.user.id:
+        messages.error(request, "Only owner can review join requests.")
+        return redirect("community-detail", slug=slug)
+    if not community.is_public:
+        messages.error(request, "Join requests exist only for public communities.")
+        return redirect("community-detail", slug=slug)
+
+    join_request = CommunityJoinRequest.objects.filter(
+        id=request_id,
+        community=community,
+        status=CommunityJoinRequest.STATUS_PENDING,
+    ).select_related("user").first()
+    if join_request is None:
+        messages.error(request, "Join request was not found.")
+        return redirect("community-detail", slug=slug)
+
+    if _is_public_community_full(community):
+        messages.error(request, "Community is full. Cannot approve more members.")
+        return redirect("community-detail", slug=slug)
+
+    _join_community(join_request.user, community)
+    join_request.status = CommunityJoinRequest.STATUS_APPROVED
+    join_request.reviewed_at = datetime.now(timezone.utc)
+    join_request.save(update_fields=["status", "reviewed_at"])
+    notification_signals.community_join_reviewed.send_robust(
+        sender=type(community),
+        requester=join_request.user,
+        community=community,
+        approved=True,
+    )
+    messages.success(request, f"Approved {join_request.user.username}.")
+    return redirect("community-detail", slug=slug)
+
+
+@require_POST
+@login_required
+def decline_join_request(
+    request: HttpRequest,
+    slug: str,
+    request_id: int,
+) -> HttpResponse:
+    community = Community.objects.filter(slug=slug).first()
+    if community is None:
+        messages.error(request, "Community was not found.")
+        return redirect("communities")
+    if community.owner_id != request.user.id:
+        messages.error(request, "Only owner can review join requests.")
+        return redirect("community-detail", slug=slug)
+    if not community.is_public:
+        messages.error(request, "Join requests exist only for public communities.")
+        return redirect("community-detail", slug=slug)
+
+    join_request = CommunityJoinRequest.objects.filter(
+        id=request_id,
+        community=community,
+        status=CommunityJoinRequest.STATUS_PENDING,
+    ).select_related("user").first()
+    if join_request is None:
+        messages.error(request, "Join request was not found.")
+        return redirect("community-detail", slug=slug)
+
+    join_request.status = CommunityJoinRequest.STATUS_DECLINED
+    join_request.reviewed_at = datetime.now(timezone.utc)
+    join_request.save(update_fields=["status", "reviewed_at"])
+    notification_signals.community_join_reviewed.send_robust(
+        sender=type(community),
+        requester=join_request.user,
+        community=community,
+        approved=False,
+    )
+    messages.success(request, f"Declined {join_request.user.username}.")
+    return redirect("community-detail", slug=slug)
 
 
 @require_GET
@@ -570,6 +906,45 @@ def delete_community(request: HttpRequest, slug: str) -> HttpResponse:
     return redirect("communities")
 
 
+@require_POST
+@login_required
+def remove_community_member(
+    request: HttpRequest,
+    slug: str,
+    user_id: int,
+) -> HttpResponse:
+    community = Community.objects.filter(slug=slug).first()
+    if community is None:
+        messages.error(request, "Community was not found.")
+        return redirect("communities")
+
+    if community.owner_id != request.user.id:
+        messages.error(request, "Only the community owner can remove members.")
+        return redirect("community-detail", slug=slug)
+
+    if user_id == request.user.id:
+        messages.error(request, "Owner cannot remove themselves.")
+        return redirect("community-detail", slug=slug)
+
+    membership = CommunityMembership.objects.filter(
+        community=community,
+        user_id=user_id,
+        active=True,
+    ).select_related("user").first()
+    if membership is None:
+        messages.error(request, "Member was not found.")
+        return redirect("community-detail", slug=slug)
+
+    membership.active = False
+    membership.left_at = datetime.now(timezone.utc)
+    membership.save(update_fields=["active", "left_at"])
+    messages.success(
+        request,
+        f"{membership.user.username} was removed from the community.",
+    )
+    return redirect("community-detail", slug=slug)
+
+
 @require_GET
 @login_required
 def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
@@ -598,6 +973,7 @@ def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
         "chat_grouped": bool(memberships),
         "chat_groups": chat_groups,
         "chat_default_group_slug": "global",
+        "chat_can_send": _user_can_use_chat(request.user),
     }
     return render(request, "pixelwar/index.html", context)
 
@@ -632,10 +1008,28 @@ def community_guide(request: HttpRequest, slug: str) -> HttpResponse:
 
 
 @require_GET
-@login_required
 def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
-    community = _community_for_user(request.user, slug)
+    community = Community.objects.filter(slug=slug).select_related("owner").first()
     if community is None:
+        messages.error(request, "Community was not found.")
+        return redirect("communities")
+
+    is_member = False
+    if request.user.is_authenticated:
+        is_member = CommunityMembership.objects.filter(
+            community=community,
+            user=request.user,
+            active=True,
+        ).exists()
+
+    is_owner = (
+        request.user.is_authenticated
+        and community.owner_id == request.user.id
+    )
+    can_view_full_details = is_owner or is_member
+    can_view_general_details = can_view_full_details or community.is_public
+    if not can_view_general_details:
+        messages.error(request, "You cannot view details of this community.")
         return redirect("communities")
 
     sort_key = str(request.GET.get("sort", "joined")).strip().lower()
@@ -646,18 +1040,22 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
     if sort_dir not in {"asc", "desc"}:
         sort_dir = "asc"
 
-    member_rows = _community_member_rows(community)
-    reverse = sort_dir == "desc"
-    if sort_key == "pixels":
-        member_rows.sort(
-            key=lambda item: (item["pixel_count"], item["joined_at"]),
-            reverse=reverse,
-        )
-    else:
-        member_rows.sort(
-            key=lambda item: (item["joined_at"], item["pixel_count"]),
-            reverse=reverse,
-        )
+    member_rows: list[dict] = []
+    if can_view_full_details:
+        member_rows = _community_member_rows(community)
+        reverse = sort_dir == "desc"
+        if sort_key == "pixels":
+            member_rows.sort(
+                key=lambda item: (item["pixel_count"], item["joined_at"]),
+                reverse=reverse,
+            )
+        else:
+            member_rows.sort(
+                key=lambda item: (item["joined_at"], item["pixel_count"]),
+                reverse=reverse,
+            )
+
+    member_count = _community_active_member_count(community)
 
     pixels_qs = list(
         Pixel.objects.filter(community=community).values("x", "y", "color")
@@ -667,13 +1065,94 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
         max_coord = max(max_coord, int(px["x"]), int(px["y"]))
     metrics = _grid_metrics_for_state(len(pixels_qs), max_coord=max_coord)
 
+    pending_join_request_rows: list[dict] = []
+    if community.is_public and is_owner:
+        pending_requests = list(
+            CommunityJoinRequest.objects.filter(
+                community=community,
+                status=CommunityJoinRequest.STATUS_PENDING,
+            )
+            .select_related("user", "user__profile")
+            .order_by("created_at")
+        )
+
+        requester_ids = [row.user_id for row in pending_requests]
+        community_counts_by_user: dict[int, int] = {}
+        global_pixels_by_user: dict[int, int] = {}
+
+        if requester_ids:
+            community_counts_by_user = dict(
+                CommunityMembership.objects.filter(
+                    user_id__in=requester_ids,
+                    active=True,
+                )
+                .exclude(community__slug__iexact="global")
+                .values("user_id")
+                .annotate(total=Count("id"))
+                .values_list("user_id", "total")
+            )
+
+            global_community_id = (
+                Community.objects.filter(slug__iexact="global")
+                .values_list("id", flat=True)
+                .first()
+            )
+            if global_community_id is not None:
+                user_keys = [f"user:{user_id}" for user_id in requester_ids]
+                global_rows = (
+                    UserAction.objects.filter(
+                        community_id=global_community_id,
+                        accepted=True,
+                        user_key__in=user_keys,
+                    )
+                    .values("user_key")
+                    .annotate(total=Count("id"))
+                )
+                for stat_row in global_rows:
+                    raw_key = str(stat_row.get("user_key", ""))
+                    parts = raw_key.split(":", 1)
+                    if len(parts) != 2:
+                        continue
+                    try:
+                        stat_user_id = int(parts[1])
+                    except ValueError:
+                        continue
+                    global_pixels_by_user[stat_user_id] = int(
+                        stat_row["total"]
+                    )
+
+        for join_req in pending_requests:
+            profile = getattr(join_req.user, "profile", None)
+            avatar_url = profile.avatar.url if profile and profile.avatar else ""
+            pending_join_request_rows.append({
+                "request": join_req,
+                "avatar_url": avatar_url,
+                "email": join_req.user.email,
+                "global_pixel_count": global_pixels_by_user.get(
+                    join_req.user_id,
+                    0,
+                ),
+                "joined_communities_count": community_counts_by_user.get(
+                    join_req.user_id,
+                    0,
+                ),
+            })
+
     context = {
         **_base_nav_context(request, active_tab="communities", community=community),
         "community": community,
         "memberships": _non_global_memberships_for_user(request.user),
-        "is_owner": community.owner_id == request.user.id,
+        "is_owner": is_owner,
+        "is_member": is_member,
+        "can_view_full_details": can_view_full_details,
         "member_rows": member_rows,
-        "member_count": len(member_rows),
+        "member_count": member_count,
+        "pixel_count": len(pixels_qs),
+        "is_public_full": (
+            community.is_public
+            and member_count >= int(community.max_members)
+        ),
+        "pending_join_requests": pending_join_request_rows,
         "sort": sort_key,
         "dir": sort_dir,
         "canvas_grid_size": metrics["grid_size"],
@@ -722,13 +1201,20 @@ def chat_messages(request: HttpRequest) -> JsonResponse:
     community = _global_community(request)
     if community is None:
         return JsonResponse({"status": "unavailable"}, status=503)
+    limit = min(max(_pagination_arg(request, "limit", 20), 1), 100)
+    offset = max(_pagination_arg(request, "offset", 0), 0)
     recent: QuerySet[ChatMessage] = (
         ChatMessage.objects.filter(community=community)
         .select_related("user")
-        .order_by("-created_at")[:100]
+        .order_by("-created_at", "-id")[offset:offset + limit]
     )
     payload = [_chat_payload(msg) for msg in reversed(list(recent))]
-    return JsonResponse({"messages": payload})
+    return JsonResponse({
+        "messages": payload,
+        "limit": limit,
+        "offset": offset,
+        "has_more": len(payload) == limit,
+    })
 
 
 @require_GET
@@ -742,14 +1228,21 @@ def grouped_chat_messages(request: HttpRequest) -> JsonResponse:
         memberships = _non_global_memberships_for_user(request.user)
         community_ids.extend(m.community_id for m in memberships)
 
+    limit = min(max(_pagination_arg(request, "limit", 60), 1), 200)
+    offset = max(_pagination_arg(request, "offset", 0), 0)
     recent: QuerySet[ChatMessage] = (
         ChatMessage.objects.filter(community_id__in=community_ids)
         .select_related("user", "community")
-        .order_by("-created_at")[:120]
+        .order_by("-created_at", "-id")[offset:offset + limit]
     )
     payload = [_chat_payload(msg, include_group=True)
                for msg in reversed(list(recent))]
-    return JsonResponse({"messages": payload})
+    return JsonResponse({
+        "messages": payload,
+        "limit": limit,
+        "offset": offset,
+        "has_more": len(payload) == limit,
+    })
 
 
 @require_POST
@@ -759,6 +1252,8 @@ def chat_send(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"status": "unavailable"}, status=503)
     if not request.user.is_authenticated:
         return JsonResponse({"status": "unauthorized"}, status=401)
+    if not _user_can_use_chat(request.user):
+        return JsonResponse({"status": "email_not_activated"}, status=403)
     try:
         payload = json.loads(request.body.decode("utf-8"))
     except (json.JSONDecodeError, UnicodeDecodeError):
@@ -924,13 +1419,20 @@ def community_chat_messages(request: HttpRequest, slug: str) -> JsonResponse:
     community = _community_for_user(request.user, slug)
     if community is None:
         return JsonResponse({"status": "forbidden"}, status=403)
+    limit = min(max(_pagination_arg(request, "limit", 20), 1), 100)
+    offset = max(_pagination_arg(request, "offset", 0), 0)
     recent: QuerySet[ChatMessage] = (
         ChatMessage.objects.filter(community=community)
         .select_related("user")
-        .order_by("-created_at")[:100]
+        .order_by("-created_at", "-id")[offset:offset + limit]
     )
     payload = [_chat_payload(msg) for msg in reversed(list(recent))]
-    return JsonResponse({"messages": payload})
+    return JsonResponse({
+        "messages": payload,
+        "limit": limit,
+        "offset": offset,
+        "has_more": len(payload) == limit,
+    })
 
 
 @require_POST
@@ -939,6 +1441,8 @@ def community_chat_send(request: HttpRequest, slug: str) -> JsonResponse:
     community = _community_for_user(request.user, slug)
     if community is None:
         return JsonResponse({"status": "forbidden"}, status=403)
+    if not _user_can_use_chat(request.user):
+        return JsonResponse({"status": "email_not_activated"}, status=403)
     try:
         payload = json.loads(request.body.decode("utf-8"))
     except (json.JSONDecodeError, UnicodeDecodeError):

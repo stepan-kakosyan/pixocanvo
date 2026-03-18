@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",
+    "Notifications",
     "pixelwar",
     "users",
 ]
@@ -49,6 +50,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "Notifications.context_processors.notification_center",
                 "pixelwar.context_processors.language_switcher_options",
             ],
         },
@@ -116,27 +118,27 @@ LANGUAGES = [
 LANGUAGE_SWITCHER_OPTIONS = [
     ("en", "English (US)", "us"),
     ("en", "English (UK)", "gb"),
-    ("zh-hans", "Chinese", "cn"),
-    ("es", "Spanish", "es"),
-    ("ar", "Arabic", "sa"),
-    ("pt", "Portuguese", "br"),
-    ("id", "Indonesian", "id"),
-    ("fr", "French", "fr"),
-    ("ja", "Japanese", "jp"),
-    ("ru", "Russian", "ru"),
-    ("de", "German", "de"),
-    ("ko", "Korean", "kr"),
-    ("hi", "Hindi", "in"),
-    ("bn", "Bengali", "bd"),
-    ("it", "Italian", "it"),
-    ("tr", "Turkish", "tr"),
-    ("vi", "Vietnamese", "vn"),
-    ("th", "Thai", "th"),
-    ("pl", "Polish", "pl"),
-    ("nl", "Dutch", "nl"),
-    ("uk", "Ukrainian", "ua"),
-    ("hy", "Armenian", "am"),
-    ("ka", "Georgian", "ge"),
+    ("zh-hans", "中文（简体）", "cn"),
+    ("es", "Español", "es"),
+    ("ar", "العربية", "sa"),
+    ("pt", "Português", "br"),
+    ("id", "Bahasa Indonesia", "id"),
+    ("fr", "Français", "fr"),
+    ("ja", "日本語", "jp"),
+    ("ru", "Русский", "ru"),
+    ("de", "Deutsch", "de"),
+    ("ko", "한국어", "kr"),
+    ("hi", "हिन्दी", "in"),
+    ("bn", "বাংলা", "bd"),
+    ("it", "Italiano", "it"),
+    ("tr", "Türkçe", "tr"),
+    ("vi", "Tiếng Việt", "vn"),
+    ("th", "ไทย", "th"),
+    ("pl", "Polski", "pl"),
+    ("nl", "Nederlands", "nl"),
+    ("uk", "Українська", "ua"),
+    ("hy", "Հայերեն", "am"),
+    ("ka", "ქართული", "ge"),
 ]
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -192,6 +194,18 @@ KAFKA_CONSUMER_AUTO_OFFSET_RESET = os.getenv(
 KAFKA_CONSUMER_CONNECT_RETRY_BACKOFF = float(
     os.getenv("KAFKA_CONSUMER_CONNECT_RETRY_BACKOFF", "2.0")
 )
+CELERY_BROKER_URL = os.getenv(
+    "CELERY_BROKER_URL",
+    os.getenv("REDIS_URL", "redis://redis:6379/1"),
+)
+CELERY_RESULT_BACKEND = os.getenv(
+    "CELERY_RESULT_BACKEND",
+    CELERY_BROKER_URL,
+)
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 COOLDOWN_SECONDS = int(os.getenv("PIXEL_COOLDOWN_SECONDS", "60"))
 INITIAL_GRID_SIZE = int(os.getenv("PIXEL_INITIAL_GRID_SIZE", "200"))
 GRID_EXPAND_STEP = int(os.getenv("PIXEL_GRID_EXPAND_STEP", "20"))
@@ -199,3 +213,21 @@ GRID_FILL_EXPAND_THRESHOLD = float(
     os.getenv("PIXEL_GRID_FILL_EXPAND_THRESHOLD", "0.8")
 )
 GRID_MAX_SIZE = int(os.getenv("PIXEL_GRID_MAX_SIZE", "1000"))
+
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "1") == "1"
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "0") == "1"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "")
+PASSWORD_RESET_TIMEOUT = int(
+    os.getenv("EMAIL_ACTIVATION_TIMEOUT_SECONDS", "86400")
+)
+PASSWORD_RESET_LINK_TTL_SECONDS = int(
+    os.getenv("PASSWORD_RESET_LINK_TTL_SECONDS", "1800")
+)

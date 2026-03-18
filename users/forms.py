@@ -33,7 +33,19 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(max_length=150)
+    username = forms.CharField(max_length=150, label="Username or email")
+
+    def clean(self):
+        identifier = str(self.cleaned_data.get("username", "")).strip()
+        if "@" in identifier:
+            user = User.objects.filter(email__iexact=identifier).first()
+            if user is not None:
+                self.cleaned_data["username"] = user.username
+        return super().clean()
+
+
+class ForgotPasswordForm(forms.Form):
+    identifier = forms.CharField(max_length=254, label="Username or email")
 
 
 class ProfileSettingsForm(forms.Form):

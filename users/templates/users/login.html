@@ -12,7 +12,7 @@
         {% if messages %}
             <div class="mt-4 space-y-2">
                 {% for message in messages %}
-                    <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-700">
+                    <div class="rounded-lg px-3 py-2 text-sm {% if message.tags == 'success' %}bg-emerald-100 text-emerald-800{% elif message.tags == 'info' %}bg-sky-100 text-sky-800{% else %}bg-rose-100 text-rose-700{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -28,7 +28,7 @@
             {% endif %}
 
             <div>
-                <label class="mb-1 block text-sm font-semibold">{% trans "Username" %}</label>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Username or email" %}</label>
                 {{ form.username }}
                 <p class="mt-1 text-xs text-rose-600">{{ form.username.errors|striptags }}</p>
             </div>
@@ -42,6 +42,13 @@
             <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-cyan-400 hover:to-sky-400">
                 {% trans "Login" %}
             </button>
+
+            <a href="{% url 'forgot-password' %}"
+               hx-get="{% url 'forgot-password' %}" hx-target="#page-content"
+               hx-swap="innerHTML" hx-push-url="true"
+               class="block text-center text-sm font-semibold text-sky-700 transition hover:text-sky-900">
+                {% trans "Forgot password?" %}
+            </a>
         </form>
 
         <p class="mt-4 text-sm text-slate-600">

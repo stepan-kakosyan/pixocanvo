@@ -51,6 +51,27 @@ body {
     cursor: default;
 }
 
+.canvas-cooldown-badge {
+    position: fixed;
+    top: 1.5rem;
+    left: 48%;
+    z-index: 10;
+    transform: translateX(-50%);
+    pointer-events: none;
+    border: 1px solid #f59e0b;
+    border-radius: 9999px;
+    background: rgba(255, 251, 235, 0.95);
+    color: #92400e;
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    min-width: 2.25rem;
+    text-align: center;
+    padding: 0.35rem 0.6rem;
+    box-shadow: 0 8px 18px rgba(245, 158, 11, 0.3);
+}
+
 #chatPanel.pinned {
     top: 1rem;
     right: 1rem;
@@ -102,6 +123,9 @@ input[type="file"] {
 }
 
 .chat-group-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     border: 1px solid #f5d0fe;
     border-radius: 9999px;
     background: #fdf4ff;
@@ -111,6 +135,19 @@ input[type="file"] {
     letter-spacing: 0.03em;
     padding: 0.24rem 0.6rem;
     transition: all 160ms ease;
+}
+
+.chat-group-unread {
+    display: inline-flex;
+    min-width: 1rem;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #f43f5e;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 800;
+    line-height: 1;
+    padding: 0.14rem 0.3rem;
 }
 
 .chat-group-tab:hover {

@@ -11,6 +11,10 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path("admin/", admin.site.urls),
     path("auth/", include("users.urls")),
+    path(
+        "notifications/",
+        include(("Notifications.urls", "notifications"), namespace="notifications"),
+    ),
     path("", include("pixelwar.urls")),
     prefix_default_language=False,
 )

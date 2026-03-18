@@ -6,13 +6,32 @@ from django.db import models
 
 
 class Community(models.Model):
+    MAX_MEMBER_CHOICES = (
+        (5, "5"),
+        (10, "10"),
+        (20, "20"),
+        (30, "30"),
+        (50, "50"),
+    )
+
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="owned_communities",
     )
     name = models.CharField(max_length=64, unique=True)
+    description = models.CharField(max_length=280, blank=True, default="")
     slug = models.SlugField(max_length=80, unique=True)
+    image = models.ImageField(
+        upload_to="community_covers/",
+        blank=True,
+        null=True,
+    )
+    is_public = models.BooleanField(default=False)
+    max_members = models.PositiveSmallIntegerField(
+        choices=MAX_MEMBER_CHOICES,
+        default=50,
+    )
     invite_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
@@ -21,6 +40,50 @@ class Community(models.Model):
 
     def __str__(self) -> str:
         return f"Community<{self.slug}>"
+
+
+class CommunityJoinRequest(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_APPROVED = "approved"
+    STATUS_DECLINED = "declined"
+    STATUS_CHOICES = (
+        (STATUS_PENDING, "Pending"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_DECLINED, "Declined"),
+    )
+
+    community = models.ForeignKey(
+        Community,
+        on_delete=models.CASCADE,
+        related_name="join_requests",
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="community_join_requests",
+    )
+    status = models.CharField(
+        max_length=16,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING,
+        db_index=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["community", "user"],
+                name="uniq_join_request_per_user_community",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["community", "status"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user.username} -> {self.community.slug} ({self.status})"
 
 
 class CommunityMembership(models.Model):

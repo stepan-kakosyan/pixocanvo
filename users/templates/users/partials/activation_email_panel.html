@@ -1,0 +1,22 @@
+{% load i18n %}
+<div id="activation-email-panel" class="mt-4 space-y-3">
+    {% if activation_feedback_message %}
+        <div class="rounded-xl px-3 py-2 text-sm ring-1 {% if activation_feedback_level == 'success' %}bg-emerald-50 text-emerald-800 ring-emerald-200{% elif activation_feedback_level == 'error' %}bg-rose-50 text-rose-700 ring-rose-200{% else %}bg-sky-50 text-sky-800 ring-sky-200{% endif %}">
+            {{ activation_feedback_message }}
+        </div>
+    {% endif %}
+
+    {% if show_send_activation_button %}
+        <form method="post"
+              action="{% url 'resend-activation-email' %}"
+              hx-post="{% url 'resend-activation-email' %}"
+              hx-target="#activation-email-panel"
+              hx-swap="outerHTML">
+            {% csrf_token %}
+            <button type="submit"
+                    class="w-full rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-md shadow-amber-300/40 transition hover:from-amber-300 hover:to-orange-300">
+                {% trans "Send activation email" %}
+            </button>
+        </form>
+    {% endif %}
+</div>

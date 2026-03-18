@@ -9,6 +9,7 @@
      data-filled-pixels="{{ filled_pixels }}"
      data-fill-ratio="{{ fill_ratio }}"
      data-user-key="{{ current_user_key }}"
+    data-current-username="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}"
      data-authenticated="{% if request.user.is_authenticated %}1{% else %}0{% endif %}"
      data-pixel-snapshot-url="{{ pixel_snapshot_url }}"
      data-my-pixels-url="{{ my_pixels_url }}"
@@ -16,6 +17,7 @@
      data-chat-messages-url="{{ chat_messages_url }}"
     data-chat-all-messages-url="{{ chat_all_messages_url|default:'' }}"
      data-chat-send-url="{{ chat_send_url }}"
+    data-chat-can-send="{% if chat_can_send %}1{% else %}0{% endif %}"
     data-chat-grouped="{% if chat_grouped %}1{% else %}0{% endif %}"
     data-chat-default-group="{{ chat_default_group_slug|default:'global' }}"
      data-pixels-ws-url="{{ pixels_ws_url }}"
@@ -88,6 +90,7 @@
     <section class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
         <div class="max-h-[72vh] overflow-x-auto overflow-y-auto rounded-xl border border-sky-100 bg-white p-2">
             <div class="relative w-fit">
+                <div id="cooldownBadge" class="canvas-cooldown-badge hidden" aria-live="polite">0</div>
                 <canvas id="pixelCanvas"></canvas>
                 <canvas id="pixelOverlay"></canvas>
             </div>
@@ -123,9 +126,14 @@
     <div class="border-t border-pink-100 p-3">
         <p id="chatNotice" class="mb-2 min-h-4 text-xs font-medium text-slate-500"></p>
         {% if request.user.is_authenticated %}
+            {% if not chat_can_send %}
+                <div class="mb-2 rounded-xl bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800 ring-1 ring-amber-200">
+                    Validate your email before chat.
+                </div>
+            {% endif %}
             <form id="chatForm" class="space-y-2">
-                <textarea id="chatInput" rows="2" maxlength="500" class="w-full resize-none rounded-xl border border-pink-200 px-3 py-2 text-sm outline-none focus:border-fuchsia-400" placeholder="Write a message..."></textarea>
-                <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">Send Message</button>
+                <textarea id="chatInput" rows="2" maxlength="500" {% if not chat_can_send %}disabled{% endif %} class="w-full resize-none rounded-xl border border-pink-200 px-3 py-2 text-sm outline-none focus:border-fuchsia-400 {% if not chat_can_send %}cursor-not-allowed bg-slate-100 text-slate-400{% endif %}" placeholder="{% if chat_can_send %}Write a message...{% else %}Validate your email before chat{% endif %}"></textarea>
+                <button type="submit" {% if not chat_can_send %}disabled{% endif %} class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400 {% if not chat_can_send %}cursor-not-allowed opacity-50 hover:from-fuchsia-500 hover:to-pink-500{% endif %}">Send Message</button>
             </form>
         {% else %}
             <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">

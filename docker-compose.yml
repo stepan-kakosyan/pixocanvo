@@ -3,16 +3,25 @@ version: "3.9"
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.3
+    restart: unless-stopped
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "cub zk-ready localhost 2181 10 2>&1 | grep -q 'ZooKeeper is healthy'"]
+      interval: 10s
+      timeout: 15s
+      retries: 5
+      start_period: 20s
 
   kafka:
     image: confluentinc/cp-kafka:7.5.3
+    restart: unless-stopped
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "9092:9092"
     environment:
@@ -23,19 +32,29 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   redis:
     image: redis:7.2-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
 
   web:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - redis
-      - kafka
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_healthy
     environment:
       DJANGO_SECRET_KEY: dev-secret-key-change-me
       DJANGO_DEBUG: "1"
@@ -48,6 +67,8 @@ services:
       MYSQL_PORT: ${MYSQL_PORT:-3306}
       REDIS_URL: redis://redis:6379/1
       CHANNEL_REDIS_URL: redis://redis:6379/2
+      CELERY_BROKER_URL: redis://redis:6379/3
+      CELERY_RESULT_BACKEND: redis://redis:6379/4
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_PIXEL_TOPIC: pixel-updates
       KAFKA_CHAT_TOPIC: chat-messages
@@ -56,19 +77,22 @@ services:
       PIXEL_GRID_EXPAND_STEP: "20"
       PIXEL_GRID_FILL_EXPAND_THRESHOLD: "0.8"
       PIXEL_GRID_MAX_SIZE: "1000"
-    command: sh -c "python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 config.asgi:application"
+    command: sh -c "npm install && npm run build:css && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 config.asgi:application"
     volumes:
       - .:/app
     ports:
       - "8099:8000"
 
   consumer:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - redis
-      - kafka
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_healthy
     environment:
       DJANGO_SECRET_KEY: dev-secret-key-change-me
       DJANGO_DEBUG: "1"
@@ -80,6 +104,8 @@ services:
       MYSQL_PORT: ${MYSQL_PORT:-3306}
       REDIS_URL: redis://redis:6379/1
       CHANNEL_REDIS_URL: redis://redis:6379/2
+      CELERY_BROKER_URL: redis://redis:6379/3
+      CELERY_RESULT_BACKEND: redis://redis:6379/4
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_PIXEL_TOPIC: pixel-updates
       KAFKA_CHAT_TOPIC: chat-messages
@@ -88,3 +114,58 @@ services:
     command: sh -c "python manage.py migrate && python manage.py consume_pixel_updates"
     volumes:
       - .:/app
+
+  celery:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - web
+    environment:
+      DJANGO_SECRET_KEY: dev-secret-key-change-me
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "*"
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
+      MYSQL_HOST: ${MYSQL_HOST:-host.docker.internal}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      REDIS_URL: redis://redis:6379/1
+      CHANNEL_REDIS_URL: redis://redis:6379/2
+      CELERY_BROKER_URL: redis://redis:6379/3
+      CELERY_RESULT_BACKEND: redis://redis:6379/4
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_PIXEL_TOPIC: pixel-updates
+      KAFKA_CHAT_TOPIC: chat-messages
+    command: sh -c "celery -A config worker -l info"
+    volumes:
+      - .:/app
+
+  flower:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - celery
+    environment:
+      DJANGO_SECRET_KEY: dev-secret-key-change-me
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "*"
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
+      MYSQL_HOST: ${MYSQL_HOST:-host.docker.internal}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      REDIS_URL: redis://redis:6379/1
+      CHANNEL_REDIS_URL: redis://redis:6379/2
+      CELERY_BROKER_URL: redis://redis:6379/3
+      CELERY_RESULT_BACKEND: redis://redis:6379/4
+    command: sh -c "celery -A config flower --port=5555"
+    volumes:
+      - .:/app
+    ports:
+      - "5555:5555"

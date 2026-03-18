@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ctx = canvas.getContext('2d', { alpha: false });
     const overlayCtx = pixelOverlay.getContext('2d');
     const gridMeta = document.getElementById('gridMeta');
+    const cooldownBadge = document.getElementById('cooldownBadge');
     const colorPalette = document.getElementById('colorPalette');
     const customColorPicker = document.getElementById('customColorPicker');
     const status = document.getElementById('status');
@@ -104,26 +105,43 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatGroupsContainer = document.getElementById('chatGroups');
     const chatGroupsDataTag = document.getElementById('chat-groups-data');
     const isAuthenticated = app.dataset.authenticated === '1';
+    const canSendChat = app.dataset.chatCanSend === '1';
+    const currentUsername = String(app.dataset.currentUsername || '').trim();
     let reconnectDelayMs = 1000;
     let reconnectTimer = null;
     let groupedChatTimer = null;
     let cooldownTimer = null;
     let cooldownRemaining = 0;
+    let cooldownUntilTs = 0;
+    let isRealtimeConnected = false;
+    let hasLoadedSnapshot = false;
     let requestInFlight = false;
     let selectedColor = '#000000';
     let isChatOpen = false;
     let isChatPinned = false;
     let isChatMuted = false;
     let unreadCount = 0;
+    let chatNoticeTimer = null;
     let suppressChatSound = true;
     let audioCtx = null;
     let selectedChatGroup = useGroupedChat ? 'global' : chatDefaultGroup;
+    let chatHasMoreHistory = true;
+    let chatLoadingHistory = false;
+    let chatUnreadSeeded = false;
+    const chatPageSize = 20;
     let manualZoomLockUntil = 0;
     let didInitialSmartZoom = false;
     let isHighlightingMine = false;
     let minePixelsLoaded = false;
     const minePixels = new Set();
     const knownChatMessageKeys = new Set();
+    const chatUnreadByGroup = new Map();
+    const cooldownStorageKey = [
+        'pixelwar',
+        'cooldownUntil',
+        pixelUpdateUrl,
+        currentUserKey || 'anon',
+    ].join(':');
 
     const chatGroups = (() => {
         if (!chatGroupsDataTag) {
@@ -244,12 +262,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setStatus(message, mode = 'ok') {
+        const cooldownActive = cooldownRemaining > 0 || cooldownUntilTs > Date.now();
+        if (cooldownActive && mode === 'ok') {
+            return;
+        }
         status.textContent = message;
         if (mode === 'error') {
             status.className = 'mt-3 text-sm font-medium text-rose-600';
             return;
         }
-        status.className = 'mt-3 text-sm font-medium text-emerald-700';
+        status.className = 'mt-3 text-sm font-medium text-slate-700';
     }
 
     function setCanvasLocked(locked) {
@@ -257,40 +279,102 @@ document.addEventListener('DOMContentLoaded', function () {
         canvas.style.cursor = locked ? 'not-allowed' : 'crosshair';
     }
 
-    function startCooldown(seconds) {
-        const next = Number(seconds || 0);
-        if (cooldownRemaining > 0 && next > cooldownRemaining) {
-            return;
+    function persistCooldownUntil(value) {
+        try {
+            window.localStorage.setItem(cooldownStorageKey, String(value));
+        } catch (_error) {
+            // Ignore browsers/storage modes that block localStorage writes.
         }
+    }
 
-        if (cooldownTimer) {
-            window.clearInterval(cooldownTimer);
+    function readPersistedCooldownUntil() {
+        try {
+            const raw = window.localStorage.getItem(cooldownStorageKey);
+            if (!raw) {
+                return 0;
+            }
+            const value = Number(raw);
+            if (Number.isFinite(value) && value > 0) {
+                return value;
+            }
+        } catch (_error) {
+            // Ignore localStorage read errors and fallback to in-memory timer.
         }
+        return 0;
+    }
 
-        let remaining = next;
-        if (remaining <= 0) {
-            cooldownRemaining = 0;
-            setCanvasLocked(false);
-            setStatus('Ready');
-            return;
+    function clearPersistedCooldown() {
+        try {
+            window.localStorage.removeItem(cooldownStorageKey);
+        } catch (_error) {
+            // Ignore localStorage cleanup failures.
         }
+    }
 
-        cooldownRemaining = remaining;
-        setCanvasLocked(true);
-        setStatus(`Saved. Next pixel in ${remaining}s`, 'ok');
-        cooldownTimer = window.setInterval(() => {
-            remaining -= 1;
-            cooldownRemaining = remaining;
-            if (remaining <= 0) {
+    function computeCooldownRemainingSeconds() {
+        if (cooldownUntilTs <= 0) {
+            return 0;
+        }
+        return Math.max(0, Math.ceil((cooldownUntilTs - Date.now()) / 1000));
+    }
+
+    function updateCooldownUi() {
+        cooldownRemaining = computeCooldownRemainingSeconds();
+        if (cooldownRemaining <= 0) {
+            cooldownUntilTs = 0;
+            const shouldLock = !isRealtimeConnected || !hasLoadedSnapshot;
+            setCanvasLocked(shouldLock);
+            clearPersistedCooldown();
+            setStatus('');
+            if (cooldownBadge) {
+                cooldownBadge.classList.add('hidden');
+            }
+            if (cooldownTimer) {
                 window.clearInterval(cooldownTimer);
                 cooldownTimer = null;
-                cooldownRemaining = 0;
-                setCanvasLocked(false);
-                setStatus('Ready');
-                return;
             }
-            setStatus(`Saved. Next pixel in ${remaining}s`, 'ok');
+            return;
+        }
+        setCanvasLocked(true);
+        if (cooldownBadge) {
+            cooldownBadge.textContent = String(cooldownRemaining);
+            cooldownBadge.classList.remove('hidden');
+        }
+    }
+
+    function ensureCooldownTicker() {
+        if (cooldownTimer) {
+            return;
+        }
+        cooldownTimer = window.setInterval(() => {
+            updateCooldownUi();
         }, 1000);
+    }
+
+    function startCooldown(seconds) {
+        const nextSeconds = Math.max(0, Number(seconds || 0));
+        if (nextSeconds <= 0) {
+            cooldownUntilTs = 0;
+            updateCooldownUi();
+            return;
+        }
+
+        cooldownUntilTs = Date.now() + (nextSeconds * 1000);
+        persistCooldownUntil(cooldownUntilTs);
+        updateCooldownUi();
+        ensureCooldownTicker();
+    }
+
+    function restoreCooldownFromStorage() {
+        const persistedUntil = readPersistedCooldownUntil();
+        if (persistedUntil <= 0) {
+            return;
+        }
+        cooldownUntilTs = persistedUntil;
+        updateCooldownUi();
+        if (computeCooldownRemainingSeconds() > 0) {
+            ensureCooldownTicker();
+        }
     }
 
     function applyScale() {
@@ -384,12 +468,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!chatNotice) {
             return;
         }
+        if (chatNoticeTimer) {
+            window.clearTimeout(chatNoticeTimer);
+            chatNoticeTimer = null;
+        }
         chatNotice.textContent = message;
         if (mode === 'error') {
             chatNotice.className = 'mb-2 min-h-4 text-xs font-medium text-rose-600';
             return;
         }
         chatNotice.className = 'mb-2 min-h-4 text-xs font-medium text-slate-500';
+
+        if (String(message).trim() === 'Message queued') {
+            chatNoticeTimer = window.setTimeout(() => {
+                setChatNotice('');
+            }, 1800);
+        }
     }
 
     function playChatSound() {
@@ -406,21 +500,59 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const now = audioCtx.currentTime;
+            const oscLow = audioCtx.createOscillator();
+            const oscHigh = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            oscLow.type = 'sine';
+            oscHigh.type = 'triangle';
+            oscLow.frequency.setValueAtTime(720, now);
+            oscLow.frequency.exponentialRampToValueAtTime(940, now + 0.12);
+            oscHigh.frequency.setValueAtTime(980, now + 0.08);
+            oscHigh.frequency.exponentialRampToValueAtTime(1240, now + 0.2);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.055, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.24);
+
+            oscLow.connect(gain);
+            oscHigh.connect(gain);
+            gain.connect(audioCtx.destination);
+            oscLow.start(now);
+            oscHigh.start(now + 0.08);
+            oscLow.stop(now + 0.18);
+            oscHigh.stop(now + 0.25);
+        } catch (_error) {
+            // Ignore sound playback errors (browser policy or unsupported API).
+        }
+    }
+
+    function playPixelPlacementSound() {
+        try {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) {
+                    return;
+                }
+                audioCtx = new AudioContextClass();
+            }
+
+            const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(920, now);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(560, now);
+            osc.frequency.exponentialRampToValueAtTime(430, now + 0.08);
             gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+            gain.gain.exponentialRampToValueAtTime(0.04, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
-            osc.stop(now + 0.2);
+            osc.stop(now + 0.1);
         } catch (_error) {
-            // Ignore sound playback errors (browser policy or unsupported API).
+            // Ignore audio playback errors and continue normal flow.
         }
     }
 
@@ -473,30 +605,113 @@ document.addEventListener('DOMContentLoaded', function () {
         chatUnreadBadge.classList.remove('hidden');
     }
 
+    function messageGroupSlug(item) {
+        if (!useGroupedChat) {
+            return chatDefaultGroup;
+        }
+        return String(item.group_slug || chatDefaultGroup || 'global');
+    }
+
+    function recalculateUnreadTotal() {
+        let total = 0;
+        for (const value of chatUnreadByGroup.values()) {
+            total += Number(value || 0);
+        }
+        unreadCount = total;
+        renderUnreadBadge();
+    }
+
+    function renderChatGroupUnreadBadges() {
+        if (!chatGroupsContainer || !useGroupedChat) {
+            return;
+        }
+        const buttons = chatGroupsContainer.querySelectorAll('[data-chat-group]');
+        buttons.forEach((button) => {
+            const slug = String(button.dataset.chatGroup || 'global');
+            const count = Number(chatUnreadByGroup.get(slug) || 0);
+            const badge = button.querySelector('[data-chat-group-unread]');
+            if (!badge) {
+                return;
+            }
+            if (count <= 0) {
+                badge.classList.add('hidden');
+                badge.textContent = '0';
+                return;
+            }
+            badge.classList.remove('hidden');
+            badge.textContent = String(count > 99 ? '99+' : count);
+        });
+    }
+
+    function markGroupAsRead(groupSlug) {
+        const slug = String(groupSlug || '');
+        if (!slug) {
+            return;
+        }
+        if (!chatUnreadByGroup.has(slug)) {
+            return;
+        }
+        chatUnreadByGroup.set(slug, 0);
+        renderChatGroupUnreadBadges();
+        recalculateUnreadTotal();
+    }
+
+    function incrementUnread(groupSlug, delta) {
+        const slug = String(groupSlug || '');
+        const add = Number(delta || 0);
+        if (!slug || add <= 0) {
+            return;
+        }
+        const current = Number(chatUnreadByGroup.get(slug) || 0);
+        chatUnreadByGroup.set(slug, current + add);
+    }
+
+    function applyUnreadDeltas(deltaByGroup) {
+        for (const [slug, delta] of deltaByGroup.entries()) {
+            incrementUnread(slug, delta);
+        }
+        if (isChatOpen) {
+            markGroupAsRead(selectedChatGroup);
+        } else {
+            renderChatGroupUnreadBadges();
+            recalculateUnreadTotal();
+        }
+    }
+
     function appendChatMessage(item, options = {}) {
         const silent = Boolean(options.silent);
+        const isOwn = (
+            Boolean(currentUsername)
+            && String(item.username || '').toLowerCase() === currentUsername.toLowerCase()
+        );
         const row = document.createElement('div');
-        row.className = 'mb-2 rounded-xl bg-slate-50 px-2.5 py-2';
+        row.className = isOwn
+            ? 'mb-2 ml-auto max-w-[88%] rounded-xl bg-fuchsia-50 px-2.5 py-2'
+            : 'mb-2 mr-auto max-w-[88%] rounded-xl bg-slate-50 px-2.5 py-2';
 
         const header = document.createElement('div');
-        header.className = 'mb-1 flex items-center gap-2';
+        header.className = isOwn
+            ? 'mb-1 flex items-center justify-end gap-2'
+            : 'mb-1 flex items-center gap-2';
 
+        let avatarElement = null;
         if (item.avatar_url) {
             const img = document.createElement('img');
             img.src = item.avatar_url;
             img.alt = 'avatar';
             img.className = 'h-7 w-7 rounded-full object-cover';
-            header.appendChild(img);
+            avatarElement = img;
         } else {
             const avatar = document.createElement('div');
             avatar.className = 'flex h-7 w-7 items-center justify-center rounded-full bg-fuchsia-500 text-xs font-bold text-white';
             avatar.textContent = avatarFallback(item.username);
-            header.appendChild(avatar);
+            avatarElement = avatar;
         }
 
         const title = document.createElement('div');
         title.className = 'text-xs font-semibold text-slate-700';
         title.textContent = item.username || 'User';
+        header.appendChild(avatarElement);
         header.appendChild(title);
 
         if (useGroupedChat && item.group_name) {
@@ -512,7 +727,9 @@ document.addEventListener('DOMContentLoaded', function () {
         header.appendChild(timestamp);
 
         const body = document.createElement('p');
-        body.className = 'text-sm text-slate-800 break-words';
+        body.className = isOwn
+            ? 'text-right text-sm text-slate-800 break-words'
+            : 'text-sm text-slate-800 break-words';
         body.textContent = item.message || '';
 
         row.appendChild(header);
@@ -534,6 +751,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function shouldShowMessage(item) {
         if (!useGroupedChat) {
+            return true;
+        }
+        if (!item.group_slug) {
             return true;
         }
         return String(item.group_slug || '') === selectedChatGroup;
@@ -568,10 +788,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const groupButtons = chatGroups.map((group) => (
             `<button type="button" data-chat-group="${group.slug}" `
             + 'class="chat-group-tab">'
-            + `${group.name}</button>`
+            + `<span>${group.name}</span>`
+            + '<span data-chat-group-unread '
+            + 'class="chat-group-unread hidden">0</span>'
+            + '</button>'
         ));
         chatGroupsContainer.innerHTML = groupButtons.join('');
         updateChatGroupButtons();
+        renderChatGroupUnreadBadges();
     }
 
     function currentChatSendUrl() {
@@ -585,38 +809,121 @@ document.addEventListener('DOMContentLoaded', function () {
         return chatSendUrl;
     }
 
-    async function loadChatMessages() {
-        const targetUrl = (useGroupedChat && chatAllMessagesUrl)
-            ? chatAllMessagesUrl
-            : chatMessagesUrl;
-        const response = await fetch(targetUrl, { cache: 'no-store' });
+    function currentChatMessagesUrl() {
+        if (!useGroupedChat) {
+            return chatMessagesUrl;
+        }
+        const targetGroup = chatGroupMap.get(selectedChatGroup);
+        if (targetGroup && targetGroup.messages_url) {
+            return String(targetGroup.messages_url);
+        }
+        return chatMessagesUrl;
+    }
+
+    function chatPageUrl(baseUrl, offset, limit) {
+        const target = new URL(baseUrl, window.location.origin);
+        target.searchParams.set('offset', String(Math.max(0, offset)));
+        target.searchParams.set('limit', String(Math.max(1, limit)));
+        return target.toString();
+    }
+
+    async function fetchChatPage(baseUrl, offset, limit) {
+        const response = await fetch(chatPageUrl(baseUrl, offset, limit), {
+            cache: 'no-store',
+        });
         if (!response.ok) {
-            return;
+            return { messages: [], hasMore: false };
         }
         const payload = await response.json();
-        const messages = payload.messages || [];
-        let newVisibleCount = 0;
+        const messages = Array.isArray(payload.messages) ? payload.messages : [];
+        const hasMore = Boolean(payload.has_more);
+        return { messages, hasMore };
+    }
+
+    function isChatNearBottom() {
+        const threshold = 40;
+        return (
+            chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight
+        ) <= threshold;
+    }
+
+    async function loadLatestChatPage(options = {}) {
+        const silent = Boolean(options.silent);
+        const keepBottom = Boolean(options.keepBottom);
+        const page = await fetchChatPage(currentChatMessagesUrl(), 0, chatPageSize);
+        renderChatMessages(page.messages, { silent });
+        chatHasMoreHistory = page.hasMore;
+        if (keepBottom) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    async function loadOlderChatPage() {
+        if (chatLoadingHistory || !chatHasMoreHistory) {
+            return;
+        }
+        chatLoadingHistory = true;
+        const previousHeight = chatMessages.scrollHeight;
+        const currentCount = chatMessages.children.length;
+        const page = await fetchChatPage(
+            currentChatMessagesUrl(),
+            currentCount,
+            chatPageSize,
+        );
+        if (!page.messages.length) {
+            chatHasMoreHistory = false;
+            chatLoadingHistory = false;
+            return;
+        }
+        const fragment = document.createDocumentFragment();
+        for (const message of page.messages) {
+            const rowBefore = chatMessages.children.length;
+            appendChatMessage(message, { silent: true });
+            const row = chatMessages.lastElementChild;
+            if (row && rowBefore >= 0) {
+                fragment.appendChild(row);
+            }
+        }
+        chatMessages.insertBefore(fragment, chatMessages.firstChild);
+        chatHasMoreHistory = page.hasMore;
+        const nextHeight = chatMessages.scrollHeight;
+        chatMessages.scrollTop = nextHeight - previousHeight;
+        chatLoadingHistory = false;
+    }
+
+    async function syncUnreadCounts() {
+        const sourceUrl = (useGroupedChat && chatAllMessagesUrl)
+            ? chatAllMessagesUrl
+            : chatMessagesUrl;
+        const page = await fetchChatPage(sourceUrl, 0, 80);
+        const messages = page.messages;
+        const deltaByGroup = new Map();
         const nextKeys = new Set();
+
         for (const item of messages) {
             const key = messageKey(item);
             nextKeys.add(key);
-            if (!knownChatMessageKeys.has(key) && shouldShowMessage(item)) {
-                newVisibleCount += 1;
+            if (chatUnreadSeeded && !knownChatMessageKeys.has(key)) {
+                const slug = messageGroupSlug(item);
+                deltaByGroup.set(slug, Number(deltaByGroup.get(slug) || 0) + 1);
             }
         }
+
         knownChatMessageKeys.clear();
         for (const key of nextKeys) {
             knownChatMessageKeys.add(key);
         }
 
-        renderChatMessages(messages, { silent: true });
+        if (!chatUnreadSeeded) {
+            chatUnreadSeeded = true;
+            return;
+        }
 
-        if (!suppressChatSound && newVisibleCount > 0) {
-            if (!isChatOpen) {
-                unreadCount += newVisibleCount;
-                renderUnreadBadge();
+        if (deltaByGroup.size > 0) {
+            applyUnreadDeltas(deltaByGroup);
+            if (!suppressChatSound) {
+                playChatSound();
             }
-            playChatSound();
         }
         suppressChatSound = false;
     }
@@ -650,8 +957,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (response.status === 403) {
-            setChatNotice('You no longer have access to this community.', 'error');
-            window.location.href = '/';
             return false;
         }
 
@@ -687,6 +992,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const payload = await response.json();
         filledPixels = Number(payload.filled_pixels || payload.pixels.length || 0);
+        hasLoadedSnapshot = true;
         setGridSize(Number(payload.grid_size || gridSize));
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, gridSize, gridSize);
@@ -734,7 +1040,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (response.status === 429) {
             const info = await response.json();
-            setStatus(`Cooldown: ${info.retry_after}s remaining`, 'error');
             startCooldown(Number(info.retry_after || 0));
             return {
                 ok: false,
@@ -796,10 +1101,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         socket.onopen = () => {
             reconnectDelayMs = 1000;
-            setStatus('Realtime connected');
+            isRealtimeConnected = true;
+            updateCooldownUi();
         };
         socket.onclose = () => {
-            setStatus('Realtime disconnected, retrying...', 'error');
+            isRealtimeConnected = false;
+            setCanvasLocked(true);
             if (reconnectTimer) {
                 window.clearTimeout(reconnectTimer);
             }
@@ -819,7 +1126,19 @@ document.addEventListener('DOMContentLoaded', function () {
         socket.onmessage = (event) => {
             try {
                 const payload = JSON.parse(event.data);
+                const key = messageKey(payload);
+                if (knownChatMessageKeys.has(key)) {
+                    return;
+                }
+                knownChatMessageKeys.add(key);
                 appendChatMessage(payload);
+                const groupSlug = messageGroupSlug(payload);
+                if (isChatOpen && groupSlug === selectedChatGroup) {
+                    markGroupAsRead(groupSlug);
+                } else {
+                    const deltaByGroup = new Map([[groupSlug, 1]]);
+                    applyUnreadDeltas(deltaByGroup);
+                }
             } catch (_error) {
                 // Ignore malformed chat events to avoid breaking the UI loop.
             }
@@ -833,9 +1152,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     canvas.addEventListener('click', async (event) => {
+        if (!isRealtimeConnected || !hasLoadedSnapshot) {
+            setCanvasLocked(true);
+            return;
+        }
         if (requestInFlight || cooldownRemaining > 0) {
             if (cooldownRemaining > 0) {
-                setStatus(`Cooldown: ${cooldownRemaining}s remaining`, 'error');
+                updateCooldownUi();
             }
             return;
         }
@@ -846,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         requestInFlight = true;
-        setStatus('Saving pixel...');
+        playPixelPlacementSound();
 
         try {
             const result = await sendPixel(x, y, selectedColor);
@@ -935,25 +1258,55 @@ document.addEventListener('DOMContentLoaded', function () {
     updatePaletteSelection();
     updateGridMeta();
     updateMineHighlightButton();
-    setCanvasLocked(false);
-    loadSnapshot({ applySmartZoom: true }).then(connectWebsocket).catch((error) => {
-        setStatus(error.message, 'error');
-    });
-    loadChatMessages().catch(() => {});
+    setCanvasLocked(true);
+    restoreCooldownFromStorage();
+    loadSnapshot({ applySmartZoom: true })
+        .then(() => {
+            connectWebsocket();
+            updateCooldownUi();
+        })
+        .catch((error) => {
+            setStatus(error.message, 'error');
+        });
     if (useGroupedChat) {
+        for (const group of chatGroups) {
+            chatUnreadByGroup.set(group.slug, 0);
+        }
         renderChatGroupTabs();
+        loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
+        syncUnreadCounts().catch(() => {});
         groupedChatTimer = window.setInterval(() => {
-            loadChatMessages().catch(() => {});
+            const shouldKeepBottom = isChatOpen && isChatNearBottom();
+            syncUnreadCounts().catch(() => {});
+            if (shouldKeepBottom) {
+                loadLatestChatPage({
+                    silent: true,
+                    keepBottom: true,
+                }).catch(() => {});
+            }
         }, 4000);
     } else {
+        chatUnreadByGroup.set(chatDefaultGroup, 0);
+        loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
         connectChatWebsocket();
     }
+
+    chatMessages.addEventListener('scroll', () => {
+        if (chatMessages.scrollTop > 16) {
+            return;
+        }
+        loadOlderChatPage().catch(() => {});
+    });
 
     chatToggle.addEventListener('click', () => {
         chatPanel.classList.remove('hidden');
         isChatOpen = true;
-        unreadCount = 0;
-        renderUnreadBadge();
+        loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
+        if (useGroupedChat) {
+            markGroupAsRead(selectedChatGroup);
+        } else {
+            markGroupAsRead(chatDefaultGroup);
+        }
     });
 
     if (chatGroupsContainer && useGroupedChat) {
@@ -968,7 +1321,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             selectedChatGroup = nextGroup;
             updateChatGroupButtons();
-            loadChatMessages().catch(() => {});
+            markGroupAsRead(selectedChatGroup);
+            loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
         });
     }
 
@@ -993,6 +1347,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (chatForm && isAuthenticated) {
         chatForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            if (!canSendChat) {
+                return;
+            }
             const text = chatInput.value.trim();
             if (!text) {
                 return;
@@ -1008,4 +1365,15 @@ document.addEventListener('DOMContentLoaded', function () {
     setChatPinned(false);
     updateMuteButton();
     updateFullscreenButton();
+
+    window.addEventListener('storage', (event) => {
+        if (event.key !== cooldownStorageKey) {
+            return;
+        }
+        cooldownUntilTs = readPersistedCooldownUntil();
+        updateCooldownUi();
+        if (computeCooldownRemainingSeconds() > 0) {
+            ensureCooldownTicker();
+        }
+    });
 })();

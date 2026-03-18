@@ -20,14 +20,17 @@
         const invitationModal = byId('invitation-modal');
         const leaveModal = byId('leave-modal');
         const deleteModal = byId('delete-modal');
+        const removeMemberModal = byId('remove-member-modal');
 
         const invitationInput = byId('invitation-link-input');
         const copyInviteButton = byId('copy-invite-link-btn');
 
         const leaveForm = byId('leave-community-form');
         const deleteForm = byId('delete-community-form');
+        const removeMemberForm = byId('remove-member-form');
         const leaveModalText = byId('leave-modal-text');
         const deleteModalText = byId('delete-modal-text');
+        const removeMemberModalText = byId('remove-member-modal-text');
 
         if (!modalBackdrop) {
             return;
@@ -38,6 +41,7 @@
             hide(invitationModal);
             hide(leaveModal);
             hide(deleteModal);
+            hide(removeMemberModal);
         };
 
         const openModal = (modal) => {
@@ -109,6 +113,21 @@
                     deleteModalText.textContent = `Delete "${name}" permanently? This action cannot be undone. All data will be deleted and cannot be restored.`;
                 }
                 openModal(deleteModal);
+            });
+        });
+
+        document.querySelectorAll('.remove-member-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const memberName = String(btn.getAttribute('data-member-name') || '');
+                const removeUrl = String(btn.getAttribute('data-remove-url') || '');
+                if (removeMemberForm) {
+                    removeMemberForm.action = removeUrl;
+                }
+                if (removeMemberModalText && memberName) {
+                    removeMemberModalText.textContent =
+                        `Are you sure you want to remove "${memberName}" from this community?`;
+                }
+                openModal(removeMemberModal);
             });
         });
 
