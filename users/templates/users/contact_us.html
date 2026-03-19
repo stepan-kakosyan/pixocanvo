@@ -1,0 +1,103 @@
+{% extends "pixelwar/base.html" %}
+{% load i18n message_tags %}
+
+{% block title %}{% trans "Contact Us" %} | Pixo Canvo{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-3xl px-4 py-8 md:px-6">
+    <div class="mb-6">
+        <h2 class="text-3xl font-black tracking-tight text-slate-900">
+            {% trans "Contact Us" %}
+        </h2>
+        <p class="mt-1 text-sm text-slate-500">
+            {% trans "Share your question, issue, or feedback. Everyone can contact us." %}
+        </p>
+    </div>
+
+    <div class="rounded-3xl border border-cyan-200 bg-white p-6 shadow-xl shadow-cyan-100/60">
+        {% if messages %}
+            <div class="mb-4 space-y-2">
+                {% for message in messages %}
+                    {% if message|has_tag:'contact' %}
+                        <div class="rounded-xl px-3 py-2 text-sm ring-1 {% if 'error' in message.tags %}bg-rose-50 text-rose-800 ring-rose-200{% else %}bg-emerald-50 text-emerald-800 ring-emerald-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700 ring-1 ring-rose-200">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+                <div class="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-800">
+                    <p class="font-semibold">{% trans "Signed-in contact details" %}</p>
+                    <p class="mt-1">
+                        {% blocktrans with name=request.user.first_name|default:request.user.username email=request.user.email %}
+                            Your message will be sent using your account details: {{ name }} ({{ email }}).
+                        {% endblocktrans %}
+                    </p>
+                </div>
+                <p class="text-xs text-rose-600">{{ form.email.errors|striptags }}</p>
+            {% else %}
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold" for="{{ form.name.id_for_label }}">
+                            {% trans "Name" %}
+                        </label>
+                        {{ form.name }}
+                        <p class="mt-1 text-xs text-rose-600">
+                            {{ form.name.errors|striptags }}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold" for="{{ form.email.id_for_label }}">
+                            {% trans "Email" %}
+                        </label>
+                        {{ form.email }}
+                        <p class="mt-1 text-xs text-rose-600">
+                            {{ form.email.errors|striptags }}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold" for="{{ form.subject.id_for_label }}">
+                    {% trans "Subject" %}
+                </label>
+                {{ form.subject }}
+                <p class="mt-1 text-xs text-rose-600">
+                    {{ form.subject.errors|striptags }}
+                </p>
+            </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-semibold" for="{{ form.description.id_for_label }}">
+                    {% trans "Description" %}
+                </label>
+                {{ form.description }}
+                <p class="mt-1 text-xs text-rose-600">
+                    {{ form.description.errors|striptags }}
+                </p>
+            </div>
+
+            <p class="text-xs text-slate-500">
+                {% trans "For security reasons, code-like markup and scripts are blocked in this form." %}
+            </p>
+
+            <button type="submit"
+                    class="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-cyan-300/30 transition hover:from-cyan-400 hover:to-sky-400">
+                {% trans "Send message" %}
+            </button>
+        </form>
+    </div>
+</main>
+{% endblock %}

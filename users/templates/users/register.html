@@ -5,9 +5,9 @@
 
 {% block content %}
 <div class="mx-auto max-w-md px-4 py-10">
-    <div class="mt-3 rounded-3xl border border-pink-300 bg-white/90 p-6 shadow-xl shadow-pink-200/60">
+    <div class="mt-3 rounded-3xl border border-cyan-300 bg-white/90 p-6 shadow-xl shadow-cyan-200/60">
         <h1 class="text-2xl font-black tracking-tight text-slate-900">{% trans "Create account" %}</h1>
-        <p class="mt-1 text-sm text-slate-600">{% trans "Email is required. Avatar is optional." %}</p>
+        <p class="mt-1 text-sm text-slate-600">{% trans "Email and Full Name are optional. Avatar is optional." %}</p>
 
         <form method="post" action="{% url 'register' %}" hx-post="{% url 'register' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" enctype="multipart/form-data" class="mt-5 space-y-4">
             {% csrf_token %}
@@ -16,7 +16,11 @@
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-
+            <div>
+                <label class="mb-1 block text-sm font-semibold">{% trans "Full Name" %}</label>
+                {{ form.full_name }}
+                <p class="mt-1 text-xs text-rose-600">{{ form.full_name.errors|striptags }}</p>
+            </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold">{% trans "Username" %}</label>
                 {{ form.username }}
@@ -28,7 +32,6 @@
                 {{ form.email }}
                 <p class="mt-1 text-xs text-rose-600">{{ form.email.errors|striptags }}</p>
             </div>
-
             <div>
                 <label class="mb-1 block text-sm font-semibold">{% trans "Password" %}</label>
                 {{ form.password1 }}
@@ -47,7 +50,7 @@
                 <p class="mt-1 text-xs text-rose-600">{{ form.avatar.errors|striptags }}</p>
             </div>
 
-            <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+            <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
                 {% trans "Register" %}
             </button>
         </form>

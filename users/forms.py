@@ -1,17 +1,19 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
+import re
 
-from .models import UserProfile
+from .models import ContactMessage, UserProfile
 
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    full_name = forms.CharField(max_length=150, required=False, label="Full name (optional)")
     avatar = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2", "avatar")
+        fields = ("username", "email", "full_name", "password1", "password2", "avatar")
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
@@ -22,6 +24,7 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"].strip().lower()
+        user.first_name = self.cleaned_data.get("full_name", "").strip()
         if commit:
             user.save()
             avatar = self.cleaned_data.get("avatar")
@@ -48,8 +51,13 @@ class ForgotPasswordForm(forms.Form):
     identifier = forms.CharField(max_length=254, label="Username or email")
 
 
+class AvatarUploadForm(forms.Form):
+    avatar = forms.ImageField(required=True)
+
+
 class ProfileSettingsForm(forms.Form):
     username = forms.CharField(max_length=150)
+    full_name = forms.CharField(max_length=150, required=False)
     email = forms.EmailField(required=True)
     avatar = forms.ImageField(required=False)
     new_password1 = forms.CharField(
@@ -69,6 +77,7 @@ class ProfileSettingsForm(forms.Form):
 
         if not self.is_bound:
             self.initial["username"] = user.username
+            self.initial["full_name"] = user.first_name
             self.initial["email"] = user.email
 
     def clean_username(self):
@@ -98,12 +107,27 @@ class ProfileSettingsForm(forms.Form):
 
         return cleaned
 
+    def email_changed(self) -> bool:
+        return (
+            self.cleaned_data.get("email", "").strip().lower()
+            != self.user.email.lower()
+        )
+
     def save(self):
         self.user.username = self.cleaned_data["username"]
-        self.user.email = self.cleaned_data["email"]
-        self.user.save(update_fields=["username", "email"])
+        self.user.first_name = self.cleaned_data["full_name"].strip()
 
         profile, _ = UserProfile.objects.get_or_create(user=self.user)
+
+        new_email = self.cleaned_data["email"].strip().lower()
+        if new_email.lower() != self.user.email.lower():
+            profile.pending_email = new_email
+            profile.save(update_fields=["pending_email"])
+        else:
+            self.user.email = new_email
+
+        self.user.save(update_fields=["username", "first_name", "email"])
+
         avatar = self.cleaned_data.get("avatar")
         if avatar:
             profile.avatar = avatar
@@ -115,3 +139,98 @@ class ProfileSettingsForm(forms.Form):
             self.user.save(update_fields=["password"])
 
         return self.user
+
+
+class ContactUsForm(forms.Form):
+    name = forms.CharField(max_length=150)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=200)
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 7}),
+        max_length=5000,
+    )
+
+    _code_like_pattern = re.compile(
+        r"(<\s*script|javascript:|on\w+\s*=|<\?php|\{\{|\{%|</?\w+)",
+        flags=re.IGNORECASE,
+    )
+    _control_chars_pattern = re.compile(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]")
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+        if user is not None and getattr(user, "is_authenticated", False):
+            self.fields["name"].required = False
+            self.fields["email"].required = False
+            display_name = (user.first_name or user.username or "").strip()
+            self.initial["name"] = display_name
+            self.initial["email"] = (user.email or "").strip().lower()
+
+    def _validate_safe_text(self, value: str, field_label: str) -> str:
+        cleaned = str(value or "").strip()
+        if self._control_chars_pattern.search(cleaned):
+            raise forms.ValidationError(
+                f"{field_label} contains unsupported control characters."
+            )
+        if "<" in cleaned or ">" in cleaned:
+            raise forms.ValidationError(
+                f"{field_label} cannot contain HTML or markup."
+            )
+        if self._code_like_pattern.search(cleaned):
+            raise forms.ValidationError(
+                f"{field_label} contains blocked code-like content."
+            )
+        return cleaned
+
+    def clean_name(self):
+        value = self._validate_safe_text(
+            self.cleaned_data.get("name", ""),
+            "Name",
+        )
+        if self.user is not None and getattr(self.user, "is_authenticated", False):
+            return (self.user.first_name or self.user.username or value).strip()
+        return value
+
+    def clean_email(self):
+        value = str(self.cleaned_data.get("email", "")).strip().lower()
+        if "\n" in value or "\r" in value:
+            raise forms.ValidationError("Email contains invalid characters.")
+        if self.user is not None and getattr(self.user, "is_authenticated", False):
+            user_email = (self.user.email or "").strip().lower()
+            if not user_email:
+                raise forms.ValidationError(
+                    "Your account does not have an email address. "
+                    "Please add one in profile settings first."
+                )
+            return user_email
+        return value
+
+    def clean_subject(self):
+        value = self._validate_safe_text(
+            self.cleaned_data.get("subject", ""),
+            "Subject",
+        )
+        if "\n" in value or "\r" in value:
+            raise forms.ValidationError("Subject contains invalid characters.")
+        return value
+
+    def clean_description(self):
+        return self._validate_safe_text(
+            self.cleaned_data.get("description", ""),
+            "Description",
+        )
+
+    def save(self) -> ContactMessage:
+        linked_user = None
+        if self.user is not None and getattr(self.user, "is_authenticated", False):
+            linked_user = self.user
+
+        return ContactMessage.objects.create(
+            user=linked_user,
+            name=self.cleaned_data["name"],
+            email=self.cleaned_data["email"],
+            subject=self.cleaned_data["subject"],
+            description=self.cleaned_data["description"],
+            status=ContactMessage.STATUS_RECEIVED,
+        )

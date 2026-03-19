@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -62,6 +62,26 @@ def open_notification(request: HttpRequest, notification_id: int) -> HttpRespons
     if notification.target_url:
         return redirect(notification.target_url)
     return redirect("notifications:list")
+
+
+@login_required
+def mark_notification_read(request: HttpRequest, notification_id: int) -> HttpResponse:
+    if request.method != "POST":
+        return JsonResponse({"ok": False}, status=405)
+    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+    if not notification.is_read:
+        notification.is_read = True
+        notification.read_at = timezone.now()
+        notification.save(update_fields=["is_read", "read_at"])
+        push_notification_event(
+            request.user.id,
+            {
+                "event": "notification.read",
+                "notification_id": notification.id,
+                "unread_count": unread_count_for_user(request.user.id),
+            },
+        )
+    return JsonResponse({"ok": True})
 
 
 @login_required

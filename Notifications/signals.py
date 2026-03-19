@@ -10,6 +10,7 @@ from .tasks import create_notification_task
 # Domain-level notification events emitted by other apps.
 email_verification_needed = Signal()
 email_confirmed = Signal()
+email_change_verification_needed = Signal()  # kwargs: user, new_email
 community_join_requested = Signal()
 community_join_reviewed = Signal()
 
@@ -25,6 +26,24 @@ def on_email_verification_needed(sender, user, **kwargs):
             "Validate your email to unlock chat and community creation. "
             "If you did not receive the email, open Profile Details and resend it."
         ),
+        target_url="/auth/profile/",
+        visual_type=system_visual["visual_type"],
+        image_url=system_visual["image_url"],
+        initials=system_visual["initials"],
+    )
+
+
+@receiver(email_change_verification_needed)
+def on_email_change_verification_needed(sender, user, new_email, **kwargs):
+    system_visual = system_notification_visual()
+    create_notification_task.delay(
+        recipient_id=user.id,
+        notification_type=Notification.TYPE_EMAIL_CHANGE_PENDING,
+        title=_("Verify your new email"),
+        body=_(
+            "You requested to change your email to %(email)s. "
+            "We've sent a verification link there — click it to confirm the update."
+        ) % {"email": new_email},
         target_url="/auth/profile/",
         visual_type=system_visual["visual_type"],
         image_url=system_visual["image_url"],

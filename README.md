@@ -32,9 +32,9 @@ The web app will be available at http://localhost:8000.
 - `web`: Django + Daphne (HTTP + WebSocket)
 - `consumer`: Kafka consumer that bulk-upserts pixels and broadcasts updates
 - `celery`: background worker for notifications and email delivery tasks
-- `flower`: Celery monitoring UI at `http://localhost:5555`
+- `flower`: Celery monitoring UI at `http://localhost:5555` with basic auth
 - `kafka`: Kafka broker
-- `zookeeper`: Kafka dependency
+- `kafka-ui`: Kafka GUI at `http://localhost:8082` with login required
 - `redis`: cooldown cache + Channels layer
 - external MySQL server configured via `.env` (`MYSQL_*` variables)
 
@@ -44,12 +44,26 @@ When `web` container starts, it automatically runs:
 
 1. `npm install`
 2. `npm run build:css`
-3. `python manage.py migrate`
-4. `python manage.py collectstatic --noinput`
-5. Daphne server startup
+3. `python manage.py collectstatic --noinput`
+4. Daphne server startup
 
-All services are configured with `restart: unless-stopped`, so they restart
-automatically after Docker daemon restarts.
+Migrations are intentionally **manual** and are not executed by containers at
+startup. Run them explicitly when needed:
+
+```bash
+python manage.py migrate
+```
+
+`redis` is configured with `restart: on-failure:3` (up to 3 restart attempts).
+
+To protect Flower, set superuser credentials in your `.env`:
+
+```bash
+DJANGO_SUPERUSER_USERNAME=your_admin_username
+DJANGO_SUPERUSER_PASSWORD=your_admin_password
+```
+
+Flower and Kafka UI startup are blocked if these values are missing.
 
 ## Technologies used
 

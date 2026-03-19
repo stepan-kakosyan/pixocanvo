@@ -102,6 +102,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatNotice = document.getElementById('chatNotice');
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
+    const chatSubmitButton = chatForm
+        ? chatForm.querySelector('button[type="submit"]')
+        : null;
+    const chatInputInitiallyDisabled = Boolean(chatInput && chatInput.disabled);
+    const chatSubmitInitiallyDisabled = Boolean(
+        chatSubmitButton && chatSubmitButton.disabled
+    );
     const chatGroupsContainer = document.getElementById('chatGroups');
     const chatGroupsDataTag = document.getElementById('chat-groups-data');
     const isAuthenticated = app.dataset.authenticated === '1';
@@ -121,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let isChatPinned = false;
     let isChatMuted = false;
     let unreadCount = 0;
+    let chatSendInFlight = false;
+    let chatSendCooldownUntil = 0;
+    let chatSendCooldownTimer = null;
     let chatNoticeTimer = null;
     let suppressChatSound = true;
     let audioCtx = null;
@@ -205,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ? 'Show All Pixels'
             : 'Highlight My Pixels';
         highlightMine.className = isHighlightingMine
-            ? 'rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white'
+            ? 'rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-3 py-2 text-sm font-semibold text-white'
             : 'rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50';
     }
 
@@ -429,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
         buttons.forEach((button) => {
             const active = button.dataset.color.toLowerCase() === selectedColor.toLowerCase();
             button.classList.toggle('ring-2', active);
-            button.classList.toggle('ring-fuchsia-500', active);
+            button.classList.toggle('ring-emerald-500', active);
             button.classList.toggle('ring-offset-2', active);
             button.classList.toggle('ring-offset-white', active);
         });
@@ -599,10 +609,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (unreadCount <= 0) {
             chatUnreadBadge.classList.add('hidden');
+            chatUnreadBadge.textContent = '';
+            chatUnreadBadge.setAttribute('aria-hidden', 'true');
             return;
         }
         chatUnreadBadge.textContent = String(unreadCount > 99 ? '99+' : unreadCount);
         chatUnreadBadge.classList.remove('hidden');
+        chatUnreadBadge.removeAttribute('aria-hidden');
+    }
+
+    function setChatComposerDisabled(disabled) {
+        if (chatInput && !chatInputInitiallyDisabled) {
+            chatInput.disabled = disabled;
+            chatInput.classList.toggle('cursor-not-allowed', disabled);
+            chatInput.classList.toggle('bg-slate-100', disabled);
+            chatInput.classList.toggle('text-slate-400', disabled);
+        }
+
+        if (chatSubmitButton && !chatSubmitInitiallyDisabled) {
+            chatSubmitButton.disabled = disabled;
+            chatSubmitButton.classList.toggle('cursor-not-allowed', disabled);
+            chatSubmitButton.classList.toggle('opacity-60', disabled);
+        }
+    }
+
+    function startChatSendCooldown(seconds = 5) {
+        if (chatSendCooldownTimer) {
+            window.clearTimeout(chatSendCooldownTimer);
+            chatSendCooldownTimer = null;
+        }
+        chatSendCooldownUntil = Date.now() + (seconds * 1000);
+        setChatComposerDisabled(true);
+        setChatNotice(`Message sent. Send again in ${seconds}s`, 'info');
+        chatSendCooldownTimer = window.setTimeout(() => {
+            chatSendCooldownUntil = 0;
+            setChatComposerDisabled(false);
+            setChatNotice('');
+        }, seconds * 1000);
     }
 
     function messageGroupSlug(item) {
@@ -686,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function () {
         );
         const row = document.createElement('div');
         row.className = isOwn
-            ? 'mb-2 ml-auto max-w-[88%] rounded-xl bg-fuchsia-50 px-2.5 py-2'
+            ? 'mb-2 ml-auto max-w-[88%] rounded-xl bg-emerald-50 px-2.5 py-2'
             : 'mb-2 mr-auto max-w-[88%] rounded-xl bg-slate-50 px-2.5 py-2';
 
         const header = document.createElement('div');
@@ -703,7 +746,7 @@ document.addEventListener('DOMContentLoaded', function () {
             avatarElement = img;
         } else {
             const avatar = document.createElement('div');
-            avatar.className = 'flex h-7 w-7 items-center justify-center rounded-full bg-fuchsia-500 text-xs font-bold text-white';
+            avatar.className = 'flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-white';
             avatar.textContent = avatarFallback(item.username);
             avatarElement = avatar;
         }
@@ -716,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (useGroupedChat && item.group_name) {
             const groupBadge = document.createElement('span');
-            groupBadge.className = 'rounded-full bg-fuchsia-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-fuchsia-700';
+            groupBadge.className = 'rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700';
             groupBadge.textContent = item.group_name;
             header.appendChild(groupBadge);
         }
@@ -1299,6 +1342,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     chatToggle.addEventListener('click', () => {
+        if (isChatOpen) {
+            chatPanel.classList.add('hidden');
+            isChatOpen = false;
+            return;
+        }
         chatPanel.classList.remove('hidden');
         isChatOpen = true;
         loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
@@ -1350,14 +1398,23 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!canSendChat) {
                 return;
             }
+            if (chatSendInFlight || Date.now() < chatSendCooldownUntil) {
+                return;
+            }
             const text = chatInput.value.trim();
             if (!text) {
                 return;
             }
+            chatSendInFlight = true;
+            setChatComposerDisabled(true);
             const sent = await sendChatMessage(text);
             if (sent) {
                 chatInput.value = '';
+                startChatSendCooldown(5);
+            } else {
+                setChatComposerDisabled(false);
             }
+            chatSendInFlight = false;
         });
     }
 

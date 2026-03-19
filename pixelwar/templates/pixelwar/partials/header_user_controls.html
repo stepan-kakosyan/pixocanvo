@@ -6,7 +6,7 @@
                  data-open-pattern="{% url 'notifications:open' 0 %}"
                  data-ws-path="/ws/notifications/"
                  data-initial-unread-count="{{ header_notifications_unread_count }}">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-fuchsia-200 hover:bg-fuchsia-50">
+            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
                 <span class="relative flex items-center justify-center">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 1 5.454 1.31A8.967 8.967 0 0 1 12 21c-2.331 0-4.468-.893-6.07-2.355a23.848 23.848 0 0 1 5.454-1.31M18 8a6 6 0 1 0-12 0c0 2.887-1.5 5.419-3.75 6.862h19.5C19.5 13.419 18 10.887 18 8Z" />
@@ -42,7 +42,7 @@
                            hx-target="#page-content"
                            hx-swap="innerHTML"
                            hx-push-url="true"
-                           class="text-xs font-semibold text-fuchsia-700 hover:text-fuchsia-600">
+                           class="text-xs font-semibold text-emerald-700 hover:text-emerald-600">
                             {% trans "View all" %}
                         </a>
                     </div>
@@ -51,53 +51,53 @@
                     {% for notification in header_notifications %}
                         {% if notification.target_url %}
                             <a href="{% url 'notifications:open' notification.id %}"
-                               class="notification-item flex items-start gap-3 rounded-xl border px-3 py-2 transition hover:border-fuchsia-200 hover:bg-fuchsia-50/70 {% if notification.is_read %}border-slate-200 bg-white{% else %}border-fuchsia-200 bg-fuchsia-50/60{% endif %}"
+                               class="notification-item flex items-start gap-3 rounded-xl border px-3 py-2 transition hover:border-emerald-200 hover:bg-emerald-50/70 {% if notification.is_read %}border-slate-200 bg-white{% else %}border-emerald-200 bg-emerald-50/60{% endif %}"
                                data-notification-id="{{ notification.id }}">
                                 <div class="relative shrink-0">
                                     {% if notification.image_url %}
                                         <img src="{{ notification.image_url }}" alt="visual" class="h-10 w-10 rounded-full object-cover ring-1 ring-slate-200">
                                     {% else %}
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white {% if notification.visual_type == 'community' %}bg-gradient-to-br from-cyan-500 to-sky-500{% elif notification.visual_type == 'user' %}bg-gradient-to-br from-fuchsia-500 to-pink-500{% else %}bg-gradient-to-br from-slate-700 to-slate-900{% endif %}">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white {% if notification.visual_type == 'community' %}bg-gradient-to-br from-cyan-500 to-sky-500{% elif notification.visual_type == 'user' %}bg-gradient-to-br from-emerald-500 to-sky-500{% else %}bg-gradient-to-br from-emerald-500 to-sky-500{% endif %}">
                                             {{ notification.initials|default:'PC' }}
                                         </div>
                                     {% endif %}
-                                    <div class="notification-status-dot absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white {% if notification.is_read %}bg-slate-200{% else %}bg-fuchsia-500{% endif %}"></div>
+                                    <div class="notification-status-dot absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white {% if notification.is_read %}bg-slate-200{% else %}bg-emerald-500{% endif %}"></div>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="flex items-center justify-between gap-3">
-                                        <p class="truncate text-sm font-bold text-slate-900">{{ notification.title }}</p>
-                                        <span class="shrink-0 text-[11px] font-semibold text-slate-400">{{ notification.created_at|date:"Y-m-d H:i" }}</span>
+                                    <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                                        <p class="text-sm font-bold text-slate-900 break-words sm:truncate">{{ notification.title }}</p>
+                                        <span class="text-[11px] font-semibold text-slate-400 sm:shrink-0">{{ notification.created_at|date:"Y-m-d H:i" }}</span>
                                     </div>
-                                    <p class="mt-1 text-xs text-slate-600">{{ notification.body }}</p>
+                                    <p class="mt-1 break-words text-xs text-slate-600">{{ notification.body }}</p>
                                     {% if not notification.is_read %}
-                                        <div class="mt-1 flex items-center gap-2 text-[11px] font-semibold text-fuchsia-700">
-                                            <span class="notification-unread-dot h-2 w-2 rounded-full bg-fuchsia-500"></span>
+                                        <div class="mt-1 flex items-center gap-2 text-[11px] font-semibold text-emerald-700">
+                                            <span class="notification-unread-dot h-2 w-2 rounded-full bg-emerald-500"></span>
                                         </div>
                                     {% endif %}
                                 </div>
                             </a>
                         {% else %}
-                            <div class="notification-item flex items-start gap-3 rounded-xl border px-3 py-2 {% if notification.is_read %}border-slate-200 bg-white{% else %}border-fuchsia-200 bg-fuchsia-50/60{% endif %}"
+                            <div class="notification-item flex items-start gap-3 rounded-xl border px-3 py-2 {% if notification.is_read %}border-slate-200 bg-white{% else %}border-emerald-200 bg-emerald-50/60{% endif %}"
                                  data-notification-id="{{ notification.id }}">
                                 <div class="relative shrink-0">
                                     {% if notification.image_url %}
                                         <img src="{{ notification.image_url }}" alt="visual" class="h-10 w-10 rounded-full object-cover ring-1 ring-slate-200">
                                     {% else %}
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white {% if notification.visual_type == 'community' %}bg-gradient-to-br from-cyan-500 to-sky-500{% elif notification.visual_type == 'user' %}bg-gradient-to-br from-fuchsia-500 to-pink-500{% else %}bg-gradient-to-br from-slate-700 to-slate-900{% endif %}">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-full text-xs font-black text-white {% if notification.visual_type == 'community' %}bg-gradient-to-br from-cyan-500 to-sky-500{% elif notification.visual_type == 'user' %}bg-gradient-to-br from-emerald-500 to-sky-500{% else %}bg-gradient-to-br from-emerald-500 to-sky-500{% endif %}">
                                             {{ notification.initials|default:'PC' }}
                                         </div>
                                     {% endif %}
-                                    <div class="notification-status-dot absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white {% if notification.is_read %}bg-slate-200{% else %}bg-fuchsia-500{% endif %}"></div>
+                                    <div class="notification-status-dot absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white {% if notification.is_read %}bg-slate-200{% else %}bg-emerald-500{% endif %}"></div>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="flex items-center justify-between gap-3">
-                                        <p class="truncate text-sm font-bold text-slate-900">{{ notification.title }}</p>
-                                        <span class="shrink-0 text-[11px] font-semibold text-slate-400">{{ notification.created_at|date:"Y-m-d H:i" }}</span>
+                                    <div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                                        <p class="text-sm font-bold text-slate-900 break-words sm:truncate">{{ notification.title }}</p>
+                                        <span class="text-[11px] font-semibold text-slate-400 sm:shrink-0">{{ notification.created_at|date:"Y-m-d H:i" }}</span>
                                     </div>
-                                    <p class="mt-1 text-xs text-slate-600">{{ notification.body }}</p>
+                                    <p class="mt-1 break-words text-xs text-slate-600">{{ notification.body }}</p>
                                     {% if not notification.is_read %}
-                                        <div class="mt-1 flex items-center gap-2 text-[11px] font-semibold text-fuchsia-700">
-                                            <span class="notification-unread-dot h-2 w-2 rounded-full bg-fuchsia-500"></span>
+                                        <div class="mt-1 flex items-center gap-2 text-[11px] font-semibold text-emerald-700">
+                                            <span class="notification-unread-dot h-2 w-2 rounded-full bg-emerald-500"></span>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -113,7 +113,7 @@
         </details>
 
         <details class="relative">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-fuchsia-200 hover:bg-fuchsia-50">
+            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
                 {% if LANGUAGE_SWITCHER_CURRENT %}
                     <span class="inline-flex items-center justify-center">
                         <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-4 w-5 rounded-sm"></span>
@@ -136,23 +136,23 @@
         </details>
 
         <a href="{% url 'profile-settings' %}"
-           class="flex items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-slate-100"
+              class="flex items-center gap-2 rounded-xl bg-slate-100 px-2 py-1 transition hover:bg-slate-100"
            title="Edit profile">
             {% if avatar_url %}
                 <img src="{{ avatar_url }}" alt="avatar"
-                     class="h-8 w-8 rounded-full object-cover ring-2 ring-fuchsia-500/50 ring-offset-1 ring-offset-white">
+                     class="h-8 w-8 rounded-full object-cover ring-2 ring-emerald-500/50 ring-offset-1 ring-offset-white">
             {% else %}
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow-md">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow-md">
                     {{ request.user.username|slice:":1"|upper }}
                 </div>
             {% endif %}
-            <span class="hidden text-sm font-bold text-slate-800 transition hover:text-fuchsia-600 sm:block">{{ request.user.username }}</span>
+            <span class="hidden text-sm font-bold text-slate-800 transition hover:text-emerald-600 sm:block">{% firstof request.user.first_name request.user.username %}</span>
         </a>
     </div>
 {% else %}
     <div class="flex items-center gap-2">
         <details class="relative">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-fuchsia-200 hover:bg-fuchsia-50">
+            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
                 {% if LANGUAGE_SWITCHER_CURRENT %}
                     <span class="inline-flex items-center justify-center">
                         <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-4 w-5 rounded-sm"></span>
@@ -174,9 +174,9 @@
             </div>
         </details>
 
-        <a href="{% url 'login' %}"
-           hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-           class="rounded-lg bg-fuchsia-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-fuchsia-500/30 transition hover:bg-fuchsia-500">
+          <a href="{% url 'login' %}"
+              hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
+              class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-emerald-500/30 transition hover:bg-emerald-500">
             {% trans "Login" %}
         </a>
     </div>

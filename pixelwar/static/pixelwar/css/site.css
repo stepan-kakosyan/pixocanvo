@@ -51,6 +51,30 @@ body {
     cursor: default;
 }
 
+.canvas-scroll-frame {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
+    scrollbar-width: auto;
+    scrollbar-color: #0ea5e9 #e2e8f0;
+}
+
+.canvas-scroll-frame::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.canvas-scroll-frame::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 9999px;
+}
+
+.canvas-scroll-frame::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #10b981, #0ea5e9);
+    border-radius: 9999px;
+    border: 2px solid #e2e8f0;
+}
+
 .canvas-cooldown-badge {
     position: fixed;
     top: 1.5rem;
@@ -92,6 +116,16 @@ input[type="file"] {
     border: 1px solid #cbd5e1;
     background: #ffffff;
     padding: 0.6rem 0.75rem;
+}
+
+textarea {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    padding: 0.6rem 0.75rem;
+    min-height: 10rem;
+    resize: vertical;
 }
 
 .community-tab {
@@ -137,6 +171,9 @@ input[type="file"] {
     transition: all 160ms ease;
 }
 
+.chat-group-unread.hidden{
+    display: none;
+}
 .chat-group-unread {
     display: inline-flex;
     min-width: 1rem;
@@ -188,6 +225,15 @@ input[type="file"] {
 
     #chatPanel.pinned #chatMessages {
         height: calc(100vh - 12.5rem);
+    }
+
+    .canvas-scroll-frame {
+        scrollbar-width: thin;
+    }
+
+    .canvas-scroll-frame::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
     }
 }
 

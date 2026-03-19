@@ -1,0 +1,12 @@
+{% load i18n %}
+{% trans "New Contact Us submission" %}
+
+{% trans "Message ID" %}: #{{ contact_id }}
+{% trans "Name" %}: {{ name }}
+{% trans "Email" %}: {{ email }}
+{% trans "Subject" %}: {{ subject_text }}
+{% trans "Status" %}: {{ status }}
+{% trans "Submitted at" %}: {{ submitted_at }}
+
+{% trans "Description" %}:
+{{ description }}

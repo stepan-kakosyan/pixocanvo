@@ -235,6 +235,13 @@ def _community_for_user(user, slug: str) -> Community | None:
     )
 
 
+def _display_name_for_user(user) -> str:
+    full_name = str(getattr(user, "first_name", "") or "").strip()
+    if full_name:
+        return full_name
+    return str(getattr(user, "username", "") or "User")
+
+
 def _user_can_use_chat(user) -> bool:
     if not user.is_authenticated:
         return False
@@ -381,6 +388,7 @@ def _chat_payload(message: ChatMessage, include_group: bool = False) -> dict:
     payload = {
         "id": message.id,
         "username": message.user.username,
+        "display_name": _display_name_for_user(message.user),
         "avatar_url": avatar_url,
         "message": message.message,
         "created_at": message.created_at.isoformat(),
@@ -625,6 +633,7 @@ def create_community(request: HttpRequest) -> HttpResponse:
         messages.error(
             request,
             "Confirm your email before creating your own community.",
+            extra_tags="community",
         )
         return redirect("create-community")
 
@@ -632,15 +641,24 @@ def create_community(request: HttpRequest) -> HttpResponse:
         messages.error(
             request,
             "You can create up to 5 communities.",
+            extra_tags="community",
         )
         return redirect("create-community")
 
     name = str(request.POST.get("name", "")).strip()
     if not name:
-        messages.error(request, "Community name is required.")
+        messages.error(
+            request,
+            "Community name is required.",
+            extra_tags="community",
+        )
         return redirect("create-community")
     if len(name) < 3:
-        messages.error(request, "Community name must be at least 3 characters.")
+        messages.error(
+            request,
+            "Community name must be at least 3 characters.",
+            extra_tags="community",
+        )
         return redirect("create-community")
     description = str(request.POST.get("description", "")).strip()
     description = description[:280]
@@ -675,11 +693,19 @@ def create_community(request: HttpRequest) -> HttpResponse:
 def request_join_public_community(request: HttpRequest, slug: str) -> HttpResponse:
     community = Community.objects.filter(slug=slug, is_public=True).first()
     if community is None:
-        messages.error(request, "Public community was not found.")
+        messages.error(
+            request,
+            "Public community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if community.owner_id == request.user.id:
-        messages.info(request, "You already own this community.")
+        messages.info(
+            request,
+            "You already own this community.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     is_member = CommunityMembership.objects.filter(
@@ -688,11 +714,19 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
         active=True,
     ).exists()
     if is_member:
-        messages.info(request, "You are already a member of this community.")
+        messages.info(
+            request,
+            "You are already a member of this community.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if _is_public_community_full(community):
-        messages.error(request, "This community is full.")
+        messages.error(
+            request,
+            "This community is full.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     join_request, created = CommunityJoinRequest.objects.get_or_create(
@@ -707,11 +741,19 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
             requester=request.user,
             community=community,
         )
-        messages.success(request, "Join request sent.")
+        messages.success(
+            request,
+            "Join request sent.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if join_request.status == CommunityJoinRequest.STATUS_PENDING:
-        messages.info(request, "You already have a pending join request.")
+        messages.info(
+            request,
+            "You already have a pending join request.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if join_request.status == CommunityJoinRequest.STATUS_APPROVED:
@@ -723,7 +765,11 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
             requester=request.user,
             community=community,
         )
-        messages.success(request, "Join request sent.")
+        messages.success(
+            request,
+            "Join request sent.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     join_request.status = CommunityJoinRequest.STATUS_PENDING
@@ -734,7 +780,11 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
         requester=request.user,
         community=community,
     )
-    messages.success(request, "Join request re-sent.")
+    messages.success(
+        request,
+        "Join request re-sent.",
+        extra_tags="community",
+    )
     return redirect("communities")
 
 
@@ -747,13 +797,25 @@ def approve_join_request(
 ) -> HttpResponse:
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(request, "Community was not found.")
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
     if community.owner_id != request.user.id:
-        messages.error(request, "Only owner can review join requests.")
+        messages.error(
+            request,
+            "Only owner can review join requests.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
     if not community.is_public:
-        messages.error(request, "Join requests exist only for public communities.")
+        messages.error(
+            request,
+            "Join requests exist only for public communities.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     join_request = CommunityJoinRequest.objects.filter(
@@ -762,11 +824,18 @@ def approve_join_request(
         status=CommunityJoinRequest.STATUS_PENDING,
     ).select_related("user").first()
     if join_request is None:
-        messages.error(request, "Join request was not found.")
+        messages.error(
+            request,
+            "Join request was not found.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
-
     if _is_public_community_full(community):
-        messages.error(request, "Community is full. Cannot approve more members.")
+        messages.error(
+            request,
+            "Community is full. Cannot approve more members.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     _join_community(join_request.user, community)
@@ -779,7 +848,11 @@ def approve_join_request(
         community=community,
         approved=True,
     )
-    messages.success(request, f"Approved {join_request.user.username}.")
+    messages.success(
+        request,
+        f"Approved {join_request.user.username}.",
+        extra_tags="community",
+    )
     return redirect("community-detail", slug=slug)
 
 
@@ -792,13 +865,25 @@ def decline_join_request(
 ) -> HttpResponse:
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(request, "Community was not found.")
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
     if community.owner_id != request.user.id:
-        messages.error(request, "Only owner can review join requests.")
+        messages.error(
+            request,
+            "Only owner can review join requests.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
     if not community.is_public:
-        messages.error(request, "Join requests exist only for public communities.")
+        messages.error(
+            request,
+            "Join requests exist only for public communities.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     join_request = CommunityJoinRequest.objects.filter(
@@ -807,9 +892,12 @@ def decline_join_request(
         status=CommunityJoinRequest.STATUS_PENDING,
     ).select_related("user").first()
     if join_request is None:
-        messages.error(request, "Join request was not found.")
+        messages.error(
+            request,
+            "Join request was not found.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
-
     join_request.status = CommunityJoinRequest.STATUS_DECLINED
     join_request.reviewed_at = datetime.now(timezone.utc)
     join_request.save(update_fields=["status", "reviewed_at"])
@@ -819,7 +907,11 @@ def decline_join_request(
         community=community,
         approved=False,
     )
-    messages.success(request, f"Declined {join_request.user.username}.")
+    messages.success(
+        request,
+        f"Declined {join_request.user.username}.",
+        extra_tags="community",
+    )
     return redirect("community-detail", slug=slug)
 
 
@@ -853,6 +945,7 @@ def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
         messages.info(
             request,
             "Please login or register first, then click invitation link again.",
+            extra_tags="auth",
         )
         return redirect("invitation", token=community.invite_token)
     _join_community(request.user, community)
@@ -875,6 +968,7 @@ def leave_community(request: HttpRequest, slug: str) -> HttpResponse:
         messages.error(
             request,
             "You cannot leave your own community. Delete it instead.",
+            extra_tags="community",
         )
         return redirect("communities")
 
@@ -889,20 +983,36 @@ def leave_community(request: HttpRequest, slug: str) -> HttpResponse:
 def delete_community(request: HttpRequest, slug: str) -> HttpResponse:
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(request, "Community was not found.")
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if community.owner_id != request.user.id:
-        messages.error(request, "Only the community owner can delete it.")
+        messages.error(
+            request,
+            "Only the community owner can delete it.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if community.slug == "global":
-        messages.error(request, "Global community cannot be deleted.")
+        messages.error(
+            request,
+            "Global community cannot be deleted.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     community_name = community.name
     community.delete()
-    messages.success(request, f'Community "{community_name}" was deleted.')
+    messages.success(
+        request,
+        f'Community "{community_name}" was deleted.',
+        extra_tags="community",
+    )
     return redirect("communities")
 
 
@@ -915,15 +1025,27 @@ def remove_community_member(
 ) -> HttpResponse:
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(request, "Community was not found.")
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     if community.owner_id != request.user.id:
-        messages.error(request, "Only the community owner can remove members.")
+        messages.error(
+            request,
+            "Only the community owner can remove members.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     if user_id == request.user.id:
-        messages.error(request, "Owner cannot remove themselves.")
+        messages.error(
+            request,
+            "Owner cannot remove themselves.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     membership = CommunityMembership.objects.filter(
@@ -932,7 +1054,11 @@ def remove_community_member(
         active=True,
     ).select_related("user").first()
     if membership is None:
-        messages.error(request, "Member was not found.")
+        messages.error(
+            request,
+            "Member was not found.",
+            extra_tags="community",
+        )
         return redirect("community-detail", slug=slug)
 
     membership.active = False
@@ -941,6 +1067,7 @@ def remove_community_member(
     messages.success(
         request,
         f"{membership.user.username} was removed from the community.",
+        extra_tags="community",
     )
     return redirect("community-detail", slug=slug)
 
@@ -1011,7 +1138,11 @@ def community_guide(request: HttpRequest, slug: str) -> HttpResponse:
 def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
     community = Community.objects.filter(slug=slug).select_related("owner").first()
     if community is None:
-        messages.error(request, "Community was not found.")
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     is_member = False
@@ -1029,7 +1160,11 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
     can_view_full_details = is_owner or is_member
     can_view_general_details = can_view_full_details or community.is_public
     if not can_view_general_details:
-        messages.error(request, "You cannot view details of this community.")
+        messages.error(
+            request,
+            "You cannot view details of this community.",
+            extra_tags="community",
+        )
         return redirect("communities")
 
     sort_key = str(request.GET.get("sort", "joined")).strip().lower()
@@ -1264,7 +1399,7 @@ def chat_send(request: HttpRequest) -> JsonResponse:
     if len(text) > 500:
         return HttpResponseBadRequest("Message too long")
     cooldown_key = f"chatcooldown:global:{request.user.id}"
-    if not cache.add(cooldown_key, "1", timeout=20):
+    if not cache.add(cooldown_key, "1", timeout=5):
         redis_conn = get_redis_connection("default")
         ttl = redis_conn.ttl(cooldown_key)
         if ttl is None or ttl < 0:
@@ -1272,12 +1407,14 @@ def chat_send(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"status": "cooldown", "retry_after": ttl}, status=429)
     profile = getattr(request.user, "profile", None)
     avatar_url = profile.avatar.url if profile and profile.avatar else ""
+    display_name = _display_name_for_user(request.user)
     now = datetime.now(timezone.utc)
     try:
         enqueue_chat_message({
             "community_slug": community.slug,
             "user_id": request.user.id,
             "username": request.user.username,
+            "display_name": display_name,
             "avatar_url": avatar_url,
             "message": text,
             "created_at": now.isoformat(),
@@ -1461,12 +1598,14 @@ def community_chat_send(request: HttpRequest, slug: str) -> JsonResponse:
         return JsonResponse({"status": "cooldown", "retry_after": ttl}, status=429)
     profile = getattr(request.user, "profile", None)
     avatar_url = profile.avatar.url if profile and profile.avatar else ""
+    display_name = _display_name_for_user(request.user)
     now = datetime.now(timezone.utc)
     try:
         enqueue_chat_message({
             "community_slug": community.slug,
             "user_id": request.user.id,
             "username": request.user.username,
+            "display_name": display_name,
             "avatar_url": avatar_url,
             "message": text,
             "created_at": now.isoformat(),

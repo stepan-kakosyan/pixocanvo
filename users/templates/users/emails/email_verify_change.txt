@@ -1,0 +1,13 @@
+{% load i18n %}
+{% blocktrans with username=username %}Hello {{ username }},{% endblocktrans %}
+
+{% trans "You requested to change your email address. Please verify your new email by clicking the link below to complete the update." %}
+
+{% trans "New email:" %} {{ new_email }}
+
+{% trans "Verify email address:" %}
+{{ verify_url }}
+
+{% blocktrans with hours=expires_in_hours %}This link expires in {{ hours }} hours.{% endblocktrans %}
+
+{% trans "This is an automated email. Please do not reply to this message." %}

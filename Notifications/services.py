@@ -1,5 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.templatetags.static import static
 from django.utils import timezone
 
 from .models import Notification
@@ -15,7 +16,7 @@ def _initials_from_name(value: str, fallback: str) -> str:
 def system_notification_visual() -> dict:
     return {
         "visual_type": Notification.VISUAL_SYSTEM,
-        "image_url": "",
+        "image_url": static("pixelwar/images/logo-bg.png"),
         "initials": "PC",
     }
 

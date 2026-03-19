@@ -32,35 +32,35 @@
             </div>
             <ol class="divide-y divide-cyan-50">
                 <li class="flex items-start gap-4 px-5 py-4">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">1</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">1</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Pick a color from the palette" %}</p>
                         <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Choose from the 21-color palette at the top of the Canvas page. Use the <strong>Custom Color</strong> picker next to the palette for any hex color you like. Your active selection is highlighted with a ring.{% endblocktrans %}</p>
                     </div>
                 </li>
                 <li class="flex items-start gap-4 px-5 py-4">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">2</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">2</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Zoom and navigate" %}</p>
                         <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Use the <strong>+</strong> and <strong>−</strong> buttons to zoom. Pan by scrolling or dragging. The ⛶ button enters full-screen mode for a distraction-free experience. Zoom in before placing to avoid missing your target cell.{% endblocktrans %}</p>
                     </div>
                 </li>
                 <li class="flex items-start gap-4 px-5 py-4">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">3</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">3</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Click to place" %}</p>
                         <p class="mt-0.5 text-sm text-slate-500">{% trans "Click any cell on the canvas while a color is selected. Your placement is sent to the server, validated (cooldown, bounds, auth), and if accepted it appears on every connected player's screen within milliseconds." %}</p>
                     </div>
                 </li>
                 <li class="flex items-start gap-4 px-5 py-4">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">4</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">4</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Wait out the cooldown" %}</p>
                         <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}After each accepted placement you must wait <strong>60 seconds</strong> before placing again. The status bar shows how long remains. Rejected attempts do not reset the cooldown.{% endblocktrans %}</p>
                     </div>
                 </li>
                 <li class="flex items-start gap-4 px-5 py-4">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-sm font-black text-white shadow">5</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">5</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Highlight your pixels" %}</p>
                         <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}Press <strong>Highlight My Pixels</strong> to dim everything else and see exactly which pixels you own on the current canvas.{% endblocktrans %}</p>
@@ -135,8 +135,8 @@
         </div>
 
         <!-- leaderboard & chat -->
-        <div class="overflow-hidden rounded-3xl border border-fuchsia-200 bg-white shadow-lg shadow-fuchsia-100/60">
-            <div class="border-b border-fuchsia-100 px-5 py-4">
+        <div class="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-lg shadow-emerald-100/60">
+            <div class="border-b border-emerald-100 px-5 py-4">
                 <h3 class="font-black text-slate-900">🏆 {% trans "Leaderboard & chat" %}</h3>
             </div>
             <div class="divide-y divide-fuchsia-50">
@@ -144,7 +144,7 @@
                     <span class="mt-0.5 shrink-0 text-lg">🥇</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Ranking" %}</p>
-                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}The <a href="{{ leaders_url }}" class="font-semibold text-fuchsia-600 hover:text-fuchsia-800">Ranking</a> page ranks every contributor by the number of accepted pixels currently on the canvas. The list is available for the global canvas and for each community you belong to.{% endblocktrans %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}The <a href="{{ leaders_url }}" class="font-semibold text-emerald-600 hover:text-emerald-800">Ranking</a> page ranks every contributor by the number of accepted pixels currently on the canvas. The list is available for the global canvas and for each community you belong to.{% endblocktrans %}</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-4 px-5 py-4">
@@ -168,7 +168,7 @@
             {% if not request.user.is_authenticated %}
                 <div class="mt-4 flex gap-2">
                     <a href="{% url 'register' %}"
-                       class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow hover:from-fuchsia-400 hover:to-pink-400">
+                       class="rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white shadow hover:from-emerald-400 hover:to-sky-400">
                         {% trans "Create account" %}
                     </a>
                     <a href="{% url 'login' %}"
@@ -181,7 +181,7 @@
 
         <div class="text-center">
             <a href="{{ canvas_url }}"
-               class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-fuchsia-300/40 transition hover:from-fuchsia-400 hover:to-pink-400">
+               class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-300/40 transition hover:from-emerald-400 hover:to-sky-400">
                 {% trans "Go to Canvas" %} →
             </a>
         </div>

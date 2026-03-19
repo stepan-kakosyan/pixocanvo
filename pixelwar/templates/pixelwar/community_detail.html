@@ -103,7 +103,7 @@
                 <form method="post" action="{% url 'request-join-public-community' community.slug %}">
                     {% csrf_token %}
                     <button type="submit"
-                            class="rounded-lg bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-1.5 text-xs font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                            class="rounded-lg bg-gradient-to-r from-emerald-500 to-sky-500 px-3 py-1.5 text-xs font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
                         {% trans "Ask Join" %}
                     </button>
                 </form>
@@ -119,7 +119,7 @@
     </section>
 
     {% if community.is_public and is_owner %}
-        <section class="mt-5 rounded-3xl border border-fuchsia-200 bg-white p-6 shadow-xl shadow-fuchsia-100/60">
+        <section class="mt-5 rounded-3xl border border-emerald-200 bg-white p-6 shadow-xl shadow-emerald-100/60">
             <h2 class="text-xl font-black tracking-tight text-slate-900">{% trans "Join requests" %}</h2>
             {% if pending_join_requests %}
                 <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200">
@@ -142,7 +142,7 @@
                                             {% if row.avatar_url %}
                                                 <img src="{{ row.avatar_url }}" alt="avatar" class="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200">
                                             {% else %}
-                                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-xs font-black text-white">
+                                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-xs font-black text-white">
                                                     {{ row.request.user.username|slice:":1"|upper }}
                                                 </div>
                                             {% endif %}
@@ -214,11 +214,11 @@
                 <div class="flex flex-wrap items-center gap-2 text-xs">
                     <span class="font-semibold uppercase tracking-wide text-slate-500">{% trans "Sort" %}</span>
                     <a href="?sort=joined&dir={% if sort == 'joined' and dir == 'asc' %}desc{% else %}asc{% endif %}"
-                       class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'joined' %}bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
+                       class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'joined' %}bg-emerald-50 text-emerald-700 ring-emerald-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
                         {% trans "Join date" %} {% if sort == 'joined' %}({{ dir }}){% endif %}
                     </a>
                     <a href="?sort=pixels&dir={% if sort == 'pixels' and dir == 'desc' %}asc{% else %}desc{% endif %}"
-                       class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'pixels' %}bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
+                       class="rounded-lg px-2.5 py-1.5 font-semibold ring-1 {% if sort == 'pixels' %}bg-emerald-50 text-emerald-700 ring-emerald-200{% else %}bg-white text-slate-700 ring-slate-300 hover:bg-slate-100{% endif %}">
                         {% trans "Pixel count" %} {% if sort == 'pixels' %}({{ dir }}){% endif %}
                     </a>
                 </div>
@@ -246,7 +246,7 @@
                                         {% if row.avatar_url %}
                                             <img src="{{ row.avatar_url }}" alt="avatar" class="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200">
                                         {% else %}
-                                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-pink-500 text-xs font-black text-white">
+                                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-xs font-black text-white">
                                                 {{ row.user.username|slice:":1"|upper }}
                                             </div>
                                         {% endif %}
@@ -296,7 +296,7 @@
         {% endblocktrans %}
     </p>
     <input id="invitation-link-input" type="text" readonly class="mb-3 w-full rounded border border-slate-300 px-2 py-1 text-sm" value="">
-    <button id="copy-invite-link-btn" type="button" class="mb-2 w-full rounded bg-fuchsia-500 px-3 py-2 text-sm font-semibold text-white hover:bg-fuchsia-400">{% trans "Copy URL" %}</button>
+    <button id="copy-invite-link-btn" type="button" class="mb-2 w-full rounded bg-emerald-500 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-400">{% trans "Copy URL" %}</button>
     <button type="button" class="close-modal-btn w-full rounded bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300">{% trans "Close" %}</button>
 </div>
 

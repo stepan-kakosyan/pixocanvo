@@ -4,11 +4,15 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 from django.utils import translation
 from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from urllib.parse import urlsplit
+
+from .models import ContactMessage
 
 
 def activation_base_url(request) -> str:
@@ -42,6 +46,12 @@ def _language_code_for_request(request) -> str:
     )
 
 
+def _logo_url_from_reference(reference_url: str) -> str:
+    parts = urlsplit(reference_url)
+    base_url = f"{parts.scheme}://{parts.netloc}".rstrip("/")
+    return f"{base_url}{static('pixelwar/images/logo.png')}"
+
+
 def send_account_activation_email_payload(
     *,
     user_id: int,
@@ -59,6 +69,7 @@ def send_account_activation_email_payload(
         "activation_url": activation_url,
         "expires_in_hours": expires_in_hours,
         "LANGUAGE_CODE": language_code,
+        "logo_url": _logo_url_from_reference(activation_url),
     }
 
     with translation.override(language_code):
@@ -159,6 +170,7 @@ def send_password_reset_email_payload(
         "reset_url": reset_url,
         "expires_in_minutes": expires_in_minutes,
         "LANGUAGE_CODE": language_code,
+        "logo_url": _logo_url_from_reference(reset_url),
     }
 
     with translation.override(language_code):
@@ -189,5 +201,169 @@ def send_password_reset_email(request, user: User) -> None:
     send_password_reset_email_task.delay(
         user_id=user.id,
         reset_url=reset_url,
+        language_code=_language_code_for_request(request),
+    )
+
+
+def _email_verify_signing_salt() -> str:
+    return "users.email-verify"
+
+
+def build_email_verify_token(user: User, new_email: str) -> str:
+    return signing.dumps(
+        {
+            "uid": user.pk,
+            "email": new_email.lower(),
+            "pwd": user.password,
+        },
+        salt=_email_verify_signing_salt(),
+        compress=True,
+    )
+
+
+def get_user_from_email_verify_token(token: str) -> tuple[User | None, str]:
+    try:
+        payload = signing.loads(
+            token,
+            salt=_email_verify_signing_salt(),
+            max_age=settings.PASSWORD_RESET_LINK_TTL_SECONDS,
+        )
+    except signing.BadSignature:
+        return None, ""
+
+    user_id = payload.get("uid")
+    new_email = payload.get("email", "").strip().lower()
+    password_hash = payload.get("pwd")
+    if user_id is None or not new_email or not password_hash:
+        return None, ""
+
+    user = User.objects.filter(pk=user_id).first()
+    if user is None:
+        return None, ""
+    if user.password != password_hash:
+        return None, ""
+    return user, new_email
+
+
+def build_email_verify_url(request, user: User, new_email: str) -> str:
+    token = build_email_verify_token(user, new_email)
+    verify_path = reverse(
+        "verify-email-change",
+        kwargs={"token": token},
+    )
+    return f"{activation_base_url(request)}{verify_path}"
+
+
+def send_email_verification_email_payload(
+    *,
+    user_id: int,
+    new_email: str,
+    verify_url: str,
+    language_code: str,
+) -> None:
+    user = User.objects.filter(pk=user_id).first()
+    if user is None or not new_email:
+        return
+    timeout_seconds = int(
+        getattr(settings, "PASSWORD_RESET_LINK_TTL_SECONDS", 1800)
+    )
+    expires_in_hours = max(1, timeout_seconds // 3600)
+
+    context = {
+        "username": user.username,
+        "new_email": new_email,
+        "verify_url": verify_url,
+        "expires_in_hours": expires_in_hours,
+        "LANGUAGE_CODE": language_code,
+        "logo_url": _logo_url_from_reference(verify_url),
+    }
+
+    with translation.override(language_code):
+        subject = _("Verify your new email address")
+        text_body = render_to_string(
+            "users/emails/email_verify_change.txt",
+            context,
+        )
+        html_body = render_to_string(
+            "users/emails/email_verify_change.html",
+            context,
+        )
+
+    message = EmailMultiAlternatives(
+        subject,
+        text_body,
+        settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER,
+        [new_email],
+    )
+    message.attach_alternative(html_body, "text/html")
+    message.send(fail_silently=False)
+
+
+def send_email_verification_email(
+    request, user: User, new_email: str
+) -> None:
+    from .tasks import send_email_verification_email_task
+
+    verify_url = build_email_verify_url(request, user, new_email)
+    send_email_verification_email_task.delay(
+        user_id=user.id,
+        new_email=new_email,
+        verify_url=verify_url,
+        language_code=_language_code_for_request(request),
+    )
+
+
+def send_contact_us_email_payload(
+    *,
+    contact_message_id: int,
+    site_url: str,
+    language_code: str,
+) -> None:
+    message_data = ContactMessage.objects.filter(pk=contact_message_id).first()
+    if message_data is None:
+        return
+
+    context = {
+        "contact_id": message_data.id,
+        "name": message_data.name,
+        "email": message_data.email,
+        "subject_text": message_data.subject,
+        "description": message_data.description,
+        "submitted_at": message_data.created_at,
+        "status": message_data.status,
+        "LANGUAGE_CODE": language_code,
+        "logo_url": _logo_url_from_reference(site_url),
+    }
+
+    with translation.override(language_code):
+        subject = _("New Contact Us message: %(subject)s") % {
+            "subject": message_data.subject[:80],
+        }
+        text_body = render_to_string(
+            "users/emails/contact_us_notification.txt",
+            context,
+        )
+        html_body = render_to_string(
+            "users/emails/contact_us_notification.html",
+            context,
+        )
+
+    message = EmailMultiAlternatives(
+        subject,
+        text_body,
+        settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER,
+        ["info@yatuk.am"],
+        reply_to=[message_data.email],
+    )
+    message.attach_alternative(html_body, "text/html")
+    message.send(fail_silently=False)
+
+
+def send_contact_us_email(request, contact_message: ContactMessage) -> None:
+    from .tasks import send_contact_us_email_task
+
+    send_contact_us_email_task.delay(
+        contact_message_id=contact_message.id,
+        site_url=activation_base_url(request),
         language_code=_language_code_for_request(request),
     )

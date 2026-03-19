@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
@@ -20,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "channels",
     "Notifications",
     "pixelwar",
@@ -145,10 +147,92 @@ USE_I18N = True
 USE_TZ = True
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
-STATIC_URL = "/static/"
+
+def env_bool(name: str, default: bool = False) -> bool:
+    default_value = "1" if default else "0"
+    return os.getenv(name, default_value) == "1"
+
+
+def build_s3_base_url(
+    bucket_name: str,
+    region_name: str,
+    custom_domain: str,
+    endpoint_url: str,
+) -> str:
+    if custom_domain:
+        return f"https://{custom_domain.strip('/')}"
+
+    if endpoint_url:
+        return f"{endpoint_url.rstrip('/')}/{bucket_name}"
+
+    if region_name and region_name != "us-east-1":
+        return f"https://{bucket_name}.s3.{region_name}.amazonaws.com"
+
+    return f"https://{bucket_name}.s3.amazonaws.com"
+
+
+USE_S3 = env_bool("USE_S3")
 STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
+if USE_S3:
+    aws_bucket_name = os.getenv("AWS_STORAGE_BUCKET_NAME", "").strip()
+    aws_region_name = os.getenv("AWS_S3_REGION_NAME", "").strip()
+    aws_custom_domain = os.getenv("AWS_S3_CUSTOM_DOMAIN", "").strip()
+    aws_endpoint_url = os.getenv("AWS_S3_ENDPOINT_URL", "").strip()
+    aws_static_location = os.getenv("AWS_STATIC_LOCATION", "static")
+    aws_media_location = os.getenv("AWS_MEDIA_LOCATION", "media")
+    aws_static_location = aws_static_location.strip("/") or "static"
+    aws_media_location = aws_media_location.strip("/") or "media"
+
+    if not aws_bucket_name:
+        raise ImproperlyConfigured(
+            "AWS_STORAGE_BUCKET_NAME must be set when USE_S3=1."
+        )
+
+    s3_options = {
+        "bucket_name": aws_bucket_name,
+        "default_acl": None,
+        "file_overwrite": env_bool("AWS_S3_FILE_OVERWRITE"),
+        "querystring_auth": env_bool("AWS_QUERYSTRING_AUTH"),
+    }
+
+    if aws_region_name:
+        s3_options["region_name"] = aws_region_name
+
+    if aws_custom_domain:
+        s3_options["custom_domain"] = aws_custom_domain
+
+    if aws_endpoint_url:
+        s3_options["endpoint_url"] = aws_endpoint_url
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                **s3_options,
+                "location": aws_media_location,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                **s3_options,
+                "location": aws_static_location,
+            },
+        },
+    }
+
+    aws_base_url = build_s3_base_url(
+        aws_bucket_name,
+        aws_region_name,
+        aws_custom_domain,
+        aws_endpoint_url,
+    )
+    STATIC_URL = f"{aws_base_url}/{aws_static_location}/"
+    MEDIA_URL = f"{aws_base_url}/{aws_media_location}/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

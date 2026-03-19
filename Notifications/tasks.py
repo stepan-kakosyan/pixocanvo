@@ -3,8 +3,17 @@ from celery import shared_task
 from .services import create_notification
 
 
-@shared_task
+TASK_RETRY_POLICY = {
+    "autoretry_for": (Exception,),
+    "retry_backoff": True,
+    "retry_jitter": True,
+    "retry_kwargs": {"max_retries": 3},
+}
+
+
+@shared_task(bind=True, **TASK_RETRY_POLICY)
 def create_notification_task(
+    self,
     *,
     recipient_id: int,
     notification_type: str,

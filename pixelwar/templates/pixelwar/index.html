@@ -27,12 +27,12 @@
         <section class="community-tabs mb-4 rounded-2xl border border-slate-200 bg-white p-3">
             <div class="flex flex-wrap items-center gap-2 text-sm">
                 <a href="{% url 'index' %}"
-                    class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if not current_community %}active{% endif %}">
+                    class="community-tab rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100 {% if not current_community %}active{% endif %}">
                     Global
                 </a>
                 {% for membership in memberships %}
                     <a href="{% url 'community-canvas' membership.community.slug %}"
-                       class="community-tab rounded-full bg-fuchsia-50 px-2.5 py-1 text-xs font-semibold text-fuchsia-700 ring-1 ring-fuchsia-200 hover:bg-fuchsia-100 {% if current_community and membership.community.slug == current_community.slug %}active{% endif %}">
+                       class="community-tab rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100 {% if current_community and membership.community.slug == current_community.slug %}active{% endif %}">
                         {{ membership.community.name }}
                     </a>
                 {% endfor %}
@@ -40,7 +40,7 @@
         </section>
     {% endif %}
 
-    <section class="mb-4 w-full rounded-2xl border border-pink-300 bg-white/80 px-3 py-2 shadow-xl shadow-pink-200/50 backdrop-blur">
+    <section class="mb-4 w-full rounded-2xl border border-cyan-300 bg-white/80 px-3 py-2 shadow-xl shadow-pink-200/50 backdrop-blur">
         <div class="flex flex-wrap items-center gap-2">
             <span class="shrink-0 text-sm font-semibold text-slate-700">Palette</span>
 
@@ -77,7 +77,7 @@
             <button id="highlightMine" type="button" class="shrink-0 rounded-xl bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">Highlight My Pixels</button>
         {% endif %}
             <div class="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
-                <button id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-fuchsia-50">+</button>
+                <button id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-emerald-50">+</button>
                 <button id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-sky-50">-</button>
                 <button id="canvasFullscreen" type="button" aria-label="Full screen" title="Full screen" class="flex h-9 w-9 items-center justify-center text-base font-bold text-slate-700 transition hover:bg-slate-100">⛶</button>
             </div>
@@ -88,14 +88,14 @@
     </section>
 
     <section class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
-        <div class="max-h-[72vh] overflow-x-auto overflow-y-auto rounded-xl border border-sky-100 bg-white p-2">
+        <div class="canvas-scroll-frame max-h-[72vh] overflow-scroll rounded-xl border border-sky-100 bg-white p-2" aria-label="Canvas scroll area">
             <div class="relative w-fit">
                 <div id="cooldownBadge" class="canvas-cooldown-badge hidden" aria-live="polite">0</div>
                 <canvas id="pixelCanvas"></canvas>
                 <canvas id="pixelOverlay"></canvas>
             </div>
         </div>
-        <p id="gridMeta" class="mt-3 text-xs text-slate-600 md:text-sm">
+        <p id="gridMeta" class="mt-3 text-xs font-semibold text-slate-700 md:text-sm">
             Grid: {{ grid_size }}x{{ grid_size }}. Scroll horizontally and vertically on smaller screens.
         </p>
     </section>
@@ -105,14 +105,16 @@
     </p>
 </div>
 
-<button id="chatToggle" type="button" class="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white shadow-xl shadow-fuchsia-300/50 hover:from-fuchsia-400 hover:to-sky-400 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14">
-    <span class="text-[10px] font-bold uppercase tracking-wide sm:text-xs">Chat</span>
+<button id="chatToggle" type="button" class="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-xl shadow-emerald-300/50 hover:from-emerald-400 hover:to-sky-400 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
     <span id="chatUnreadBadge" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-rose-500 px-1.5 py-0.5 text-center text-xs font-bold text-white">0</span>
 </button>
 
-<aside id="chatPanel" class="fixed bottom-20 right-2 z-40 hidden h-[70vh] w-[calc(100vw-1rem)] max-w-[22rem] rounded-2xl border border-pink-200 bg-white/95 shadow-2xl shadow-pink-200/60 backdrop-blur sm:bottom-24 sm:right-6 sm:h-[28rem] sm:w-[22rem] sm:max-w-[calc(100vw-2rem)]">
+<aside id="chatPanel" class="fixed bottom-20 right-2 z-40 hidden h-[70vh] w-[calc(100vw-1rem)] max-w-[22rem] flex flex-col overflow-hidden rounded-2xl border border-pink-200 bg-white/95 shadow-2xl shadow-cyan-200/60 backdrop-blur sm:bottom-24 sm:right-6 sm:h-[28rem] sm:w-[22rem] sm:max-w-[calc(100vw-2rem)]">
     <div class="flex items-center justify-between border-b border-pink-100 px-4 py-3">
-        <h2 class="text-sm font-black uppercase tracking-wide text-fuchsia-700">Messenger</h2>
+        <h2 class="text-sm font-black uppercase tracking-wide text-emerald-700">Messenger</h2>
         <div class="flex items-center gap-2">
             <button id="chatMute" type="button" class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200">Sound On</button>
             <button id="chatPin" type="button" class="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200">Pin</button>
@@ -122,8 +124,8 @@
     {% if chat_grouped %}
         <div id="chatGroups" class="chat-groups border-b border-pink-100 px-3 py-2"></div>
     {% endif %}
-    <div id="chatMessages" class="h-[19.5rem] overflow-y-auto px-3 py-2"></div>
-    <div class="border-t border-pink-100 p-3">
+    <div id="chatMessages" class="min-h-0 flex-1 overflow-y-auto px-3 py-2"></div>
+    <div class="shrink-0 border-t border-pink-100 bg-white/95 p-3">
         <p id="chatNotice" class="mb-2 min-h-4 text-xs font-medium text-slate-500"></p>
         {% if request.user.is_authenticated %}
             {% if not chat_can_send %}
@@ -132,8 +134,8 @@
                 </div>
             {% endif %}
             <form id="chatForm" class="space-y-2">
-                <textarea id="chatInput" rows="2" maxlength="500" {% if not chat_can_send %}disabled{% endif %} class="w-full resize-none rounded-xl border border-pink-200 px-3 py-2 text-sm outline-none focus:border-fuchsia-400 {% if not chat_can_send %}cursor-not-allowed bg-slate-100 text-slate-400{% endif %}" placeholder="{% if chat_can_send %}Write a message...{% else %}Validate your email before chat{% endif %}"></textarea>
-                <button type="submit" {% if not chat_can_send %}disabled{% endif %} class="w-full rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-3 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400 {% if not chat_can_send %}cursor-not-allowed opacity-50 hover:from-fuchsia-500 hover:to-pink-500{% endif %}">Send Message</button>
+                <textarea id="chatInput" rows="2" maxlength="500" {% if not chat_can_send %}disabled{% endif %} class="w-full resize-none rounded-xl border border-cyan-200 px-3 py-2 text-sm outline-none focus:border-emerald-400 {% if not chat_can_send %}cursor-not-allowed bg-slate-100 text-slate-400{% endif %}" placeholder="{% if chat_can_send %}Write a message...{% else %}Validate your email before chat{% endif %}"></textarea>
+                <button type="submit" {% if not chat_can_send %}disabled{% endif %} class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-3 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400 {% if not chat_can_send %}cursor-not-allowed opacity-50 hover:from-emerald-500 hover:to-sky-500{% endif %}">Send Message</button>
             </form>
         {% else %}
             <div class="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">

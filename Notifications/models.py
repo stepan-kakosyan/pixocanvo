@@ -5,6 +5,7 @@ from django.db import models
 class Notification(models.Model):
     TYPE_SYSTEM_NOTICE = "system_notice"
     TYPE_EMAIL_CONFIRMED = "email_confirmed"
+    TYPE_EMAIL_CHANGE_PENDING = "email_change_pending"
     TYPE_JOIN_REQUEST = "join_request"
     TYPE_JOIN_APPROVED = "join_approved"
     TYPE_JOIN_DECLINED = "join_declined"
@@ -14,6 +15,7 @@ class Notification(models.Model):
     TYPE_CHOICES = (
         (TYPE_SYSTEM_NOTICE, "System notice"),
         (TYPE_EMAIL_CONFIRMED, "Email confirmed"),
+        (TYPE_EMAIL_CHANGE_PENDING, "Email change pending"),
         (TYPE_JOIN_REQUEST, "Join request"),
         (TYPE_JOIN_APPROVED, "Join approved"),
         (TYPE_JOIN_DECLINED, "Join declined"),

@@ -5,7 +5,7 @@
 
 {% block content %}
 <main class="mx-auto max-w-xl px-4 py-10 md:px-6">
-    <section class="rounded-3xl border border-fuchsia-200 bg-white p-6 shadow-xl">
+    <section class="rounded-3xl border border-emerald-200 bg-white p-6 shadow-xl">
         <h1 class="text-2xl font-black tracking-tight text-slate-900">
             {% trans "Community invitation" %}
         </h1>
@@ -19,7 +19,7 @@
                 {% trans "You are already a member of this community." %}
             </div>
             <a href="{% url 'community-canvas' invite_community.slug %}"
-               class="mt-4 inline-block rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+               class="mt-4 inline-block rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
                 {% trans "Open community canvas" %}
             </a>
         {% else %}
@@ -28,13 +28,13 @@
                     <form method="post" action="{% url 'invitation-accept' invite_community.invite_token %}">
                         {% csrf_token %}
                         <button type="submit"
-                                class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                                class="rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
                             {% trans "Accept invitation" %}
                         </button>
                     </form>
                 {% else %}
                     <button id="open-auth-modal" type="button"
-                            class="rounded-xl bg-gradient-to-r from-fuchsia-500 to-pink-500 px-4 py-2 text-sm font-semibold text-white hover:from-fuchsia-400 hover:to-pink-400">
+                            class="rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
                         {% trans "Accept invitation" %}
                     </button>
                 {% endif %}
@@ -55,14 +55,14 @@
     {% if not request.user.is_authenticated %}
         <div id="auth-modal" class="fixed inset-0 z-50 hidden">
             <div id="auth-modal-backdrop" class="absolute inset-0 bg-slate-900/50"></div>
-            <div class="relative z-10 mx-auto mt-24 w-[calc(100vw-2rem)] max-w-md rounded-2xl border border-fuchsia-200 bg-white p-5 shadow-2xl">
+            <div class="relative z-10 mx-auto mt-24 w-[calc(100vw-2rem)] max-w-md rounded-2xl border border-emerald-200 bg-white p-5 shadow-2xl">
                 <h2 class="text-lg font-black text-slate-900">{% trans "Login or register required" %}</h2>
                 <p class="mt-2 text-sm text-slate-600">
                     {% trans "To join this community, please login or create an account. After that, open this invitation link again and accept." %}
                 </p>
                 <div class="mt-4 flex flex-wrap gap-2">
                     <a href="{% url 'login' %}"
-                       class="rounded-xl bg-fuchsia-600 px-4 py-2 text-sm font-semibold text-white hover:bg-fuchsia-500">
+                       class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
                         {% trans "Login" %}
                     </a>
                     <a href="{% url 'register' %}"

@@ -16,8 +16,17 @@ from pixelwar.models import Community, CommunityMembership
 
 from .email_service import get_user_from_password_reset_token
 from .email_service import send_account_activation_email
+from .email_service import send_contact_us_email
 from .email_service import send_password_reset_email
-from .forms import ForgotPasswordForm, LoginForm, ProfileSettingsForm, RegisterForm
+from .email_service import send_email_verification_email
+from .forms import (
+    AvatarUploadForm,
+    ContactUsForm,
+    ForgotPasswordForm,
+    LoginForm,
+    ProfileSettingsForm,
+    RegisterForm,
+)
 from .models import UserProfile
 from django.db.models import Q
 
@@ -31,6 +40,43 @@ def _base_nav_context(request: HttpRequest) -> dict:
             else "full"
         ),
     }
+
+
+def contact_us_view(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = ContactUsForm(
+            request.POST,
+            user=request.user,
+        )
+        if form.is_valid():
+            contact_message = form.save()
+            try:
+                send_contact_us_email(request, contact_message)
+            except Exception:
+                messages.error(
+                    request,
+                    "Your message was received, but email delivery to support "
+                    "failed. Please try again later.",
+                    extra_tags="contact",
+                )
+                return redirect("contact-us")
+
+            messages.success(
+                request,
+                "Your message has been sent successfully. Our team will review "
+                "it soon.",
+                extra_tags="contact",
+            )
+            return redirect("contact-us")
+    else:
+        form = ContactUsForm(user=request.user)
+
+    context = {
+        "form": form,
+        "active_tab": None,
+    }
+    context.update(_base_nav_context(request))
+    return render(request, "users/contact_us.html", context)
 
 
 def _consume_pending_invite(request: HttpRequest, user) -> Community | None:
@@ -88,12 +134,14 @@ def register_view(request: HttpRequest) -> HttpResponse:
                     request,
                     "Registration successful. Check your email to activate your "
                     "account.",
+                    extra_tags="auth",
                 )
             except Exception:
                 messages.error(
                     request,
                     "Account created, but activation email could not be sent. "
                     "Please contact support.",
+                    extra_tags="auth",
                 )
 
             target_url = reverse("index")
@@ -135,7 +183,11 @@ def login_view(request: HttpRequest) -> HttpResponse:
                 request,
                 user,
             )
-            messages.success(request, "Logged in successfully.")
+            messages.success(
+                request,
+                "Logged in successfully.",
+                extra_tags="auth",
+            )
             if not profile.email_confirmed:
                 notification_signals.email_verification_needed.send_robust(
                     sender=type(user),
@@ -186,7 +238,11 @@ def login_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
-    messages.info(request, "You have been logged out.")
+    messages.info(
+        request,
+        "You have been logged out.",
+        extra_tags="auth",
+    )
     return redirect("index")
 
 
@@ -199,13 +255,45 @@ def profile_settings_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = ProfileSettingsForm(request.POST, request.FILES, user=user)
         if form.is_valid():
+            email_changed = form.email_changed()
             updated_user = form.save()
             if updated_user.password != previous_password_hash:
                 update_session_auth_hash(request, updated_user)
-            messages.success(request, "Profile updated successfully.")
+
+            if email_changed:
+                new_email = form.cleaned_data["email"].strip().lower()
+                try:
+                    send_email_verification_email(request, user, new_email)
+                    notification_signals.email_change_verification_needed.send_robust(
+                        sender=type(user),
+                        user=user,
+                        new_email=new_email,
+                    )
+                    messages.success(
+                        request,
+                        f"Profile updated successfully. Verification email sent to "
+                        f"{new_email}. Please verify your new email address to update "
+                        f"your account.",
+                        extra_tags="profile",
+                    )
+                except Exception:
+                    messages.warning(
+                        request,
+                        "Profile updated, but verification email could not be sent. "
+                        "Please try resending it later.",
+                        extra_tags="profile",
+                    )
+            else:
+                messages.success(
+                    request,
+                    "Profile updated successfully.",
+                    extra_tags="profile",
+                )
             return redirect("profile-settings")
     else:
         form = ProfileSettingsForm(user=user)
+
+    avatar_upload_form = AvatarUploadForm()
 
     avatar_url = ""
     if profile and profile.avatar:
@@ -216,15 +304,37 @@ def profile_settings_view(request: HttpRequest) -> HttpResponse:
         "users/profile_settings.html",
         {
             "form": form,
+            "avatar_upload_form": avatar_upload_form,
             "avatar_url": avatar_url,
             "active_tab": None,
             "canvas_url": "/",
             "leaders_url": "/leaders/",
             "guide_url": "/guide/",
             "communities_url": "/communities/",
+            "pending_email": profile.pending_email or "",
             **_activation_email_panel_context(profile),
         },
     )
+
+
+@login_required
+@require_POST
+def upload_avatar_view(request: HttpRequest) -> HttpResponse:
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    form = AvatarUploadForm(request.POST, request.FILES)
+    context = {
+        "avatar_url": profile.avatar.url if profile.avatar else "",
+        "avatar_upload_form": form,
+        "avatar_upload_success": False,
+    }
+
+    if form.is_valid():
+        profile.avatar = form.cleaned_data["avatar"]
+        profile.save(update_fields=["avatar"])
+        context["avatar_url"] = profile.avatar.url
+        context["avatar_upload_success"] = True
+
+    return render(request, "users/partials/avatar_upload_response.html", context)
 
 
 @login_required
@@ -247,7 +357,7 @@ def resend_activation_email_view(request: HttpRequest) -> HttpResponse:
                     feedback_level=feedback_level,
                 ),
             )
-        messages.info(request, feedback_message)
+        messages.info(request, feedback_message, extra_tags="profile")
         return redirect("profile-settings")
 
     try:
@@ -270,11 +380,11 @@ def resend_activation_email_view(request: HttpRequest) -> HttpResponse:
         )
 
     if feedback_level == "success":
-        messages.success(request, feedback_message)
+        messages.success(request, feedback_message, extra_tags="profile")
     elif feedback_level == "error":
-        messages.error(request, feedback_message)
+        messages.error(request, feedback_message, extra_tags="profile")
     else:
-        messages.info(request, feedback_message)
+        messages.info(request, feedback_message, extra_tags="profile")
 
     return redirect("profile-settings")
 
@@ -291,7 +401,11 @@ def activate_account_view(
         user = None
 
     if user is None:
-        messages.error(request, "Invalid activation link.")
+        messages.error(
+            request,
+            "Invalid activation link.",
+            extra_tags="auth",
+        )
         return redirect("login")
 
     profile, _ = UserProfile.objects.get_or_create(user=user)
@@ -300,7 +414,11 @@ def activate_account_view(
         return redirect("activation-success")
 
     if not default_token_generator.check_token(user, token):
-        messages.error(request, "Activation link is invalid or expired.")
+        messages.error(
+            request,
+            "Activation link is invalid or expired.",
+            extra_tags="auth",
+        )
         return redirect("login")
 
     if not user.is_active:
@@ -314,6 +432,91 @@ def activate_account_view(
         user=user,
     )
     return redirect("activation-success")
+
+
+def verify_email_change_view(request: HttpRequest, token: str) -> HttpResponse:
+    from .email_service import get_user_from_email_verify_token
+
+    user, new_email = get_user_from_email_verify_token(token)
+    if user is None or not new_email:
+        messages.error(
+            request,
+            "Email verification link is invalid or expired.",
+            extra_tags="auth",
+        )
+        return redirect("login")
+
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+
+    # User cancelled the email change after the link was sent.
+    if not profile.pending_email or profile.pending_email.lower() != new_email.lower():
+        if request.user.is_authenticated:
+            messages.info(
+                request,
+                "This email change request was already cancelled and the link is"
+                " no longer valid.",
+                extra_tags="profile",
+            )
+            return redirect("profile-settings")
+        messages.info(
+            request,
+            "This email change request was already cancelled.",
+            extra_tags="auth",
+        )
+        return redirect("login")
+
+    existing_user = User.objects.filter(
+        email__iexact=new_email
+    ).exclude(pk=user.pk).first()
+    if existing_user is not None:
+        messages.error(
+            request,
+            "This email address is already registered to another account.",
+            extra_tags="auth",
+        )
+        return redirect("login")
+
+    user.email = new_email
+    user.save(update_fields=["email"])
+
+    profile.pending_email = ""
+    profile.email_confirmed = True
+    profile.save(update_fields=["pending_email", "email_confirmed"])
+
+    notification_signals.email_confirmed.send_robust(
+        sender=type(user),
+        user=user,
+    )
+
+    if not request.user.is_authenticated:
+        messages.success(
+            request,
+            "Email verified successfully. You can now log in with your new email.",
+            extra_tags="auth",
+        )
+        return redirect("login")
+
+    messages.success(
+        request,
+        "Your email address has been updated successfully.",
+        extra_tags="profile",
+    )
+    return redirect("profile-settings")
+
+
+@login_required
+@require_POST
+def cancel_email_change_view(request: HttpRequest) -> HttpResponse:
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    if profile.pending_email:
+        profile.pending_email = ""
+        profile.save(update_fields=["pending_email"])
+        messages.success(
+            request,
+            "Email change cancelled. Your current email address remains unchanged.",
+            extra_tags="profile",
+        )
+    return redirect("profile-settings")
 
 
 def activation_success_view(request: HttpRequest) -> HttpResponse:
@@ -366,7 +569,11 @@ def forgot_password_view(request: HttpRequest) -> HttpResponse:
 def password_reset_confirm_view(request: HttpRequest, token: str) -> HttpResponse:
     user = get_user_from_password_reset_token(token)
     if user is None:
-        messages.error(request, "Password reset link is invalid or expired.")
+        messages.error(
+            request,
+            "Password reset link is invalid or expired.",
+            extra_tags="auth",
+        )
         return redirect("forgot-password")
 
     if request.method == "POST":

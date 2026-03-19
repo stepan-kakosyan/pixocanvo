@@ -79,3 +79,5 @@ flake8
 whitenoise
 celery
 flower
+boto3
+django-storages
