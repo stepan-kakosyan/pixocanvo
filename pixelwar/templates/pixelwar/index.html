@@ -81,12 +81,16 @@
                 <button id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-sky-50">-</button>
                 <button id="canvasFullscreen" type="button" aria-label="Expand canvas" title="Expand canvas" class="flex h-9 w-9 items-center justify-center text-base font-bold text-slate-700 transition hover:bg-slate-100">⛶</button>
             </div>
+            {% if request.user.is_authenticated %}
+            <div class="h-7 w-px shrink-0 bg-slate-200" aria-hidden="true"></div>
+            <button id="accelerateBtn" type="button" class="shrink-0 rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 px-3 py-1.5 text-sm font-bold text-white ring-2 ring-violet-300 hover:from-violet-400 hover:via-purple-400 hover:to-indigo-500 shadow-lg transition-all" title="Buy Acceleration (15 Pixo)">
+                ⚡ Accelerate
+            </button>
+            {% endif %}
         </div>
 
         <p id="status" class="mt-2 text-sm font-medium text-slate-700">Loading pixels...</p>
     </section>
-
-    <section id="canvasViewportSection" class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
         <div id="canvasScrollTop"
                class="canvas-scrollbar-top mb-2"
              aria-hidden="true">

@@ -2,6 +2,7 @@ import json
 import math
 import re
 import uuid
+import hashlib
 from datetime import datetime, timezone
 
 from django.conf import settings
@@ -9,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core import signing
+from django.db import transaction
 from django.db.models import Count, Max, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -17,6 +20,14 @@ from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from Notifications import signals as notification_signals
+from users.pixo_service import (
+    assign_referrer_if_missing,
+    grant_pixel_milestones_pixo,
+    grant_referral_community_join_reward,
+    increment_acceleration_pixel_count,
+    spend_pixo,
+)
+from users.models import ReferralAttribution
 from django.views.decorators.http import require_GET, require_POST
 from django_redis import get_redis_connection
 from kafka.errors import KafkaError, NoBrokersAvailable
@@ -28,7 +39,9 @@ from .models import ChatMessage, Community, CommunityJoinRequest
 from .models import CommunityMembership, Pixel, UserAction
 
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
-MAX_OWNED_COMMUNITIES = 5
+COMMUNITY_CREATION_PIXO_COST = 60
+REFERRAL_TOKEN_SALT = "pixelwar.referral.v1"
+REFERRAL_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24 * 365
 
 
 def _channel_group_send(group: str, message: dict) -> None:
@@ -204,6 +217,7 @@ def _top_users_by_pixels(community: Community, limit: int = 10) -> list[dict]:
         user_info[user.id] = {
             "username": user.username,
             "avatar_url": _avatar_url_from_profile(profile),
+            "rewarded_pixels_count": int(getattr(profile, "rewarded_pixels_count", 0) or 0),
         }
     top = []
     for user_id, pixel_count in counts_by_id.items():
@@ -213,6 +227,7 @@ def _top_users_by_pixels(community: Community, limit: int = 10) -> list[dict]:
                 "username": info["username"],
                 "avatar_url": info["avatar_url"],
                 "pixel_count": pixel_count,
+                "rewarded_pixels_count": info["rewarded_pixels_count"],
             })
     top.sort(key=lambda item: item["pixel_count"], reverse=True)
     return top[:limit]
@@ -291,12 +306,6 @@ def _community_active_member_count(community: Community) -> int:
     ).count()
 
 
-def _is_public_community_full(community: Community) -> bool:
-    if not community.is_public:
-        return False
-    return _community_active_member_count(community) >= community.max_members
-
-
 def _public_communities_for_lobby(user) -> list[dict]:
     communities = list(
         Community.objects.filter(is_public=True)
@@ -339,7 +348,7 @@ def _public_communities_for_lobby(user) -> list[dict]:
     rows: list[dict] = []
     for community in communities:
         active_count = int(member_counts.get(community.id, 0))
-        is_full = active_count >= int(community.max_members)
+        is_full = False
         is_member = community.id in member_community_ids
         is_pending = community.id in pending_request_ids
         can_request = (
@@ -347,7 +356,6 @@ def _public_communities_for_lobby(user) -> list[dict]:
             and community.owner_id != getattr(user, "id", None)
             and not is_member
             and not is_pending
-            and not is_full
         )
         rows.append({
             "community": community,
@@ -374,12 +382,86 @@ def _global_community(request: HttpRequest) -> Community | None:
     return None
 
 
-def _join_community(user, community: Community) -> CommunityMembership:
+def _ref_email_hash(value: str) -> str:
+    return hashlib.sha256(str(value or "").strip().lower().encode("utf-8")).hexdigest()
+
+
+def _encode_referrer_token(user: User | None) -> str:
+    if not user or not getattr(user, "id", None):
+        return ""
+    payload = {
+        "uid": int(user.id),
+        "uname": str(user.username or ""),
+        "emh": _ref_email_hash(getattr(user, "email", "")),
+    }
+    return signing.dumps(payload, salt=REFERRAL_TOKEN_SALT, compress=True)
+
+
+def _resolve_referrer_user(ref_raw: str | None) -> User | None:
+    if not ref_raw:
+        return None
+    raw = str(ref_raw).strip()
+
+    # Preferred format: signed referral token.
+    try:
+        payload = signing.loads(
+            raw,
+            salt=REFERRAL_TOKEN_SALT,
+            max_age=REFERRAL_TOKEN_MAX_AGE_SECONDS,
+        )
+        ref_user_id = int(payload.get("uid", 0))
+        if ref_user_id <= 0:
+            return None
+        user = User.objects.filter(pk=ref_user_id).first()
+        if user is None:
+            return None
+
+        expected_username = str(payload.get("uname", ""))
+        expected_email_hash = str(payload.get("emh", ""))
+
+        if expected_username and user.username != expected_username:
+            return None
+        if expected_email_hash and _ref_email_hash(user.email) != expected_email_hash:
+            return None
+
+        return user
+    except (signing.BadSignature, signing.SignatureExpired, TypeError, ValueError):
+        pass
+
+    # Legacy format support: plain integer user id.
+    try:
+        ref_user_id = int(raw)
+    except (TypeError, ValueError):
+        return None
+    if ref_user_id <= 0:
+        return None
+    return User.objects.filter(pk=ref_user_id).first()
+
+
+def _join_community(
+    user,
+    community: Community,
+    *,
+    referrer_user: User | None = None,
+) -> CommunityMembership:
     membership, created = CommunityMembership.objects.get_or_create(
         community=community,
         user=user,
         defaults={"active": True},
     )
+    if created and referrer_user and referrer_user.id != user.id:
+        grant_referral_community_join_reward(
+            invited_user=user,
+            referrer_user=referrer_user,
+            community=community,
+        )
+    elif referrer_user and referrer_user.id != user.id:
+        assign_referrer_if_missing(
+            referred_user=user,
+            referrer_user=referrer_user,
+            source=ReferralAttribution.SOURCE_COMMUNITY_INVITE,
+            community=community,
+        )
     if not created and not membership.active:
         membership.active = True
         membership.left_at = None
@@ -405,6 +487,7 @@ def _chat_payload(message: ChatMessage, include_group: bool = False) -> dict:
         "username": message.user.username,
         "display_name": _display_name_for_user(message.user),
         "avatar_url": avatar_url,
+        "rewarded_pixels_count": int(profile.rewarded_pixels_count) if profile else 0,
         "message": message.message,
         "created_at": message.created_at.isoformat(),
     }
@@ -422,6 +505,7 @@ def _chat_groups_for_memberships(
         "name": "Global",
         "messages_url": "/api/chat/messages/",
         "send_url": "/api/chat/send/",
+        "ws_url": "/ws/c/global/chat/",
     }]
     for membership in memberships:
         slug = membership.community.slug
@@ -430,6 +514,7 @@ def _chat_groups_for_memberships(
             "name": membership.community.name,
             "messages_url": f"/c/{slug}/api/chat/messages/",
             "send_url": f"/c/{slug}/api/chat/send/",
+            "ws_url": f"/ws/c/{slug}/chat/",
         })
     return groups
 
@@ -480,6 +565,7 @@ def _community_member_rows(community: Community) -> list[dict]:
             "avatar_url": _avatar_url_from_profile(profile),
             "joined_at": membership.joined_at,
             "pixel_count": counts_by_id.get(membership.user_id, 0),
+            "rewarded_pixels_count": int(getattr(profile, "rewarded_pixels_count", 0) or 0),
         })
     return rows
 
@@ -576,17 +662,17 @@ def communities_lobby(request: HttpRequest) -> HttpResponse:
     can_open_create_community = (
         request.user.is_authenticated
         and can_create_community
-        and owned_communities_count < MAX_OWNED_COMMUNITIES
     )
 
     context = {
         **_base_nav_context(request, active_tab="communities", community=None),
         "memberships": memberships,
         "public_communities": public_communities,
+        "invite_ref_token": _encode_referrer_token(request.user),
         "can_create_community": can_create_community,
         "can_open_create_community": can_open_create_community,
         "owned_communities_count": owned_communities_count,
-        "max_owned_communities": MAX_OWNED_COMMUNITIES,
+        "community_creation_pixo_cost": COMMUNITY_CREATION_PIXO_COST,
     }
     return render(request, "pixelwar/community_lobby.html", context)
 
@@ -647,7 +733,7 @@ def create_community(request: HttpRequest) -> HttpResponse:
             **_base_nav_context(request, active_tab="communities", community=None),
             "can_create_community": _user_can_use_chat(request.user),
             "owned_communities_count": owned_communities_count,
-            "max_owned_communities": MAX_OWNED_COMMUNITIES,
+            "community_creation_pixo_cost": COMMUNITY_CREATION_PIXO_COST,
         }
         return render(request, "pixelwar/create_community.html", context)
 
@@ -655,14 +741,6 @@ def create_community(request: HttpRequest) -> HttpResponse:
         messages.error(
             request,
             "Confirm your email before creating your own community.",
-            extra_tags="community",
-        )
-        return redirect("create-community")
-
-    if owned_communities_count >= MAX_OWNED_COMMUNITIES:
-        messages.error(
-            request,
-            "You can create up to 5 communities.",
             extra_tags="community",
         )
         return redirect("create-community")
@@ -686,27 +764,44 @@ def create_community(request: HttpRequest) -> HttpResponse:
     description = description[:280]
     visibility = str(request.POST.get("visibility", "private")).strip().lower()
     is_public = visibility == "public"
-    max_members_raw = str(request.POST.get("max_members", "50")).strip()
-    allowed_max_members = {5, 10, 20, 30, 50}
-    try:
-        max_members = int(max_members_raw)
-    except ValueError:
-        max_members = 50
-    if max_members not in allowed_max_members:
-        max_members = 50
     image = request.FILES.get("image")
 
-    slug = _new_unique_slug(name)
-    community = Community.objects.create(
-        owner=request.user,
-        name=name[:64],
-        description=description,
-        slug=slug,
-        image=image,
-        is_public=is_public,
-        max_members=max_members if is_public else 50,
+    cost_details = f"Created community '{name[:64]}'"
+    with transaction.atomic():
+        slug = _new_unique_slug(name)
+        try:
+            spend_pixo(
+                request.user,
+                amount=COMMUNITY_CREATION_PIXO_COST,
+                context_key=f"community-create:{request.user.id}:{slug}",
+                details=cost_details,
+            )
+        except ValueError as exc:
+            if str(exc) == "insufficient_pixo":
+                messages.error(
+                    request,
+                    "You need at least 60 Pixo to create a community.",
+                    extra_tags="community",
+                )
+                return redirect("create-community")
+            raise
+
+        community = Community.objects.create(
+            owner=request.user,
+            name=name[:64],
+            description=description,
+            slug=slug,
+            image=image,
+            is_public=is_public,
+            max_members=50,
+        )
+        _join_community(request.user, community)
+
+    messages.success(
+        request,
+        "Community created. 60 Pixo was deducted from your balance.",
+        extra_tags="community",
     )
-    _join_community(request.user, community)
     return redirect("community-detail", slug=community.slug)
 
 
@@ -746,16 +841,6 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
                 f'font-semibold text-emerald-700">{msg}</span>'
             )
         messages.info(request, msg, extra_tags="community")
-        return redirect("communities")
-
-    if _is_public_community_full(community):
-        msg = "This community is full."
-        if is_htmx:
-            return HttpResponse(
-                f'<span class="rounded-lg bg-rose-100 px-3 py-1.5 text-xs '
-                f'font-semibold text-rose-700">{msg}</span>'
-            )
-        messages.error(request, msg, extra_tags="community")
         return redirect("communities")
 
     join_request, created = CommunityJoinRequest.objects.get_or_create(
@@ -864,13 +949,6 @@ def approve_join_request(
             return HttpResponse(msg, status=404)
         messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
-    if _is_public_community_full(community):
-        msg = "Community is full. Cannot approve more members."
-        if is_htmx:
-            return HttpResponse(msg, status=400)
-        messages.error(request, msg, extra_tags="community")
-        return redirect("community-detail", slug=slug)
-
     _join_community(join_request.user, community)
     join_request.status = CommunityJoinRequest.STATUS_APPROVED
     join_request.reviewed_at = datetime.now(timezone.utc)
@@ -954,6 +1032,14 @@ def invitation_view(request: HttpRequest, token: str) -> HttpResponse:
     community = get_object_or_404(Community, invite_token=token)
     if community.slug == "global":
         return redirect("index")
+    referrer_user = _resolve_referrer_user(request.GET.get("ref"))
+    if referrer_user and request.user.is_authenticated:
+        assign_referrer_if_missing(
+            referred_user=request.user,
+            referrer_user=referrer_user,
+            source=ReferralAttribution.SOURCE_COMMUNITY_INVITE,
+            community=community,
+        )
     already_member = False
     if request.user.is_authenticated:
         already_member = CommunityMembership.objects.filter(
@@ -965,6 +1051,7 @@ def invitation_view(request: HttpRequest, token: str) -> HttpResponse:
         **_base_nav_context(request, active_tab="communities", community=None),
         "invite_community": community,
         "already_member": already_member,
+        "invite_ref": _encode_referrer_token(referrer_user),
     }
     return render(request, "pixelwar/invitation.html", context)
 
@@ -974,15 +1061,26 @@ def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
     community = get_object_or_404(Community, invite_token=token)
     if community.slug == "global":
         return redirect("index")
+    referrer_user = _resolve_referrer_user(request.GET.get("ref"))
     if not request.user.is_authenticated:
         request.session["pending_invite_token"] = str(token)
+        if referrer_user is not None:
+            request.session["pending_referrer_user_id"] = int(referrer_user.id)
+            request.session[
+                "pending_referral_source"
+            ] = ReferralAttribution.SOURCE_COMMUNITY_INVITE
+            request.session["pending_referral_community_id"] = int(community.id)
         messages.info(
             request,
             "Please login or register first, then click invitation link again.",
             extra_tags="auth",
         )
         return redirect("invitation", token=community.invite_token)
-    _join_community(request.user, community)
+    _join_community(
+        request.user,
+        community,
+        referrer_user=referrer_user,
+    )
     return redirect("community-canvas", slug=community.slug)
 
 
@@ -1052,6 +1150,118 @@ def delete_community(request: HttpRequest, slug: str) -> HttpResponse:
 
 @require_POST
 @login_required
+def update_community_details(request: HttpRequest, slug: str) -> HttpResponse:
+    community = Community.objects.filter(slug=slug).first()
+    if community is None:
+        messages.error(
+            request,
+            "Community was not found.",
+            extra_tags="community",
+        )
+        return redirect("communities")
+
+    if community.owner_id != request.user.id:
+        messages.error(
+            request,
+            "Only the community owner can update details.",
+            extra_tags="community",
+        )
+        return redirect("community-detail", slug=slug)
+
+    if community.slug == "global":
+        messages.error(
+            request,
+            "Global community details cannot be edited.",
+            extra_tags="community",
+        )
+        return redirect("community-detail", slug=slug)
+
+    posted_name = str(request.POST.get("name", community.name)).strip()
+    posted_description = str(
+        request.POST.get("description", community.description)
+    ).strip()[:280]
+    posted_visibility = str(
+        request.POST.get(
+            "visibility",
+            "public" if community.is_public else "private",
+        )
+    ).strip().lower()
+    next_is_public = posted_visibility == "public"
+    uploaded_image = request.FILES.get("image")
+
+    if not posted_name:
+        messages.error(
+            request,
+            "Community name is required.",
+            extra_tags="community",
+        )
+        return redirect("community-detail", slug=slug)
+    if len(posted_name) < 3:
+        messages.error(
+            request,
+            "Community name must be at least 3 characters.",
+            extra_tags="community",
+        )
+        return redirect("community-detail", slug=slug)
+    posted_name = posted_name[:64]
+    if Community.objects.filter(name__iexact=posted_name).exclude(
+        pk=community.pk
+    ).exists():
+        messages.error(
+            request,
+            "A community with this name already exists.",
+            extra_tags="community",
+        )
+        return redirect("community-detail", slug=slug)
+
+    image_changed = uploaded_image is not None
+    text_changed = False
+
+    if image_changed:
+        community.image = uploaded_image
+
+    if community.name != posted_name:
+        community.name = posted_name
+        text_changed = True
+    if community.description != posted_description:
+        community.description = posted_description
+        text_changed = True
+    if community.is_public != next_is_public:
+        community.is_public = next_is_public
+        text_changed = True
+
+    if image_changed or text_changed:
+        community.save()
+        if image_changed and text_changed:
+            messages.success(
+                request,
+                "Community details and image updated.",
+                extra_tags="community",
+            )
+        elif image_changed:
+            messages.success(
+                request,
+                "Community image updated.",
+                extra_tags="community",
+            )
+        else:
+            messages.success(
+                request,
+                "Community details updated.",
+                extra_tags="community",
+            )
+    else:
+        messages.info(
+            request,
+            "No changes to save.",
+            extra_tags="community",
+        )
+
+    return redirect("community-detail", slug=slug)
+
+
+@require_POST
+@login_required
 def remove_community_member(
     request: HttpRequest,
     slug: str,
@@ -1116,7 +1326,7 @@ def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
     memberships = _non_global_memberships_for_user(request.user)
     chat_groups = _chat_groups_for_memberships(memberships)
     context = {
-        **_base_nav_context(request, active_tab="communities",
+        **_base_nav_context(request, active_tab="canvas",
                             community=community),
         "grid_size": metrics["grid_size"],
         "filled_pixels": metrics["filled_pixels"],
@@ -1312,11 +1522,13 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
                     join_req.user_id,
                     0,
                 ),
+                "rewarded_pixels_count": int(getattr(profile, "rewarded_pixels_count", 0) or 0),
             })
 
     context = {
         **_base_nav_context(request, active_tab="communities", community=community),
         "community": community,
+        "invite_ref_token": _encode_referrer_token(request.user),
         "memberships": _non_global_memberships_for_user(request.user),
         "is_owner": is_owner,
         "is_member": is_member,
@@ -1324,10 +1536,6 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "member_rows": member_rows,
         "member_count": member_count,
         "pixel_count": len(pixels_qs),
-        "is_public_full": (
-            community.is_public
-            and member_count >= int(community.max_members)
-        ),
         "pending_join_requests": pending_join_request_rows,
         "sort": sort_key,
         "dir": sort_dir,
@@ -1526,6 +1734,20 @@ def _update_pixel_for_community(
     ip_address = _client_ip(request)
     cooldown_key = f"cooldown:{cooldown_scope}:{user_key}"
     cooldown_seconds = settings.COOLDOWN_SECONDS
+    
+    # Check if user has acceleration active
+    acceleration_active = False
+    if request.user.is_authenticated:
+        from users.models import UserProfile
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            acceleration_active = profile.acceleration_active
+            if acceleration_active:
+                from users.pixo_service import ACCELERATION_COOLDOWN_SECONDS
+                cooldown_seconds = ACCELERATION_COOLDOWN_SECONDS
+        except UserProfile.DoesNotExist:
+            pass
+    
     now = datetime.now(timezone.utc)
 
     if not cache.add(cooldown_key, now.isoformat(), timeout=cooldown_seconds):
@@ -1585,6 +1807,11 @@ def _update_pixel_for_community(
             "user_key": user_key,
             "at": now.isoformat(),
         })
+        
+        # Increment acceleration pixel count if active
+        if acceleration_active and request.user.is_authenticated:
+            increment_acceleration_pixel_count(request.user)
+            
     except (NoBrokersAvailable, KafkaError):
         # Kafka is down – revert the optimistic WS update for all clients.
         try:
@@ -1608,12 +1835,30 @@ def _update_pixel_for_community(
         action.save(update_fields=["accepted", "rejection_reason"])
         return JsonResponse({"status": "service_unavailable"}, status=503)
 
+    pixo_reward_payload = None
+    if request.user.is_authenticated:
+        granted_rewards = grant_pixel_milestones_pixo(request.user)
+        if granted_rewards:
+            total_awarded = sum(int(item.get("amount", 0)) for item in granted_rewards)
+            current_balance = int(granted_rewards[-1].get("balance", 0))
+            reached = [
+                int(item.get("threshold", 0))
+                for item in granted_rewards
+                if int(item.get("threshold", 0)) > 0
+            ]
+            pixo_reward_payload = {
+                "amount": total_awarded,
+                "balance": current_balance,
+                "thresholds": reached,
+            }
+
     return JsonResponse({
         "status": "ok",
         "cooldown_seconds": cooldown_seconds,
         "grid_size": projected_metrics["grid_size"],
         "filled_pixels": projected_metrics["filled_pixels"],
         "fill_ratio": projected_metrics["fill_ratio"],
+        "pixo_reward": pixo_reward_payload,
     })
 
 
@@ -1753,3 +1998,48 @@ def community_update_pixel(request: HttpRequest, slug: str) -> JsonResponse:
     if community is None:
         return JsonResponse({"status": "forbidden"}, status=403)
     return _update_pixel_for_community(request, community, slug)
+
+
+@require_POST
+@login_required
+def purchase_acceleration(request: HttpRequest) -> JsonResponse:
+    """Purchase acceleration: 10-second cooldown for 100 pixels."""
+    try:
+        from users.pixo_service import purchase_acceleration as service_purchase
+        result = service_purchase(request.user)
+        return JsonResponse({"status": "ok", "data": result})
+    except ValueError as e:
+        error_msg = str(e)
+        if error_msg == "acceleration_already_active":
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "Acceleration already active. Finish placing 100 pixels first.",
+                },
+                status=400,
+            )
+        elif error_msg == "insufficient_pixo":
+            from users.models import UserProfile
+            from users.pixo_service import ACCELERATION_COST
+            profile = UserProfile.objects.get(user=request.user)
+            return JsonResponse(
+                {
+                    "status": "insufficient_pixo",
+                    "message": "Your Pixo balance is insufficient.",
+                    "data": {
+                        "balance": int(profile.pixo_balance),
+                        "cost": ACCELERATION_COST,
+                    },
+                },
+                status=402,
+            )
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+
+@require_GET
+@login_required
+def acceleration_status(request: HttpRequest) -> JsonResponse:
+    """Get current acceleration status."""
+    from users.pixo_service import get_acceleration_status as service_get_status
+    status = service_get_status(request.user)
+    return JsonResponse({"status": "ok", "data": status})

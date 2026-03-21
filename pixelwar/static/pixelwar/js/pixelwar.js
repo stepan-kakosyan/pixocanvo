@@ -119,17 +119,18 @@ document.addEventListener('DOMContentLoaded', function () {
     );
     const chatGroupsContainer = document.getElementById('chatGroups');
     const chatGroupsDataTag = document.getElementById('chat-groups-data');
+    const headerPixoCount = document.getElementById('header-pixo-count');
     const isAuthenticated = app.dataset.authenticated === '1';
     const canSendChat = app.dataset.chatCanSend === '1';
     const currentUsername = String(app.dataset.currentUsername || '').trim();
     let reconnectDelayMs = 1000;
     let reconnectTimer = null;
-    let groupedChatTimer = null;
     let cooldownTimer = null;
     let isSyncingCanvasScroll = false;
     let isCanvasWideMode = false;
     let cooldownRemaining = 0;
     let cooldownUntilTs = 0;
+    let lastKnownCooldown = 60;
     let isRealtimeConnected = false;
     let hasLoadedSnapshot = false;
     let requestInFlight = false;
@@ -178,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return [];
     })();
     const chatGroupMap = new Map(chatGroups.map((group) => [group.slug, group]));
+    const groupedChatSockets = new Map();
 
     let scale = 1;
     const minScale = 1;
@@ -349,6 +351,37 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         status.className = 'mt-3 text-sm font-medium text-slate-700';
+    }
+
+    function applyPixoReward(payload) {
+        if (!payload || typeof payload !== 'object') {
+            return;
+        }
+
+        const amount = Number(payload.amount || 0);
+        const balance = Number(payload.balance || 0);
+        const thresholds = Array.isArray(payload.thresholds)
+            ? payload.thresholds
+                .map((value) => Number(value))
+                .filter((value) => Number.isFinite(value) && value > 0)
+            : [];
+
+        if (headerPixoCount && Number.isFinite(balance)) {
+            headerPixoCount.textContent = String(balance);
+        }
+
+        const details = thresholds.length > 0
+            ? `Reached milestones: ${thresholds.join(', ')} pixels`
+            : 'Pixel milestone reward';
+
+        if (typeof window.showPixoRewardModal === 'function' && amount > 0) {
+            window.showPixoRewardModal({
+                amount,
+                balance,
+                details,
+                title: 'Congratulations!',
+            });
+        }
     }
 
     function setCanvasLocked(locked) {
@@ -794,6 +827,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function createAchievementBadge(pixelCount) {
+        const tiers = [
+            { min: 1000, label: 'Legend',  bg: 'linear-gradient(135deg,#fb7185,#fbbf24)', icon: '<path d="M1 9.5h10M2 9.5 3.5 5l2 2.5L6 3l.5 4.5 2-2.5 1.5 4.5"/><rect x="1" y="9.5" width="10" height="1.5" rx="0.5"/>', iconColor: '#fff', svgSize: 12 },
+            { min: 500,  label: 'Elite',   bg: '#9333ea', icon: '<path d="M6 1L11 3.2v3.6C11 9.5 8.8 11 6 11S1 9.5 1 6.8V3.2L6 1Z"/>', iconColor: '#fff', svgSize: 12 },
+            { min: 250,  label: 'Master',  bg: '#3b82f6', icon: '<path d="M6 1.5L11 6 6 10.5 1 6Z"/>', iconColor: '#fff', svgSize: 12 },
+            { min: 100,  label: 'Artist',  bg: '#facc15', icon: '<path d="M6 1l1.25 3.5H11l-3 2.1 1.15 3.5L6 8.05 2.85 10.1 4 6.6 1 4.5h3.75Z"/>', iconColor: '#713f12', svgSize: 12 },
+            { min: 50,   label: 'Builder', bg: '#94a3b8', icon: '<rect x="1" y="6" width="4.5" height="4.5" rx="0.75"/><rect x="6.5" y="1.5" width="4.5" height="4.5" rx="0.75"/>', iconColor: '#fff', svgSize: 12 },
+            { min: 10,   label: 'Rookie',  bg: '#92400e', icon: '<rect x="1" y="1" width="8" height="8" rx="1.5"/>', iconColor: '#fff', svgSize: 10 },
+        ];
+        const tier = tiers.find(t => pixelCount >= t.min);
+        if (!tier) return null;
+        const badge = document.createElement('span');
+        badge.title = tier.label;
+        badge.style.cssText = `
+            pointer-events:none;select:none;position:absolute;bottom:-3px;right:-3px;
+            display:flex;align-items:center;justify-content:center;
+            width:12px;height:12px;border-radius:50%;
+            background:${tier.bg};
+        `;
+        badge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${tier.svgSize} ${tier.svgSize}" width="7" height="7" fill="${tier.iconColor}" aria-hidden="true">${tier.icon}</svg>`;
+        return badge;
+    }
+
     function appendChatMessage(item, options = {}) {
         const silent = Boolean(options.silent);
         const isOwn = (
@@ -830,7 +886,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const title = document.createElement('div');
         title.className = 'text-xs font-semibold text-slate-700';
         title.textContent = item.username || 'User';
-        header.appendChild(avatarElement);
+        const avatarWrapper = document.createElement('div');
+        avatarWrapper.style.cssText = 'position:relative;display:inline-flex;flex-shrink:0;';
+        avatarWrapper.appendChild(avatarElement);
+        const badge = createAchievementBadge(item.rewarded_pixels_count || 0);
+        if (badge) avatarWrapper.appendChild(badge);
+        header.appendChild(avatarWrapper);
         header.appendChild(title);
 
         if (useGroupedChat && item.group_name) {
@@ -1154,6 +1215,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 filledPixels = Number(info.filled_pixels);
                 updateGridMeta();
             }
+            if (info.pixo_reward) {
+                applyPixoReward(info.pixo_reward);
+            }
             return {
                 ok: true,
                 cooldown: Number(info.cooldown_seconds || 60),
@@ -1243,50 +1307,91 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
+    function handleChatSocketMessage(event) {
+        try {
+            const payload = JSON.parse(event.data);
+            if (payload.type === 'chat_revert') {
+                if (payload.temp_id) {
+                    const el = chatMessages
+                        ? chatMessages.querySelector(
+                            `[data-temp-id="${CSS.escape(payload.temp_id)}"]`
+                        )
+                        : null;
+                    if (el) { el.remove(); }
+                    knownChatMessageKeys.delete(`temp:${payload.temp_id}`);
+                }
+                return;
+            }
+            const key = messageKey(payload);
+            if (knownChatMessageKeys.has(key)) {
+                return;
+            }
+            knownChatMessageKeys.add(key);
+            appendChatMessage(payload);
+            const groupSlug = messageGroupSlug(payload);
+            if (isChatOpen && groupSlug === selectedChatGroup) {
+                markGroupAsRead(groupSlug);
+            } else {
+                const deltaByGroup = new Map([[groupSlug, 1]]);
+                applyUnreadDeltas(deltaByGroup);
+            }
+        } catch (_error) {
+            // Ignore malformed chat events to avoid breaking the UI loop.
+        }
+    }
+
     function connectChatWebsocket() {
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
         const socket = new WebSocket(
             `${protocol}://${window.location.host}${chatWsUrl}`
         );
 
-        socket.onmessage = (event) => {
-            try {
-                const payload = JSON.parse(event.data);
-                if (payload.type === 'chat_revert') {
-                    if (payload.temp_id) {
-                        const el = chatMessages
-                            ? chatMessages.querySelector(
-                                `[data-temp-id="${CSS.escape(payload.temp_id)}"]`
-                            )
-                            : null;
-                        if (el) { el.remove(); }
-                        knownChatMessageKeys.delete(`temp:${payload.temp_id}`);
-                    }
-                    return;
-                }
-                const key = messageKey(payload);
-                if (knownChatMessageKeys.has(key)) {
-                    return;
-                }
-                knownChatMessageKeys.add(key);
-                appendChatMessage(payload);
-                const groupSlug = messageGroupSlug(payload);
-                if (isChatOpen && groupSlug === selectedChatGroup) {
-                    markGroupAsRead(groupSlug);
-                } else {
-                    const deltaByGroup = new Map([[groupSlug, 1]]);
-                    applyUnreadDeltas(deltaByGroup);
-                }
-            } catch (_error) {
-                // Ignore malformed chat events to avoid breaking the UI loop.
-            }
-        };
+        socket.onmessage = handleChatSocketMessage;
 
         socket.onclose = () => {
             window.setTimeout(() => {
                 connectChatWebsocket();
             }, 2000);
         };
+    }
+
+    function wsPathForGroup(groupSlug) {
+        const slug = String(groupSlug || 'global');
+        const group = chatGroupMap.get(slug);
+        if (group && group.ws_url) {
+            return String(group.ws_url);
+        }
+        return `/ws/c/${slug}/chat/`;
+    }
+
+    function connectGroupedChatWebsocket(groupSlug) {
+        const slug = String(groupSlug || 'global');
+        if (!slug || groupedChatSockets.has(slug)) {
+            return;
+        }
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const socket = new WebSocket(
+            `${protocol}://${window.location.host}${wsPathForGroup(slug)}`
+        );
+
+        groupedChatSockets.set(slug, socket);
+        socket.onmessage = handleChatSocketMessage;
+        socket.onclose = () => {
+            groupedChatSockets.delete(slug);
+            window.setTimeout(() => {
+                connectGroupedChatWebsocket(slug);
+            }, 2000);
+        };
+    }
+
+    function connectGroupedChatWebsockets() {
+        if (!chatGroups.length) {
+            connectGroupedChatWebsocket('global');
+            return;
+        }
+        for (const group of chatGroups) {
+            connectGroupedChatWebsocket(group.slug);
+        }
     }
 
     canvas.addEventListener('click', async (event) => {
@@ -1308,14 +1413,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
         requestInFlight = true;
         playPixelPlacementSound();
+        startCooldown(lastKnownCooldown);
 
         try {
             const result = await sendPixel(x, y, selectedColor);
             if (result && result.ok) {
                 drawPixel(x, y, selectedColor);
+                if (accelerationActive && accelerationPixelsRemaining > 0) {
+                    accelerationPixelsRemaining = Math.max(0, accelerationPixelsRemaining - 1);
+                    if (accelerationPixelsRemaining === 0) {
+                        accelerationActive = false;
+                        window.setTimeout(loadAccelerationStatus, 300);
+                    }
+                    updateAccelerationUI();
+                }
+                lastKnownCooldown = result.cooldown;
                 startCooldown(result.cooldown);
             }
         } catch (error) {
+            startCooldown(0);
             setStatus('Network error while sending pixel', 'error');
         } finally {
             requestInFlight = false;
@@ -1409,16 +1525,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderChatGroupTabs();
         loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
         syncUnreadCounts().catch(() => {});
-        groupedChatTimer = window.setInterval(() => {
-            const shouldKeepBottom = isChatOpen && isChatNearBottom();
-            syncUnreadCounts().catch(() => {});
-            if (shouldKeepBottom) {
-                loadLatestChatPage({
-                    silent: true,
-                    keepBottom: true,
-                }).catch(() => {});
-            }
-        }, 4000);
+        connectGroupedChatWebsockets();
     } else {
         chatUnreadByGroup.set(chatDefaultGroup, 0);
         loadLatestChatPage({ silent: true, keepBottom: true }).catch(() => {});
@@ -1524,4 +1631,46 @@ document.addEventListener('DOMContentLoaded', function () {
             ensureCooldownTicker();
         }
     });
+
+    // Acceleration status
+    let accelerationActive = false;
+    let accelerationPixelsRemaining = 0;
+
+    async function loadAccelerationStatus() {
+        try {
+            const response = await fetch('/api/acceleration/status/');
+            if (response.ok) {
+                const result = await response.json();
+                accelerationActive = result.data.acceleration_active;
+                accelerationPixelsRemaining = result.data.acceleration_pixels_remaining;
+                updateAccelerationUI();
+            }
+        } catch (_error) {
+            console.error('Failed to load acceleration status:', _error);
+        }
+    }
+
+    function updateAccelerationUI() {
+        const accelerateBtn = document.getElementById('accelerateBtn');
+
+        if (!accelerateBtn) {
+            return;
+        }
+
+        if (accelerationActive && accelerationPixelsRemaining > 0) {
+            accelerateBtn.textContent = `⚡ ${accelerationPixelsRemaining}/100`;
+            accelerateBtn.disabled = true;
+            accelerateBtn.classList.add('opacity-60', 'cursor-not-allowed');
+        } else {
+            accelerateBtn.textContent = '⚡ Accelerate';
+            accelerateBtn.disabled = false;
+            accelerateBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+        }
+    }
+
+    // Load acceleration status on page load
+    if (app.dataset.authenticated === '1') {
+        loadAccelerationStatus();
+    }
 })();
+

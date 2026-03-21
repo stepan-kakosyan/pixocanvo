@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load badge_tags %}
 
 <div class="flex items-center justify-between border-b border-amber-100 px-5 py-4">
     <span class="text-xs font-semibold uppercase tracking-widest text-amber-600">{% trans "Player" %}</span>
@@ -18,14 +19,17 @@
                                  {% else %}bg-amber-100 text-amber-800{% endif %}">
                         {{ forloop.counter }}
                     </span>
-                    {% if player.avatar_url %}
-                        <img src="{{ player.avatar_url }}" alt="avatar"
-                             class="h-9 w-9 rounded-full object-cover ring-1 ring-amber-200">
-                    {% else %}
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white">
-                            {{ player.username|slice:":1"|upper }}
-                        </div>
-                    {% endif %}
+                    <div class="relative">
+                        {% if player.avatar_url %}
+                            <img src="{{ player.avatar_url }}" alt="avatar"
+                                 class="h-9 w-9 rounded-full object-cover ring-1 ring-amber-200">
+                        {% else %}
+                            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white">
+                                {{ player.username|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                        {% achievement_badge player.rewarded_pixels_count %}
+                    </div>
                     <span class="{% if forloop.counter == 1 %}text-xl font-black
                                   {% elif forloop.counter <= 3 %}text-base font-extrabold
                                   {% else %}text-sm font-semibold{% endif %} text-slate-900">

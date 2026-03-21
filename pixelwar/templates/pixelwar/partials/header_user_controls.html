@@ -1,6 +1,25 @@
 {% load i18n %}
+{% load badge_tags %}
 {% if request.user.is_authenticated %}
     <div class="flex items-center gap-2">
+        {# ── Pixo balance pill ────────────────────────────────────── #}
+        <a href="{% url 'pixo-transactions' %}"
+           hx-get="{% url 'pixo-transactions' %}"
+           hx-target="#page-content"
+           hx-swap="innerHTML"
+           hx-push-url="true"
+           title="Pixo balance — view history"
+           class="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 px-2.5 py-1.5 shadow-sm shadow-amber-300/40 transition hover:brightness-110 hover:shadow-md hover:shadow-amber-400/40 md:rounded-2xl md:px-3 md:py-2">
+            {# Sparkles icon – represents rewards / magic #}
+            <svg class="h-4 w-4 shrink-0 text-amber-100 md:h-[18px] md:w-[18px]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M15.98 1.804a1 1 0 0 0-1.96 0l-.24 1.192a1 1 0 0 1-.784.785l-1.192.24a1 1 0 0 0 0 1.961l1.192.239a1 1 0 0 1 .785.785l.239 1.192a1 1 0 0 0 1.961 0l.24-1.192a1 1 0 0 1 .784-.785l1.192-.24a1 1 0 0 0 0-1.96l-1.192-.24a1 1 0 0 1-.785-.785l-.24-1.192ZM6.949 5.684a1 1 0 0 0-1.898 0l-.683 2.051a1 1 0 0 1-.633.633l-2.051.683a1 1 0 0 0 0 1.898l2.051.684a1 1 0 0 1 .633.632l.683 2.051a1 1 0 0 0 1.898 0l.683-2.051a1 1 0 0 1 .633-.633l2.051-.683a1 1 0 0 0 0-1.898l-2.051-.683a1 1 0 0 1-.633-.633L6.95 5.684ZM13.949 13.684a1 1 0 0 0-1.898 0l-.184.551a1 1 0 0 1-.632.633l-.552.184a1 1 0 0 0 0 1.898l.552.184a1 1 0 0 1 .632.632l.184.552a1 1 0 0 0 1.898 0l.184-.552a1 1 0 0 1 .632-.632l.552-.184a1 1 0 0 0 0-1.898l-.552-.184a1 1 0 0 1-.632-.633l-.184-.551Z"/>
+            </svg>
+            <span class="flex flex-col leading-none">
+                <span class="text-[8px] font-semibold uppercase tracking-widest text-amber-200 md:text-[9px]">Pixo</span>
+                <span id="header-pixo-count" class="text-sm font-black tabular-nums text-white md:text-[0.9rem]">{{ header_pixo_balance }}</span>
+            </span>
+        </a>
+
         <details id="notification-center"
                  class="relative"
                  data-open-pattern="{% url 'notifications:open' 0 %}"
@@ -138,14 +157,17 @@
         <a href="{% url 'profile-settings' %}"
            class="flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-1 transition hover:bg-slate-100 md:gap-2 md:rounded-xl md:px-2"
            title="Edit profile">
-            {% if avatar_url %}
-                <img src="{{ avatar_url }}" alt="avatar"
-                     class="h-7 w-7 rounded-full object-cover ring-1 ring-emerald-500/40 md:h-8 md:w-8 md:ring-2 md:ring-offset-1 md:ring-offset-white">
-            {% else %}
-                <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-xs font-black text-white shadow-md md:h-8 md:w-8 md:text-sm">
-                    {{ request.user.username|slice:":1"|upper }}
-                </div>
-            {% endif %}
+            <div class="relative">
+                {% if avatar_url %}
+                    <img src="{{ avatar_url }}" alt="avatar"
+                         class="h-7 w-7 rounded-full object-cover ring-1 ring-emerald-500/40 md:h-8 md:w-8 md:ring-2 md:ring-offset-1 md:ring-offset-white">
+                {% else %}
+                    <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-xs font-black text-white shadow-md md:h-8 md:w-8 md:text-sm">
+                        {{ request.user.username|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+                {% achievement_badge header_rewarded_pixels_count %}
+            </div>
             <span class="hidden text-xs font-bold text-slate-800 transition hover:text-emerald-600 sm:block md:text-sm">{% firstof request.user.first_name request.user.username %}</span>
         </a>
     </div>

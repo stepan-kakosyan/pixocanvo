@@ -30,6 +30,11 @@ urlpatterns = [
     ),
     path("c/<slug:slug>/details/", views.community_detail, name="community-detail"),
     path(
+        "c/<slug:slug>/update/",
+        views.update_community_details,
+        name="update-community-details",
+    ),
+    path(
         "c/<slug:slug>/members/<int:user_id>/remove/",
         views.remove_community_member,
         name="remove-community-member",
@@ -82,4 +87,6 @@ urlpatterns = [
         views.community_chat_send,
         name="community-chat-send",
     ),
+    path("api/acceleration/purchase/", views.purchase_acceleration, name="purchase-acceleration"),
+    path("api/acceleration/status/", views.acceleration_status, name="acceleration-status"),
 ]

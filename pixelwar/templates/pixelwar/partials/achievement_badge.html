@@ -1,0 +1,47 @@
+{% if tier %}
+<span class="pointer-events-none select-none absolute
+             {% if position == 'tr' %}-top-1 -right-1{% else %}-bottom-1 -right-1{% endif %}
+             flex h-4 w-4 items-center justify-center rounded-full
+             {% if tier == 'legend' %}bg-gradient-to-br from-rose-400 to-amber-400
+             {% elif tier == 'elite' %}bg-purple-600
+             {% elif tier == 'master' %}bg-blue-500
+             {% elif tier == 'artist' %}bg-yellow-400
+             {% elif tier == 'builder' %}bg-slate-400
+             {% else %}bg-amber-700
+             {% endif %}"
+      title="{{ tier_label }}">
+    {% if tier == 'legend' %}
+        {# Crown icon #}
+        <svg class="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <path d="M1 9.5h10M2 9.5 3.5 5l2 2.5L6 3l.5 4.5 2-2.5 1.5 4.5"/>
+            <rect x="1" y="9.5" width="10" height="1.5" rx="0.5"/>
+        </svg>
+    {% elif tier == 'elite' %}
+        {# Shield icon #}
+        <svg class="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <path d="M6 1L11 3.2v3.6C11 9.5 8.8 11 6 11S1 9.5 1 6.8V3.2L6 1Z"/>
+        </svg>
+    {% elif tier == 'master' %}
+        {# Diamond icon #}
+        <svg class="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <path d="M6 1.5L11 6 6 10.5 1 6Z"/>
+        </svg>
+    {% elif tier == 'artist' %}
+        {# Star icon #}
+        <svg class="h-2.5 w-2.5 text-yellow-800" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <path d="M6 1l1.25 3.5H11l-3 2.1 1.15 3.5L6 8.05 2.85 10.1 4 6.6 1 4.5h3.75Z"/>
+        </svg>
+    {% elif tier == 'builder' %}
+        {# Two stacked squares icon #}
+        <svg class="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+            <rect x="1" y="6" width="4.5" height="4.5" rx="0.75"/>
+            <rect x="6.5" y="1.5" width="4.5" height="4.5" rx="0.75"/>
+        </svg>
+    {% else %}
+        {# Rookie: single pixel square #}
+        <svg class="h-2 w-2 text-white" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+            <rect x="1" y="1" width="8" height="8" rx="1.5"/>
+        </svg>
+    {% endif %}
+</span>
+{% endif %}

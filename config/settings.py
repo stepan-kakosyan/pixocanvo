@@ -54,6 +54,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "Notifications.context_processors.notification_center",
                 "pixelwar.context_processors.language_switcher_options",
+                "users.context_processors.pixo_context",
             ],
         },
     }

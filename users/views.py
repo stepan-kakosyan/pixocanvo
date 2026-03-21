@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
@@ -27,7 +29,13 @@ from .forms import (
     ProfileSettingsForm,
     RegisterForm,
 )
-from .models import ContactMessage, UserProfile
+from .models import ContactMessage, PixoTransaction, UserProfile
+from .models import ReferralAttribution
+from .pixo_service import (
+    assign_referrer_if_missing,
+    grant_email_verification_pixo,
+    grant_referral_community_join_reward,
+)
 from django.db.models import Q
 
 
@@ -90,7 +98,32 @@ def contact_us_view(request: HttpRequest) -> HttpResponse:
 
 def _consume_pending_invite(request: HttpRequest, user) -> Community | None:
     token = request.session.pop("pending_invite_token", None)
+    pending_referrer_user_id = request.session.pop("pending_referrer_user_id", None)
+    pending_referral_source = request.session.pop("pending_referral_source", "")
+    pending_referral_community_id = request.session.pop(
+        "pending_referral_community_id",
+        None,
+    )
+
+    referrer_user = None
+    if pending_referrer_user_id:
+        referrer_user = User.objects.filter(pk=pending_referrer_user_id).first()
+
     if not token:
+        if referrer_user and referrer_user.id != user.id:
+            assign_referrer_if_missing(
+                referred_user=user,
+                referrer_user=referrer_user,
+                source=(
+                    pending_referral_source
+                    or ReferralAttribution.SOURCE_PERSONAL_LINK
+                ),
+                community=(
+                    Community.objects.filter(pk=pending_referral_community_id).first()
+                    if pending_referral_community_id
+                    else None
+                ),
+            )
         return None
 
     community = Community.objects.filter(invite_token=token).first()
@@ -102,6 +135,22 @@ def _consume_pending_invite(request: HttpRequest, user) -> Community | None:
         user=user,
         defaults={"active": True},
     )
+    if created and referrer_user and referrer_user.id != user.id:
+        grant_referral_community_join_reward(
+            invited_user=user,
+            referrer_user=referrer_user,
+            community=community,
+        )
+    elif referrer_user and referrer_user.id != user.id:
+        assign_referrer_if_missing(
+            referred_user=user,
+            referrer_user=referrer_user,
+            source=(
+                pending_referral_source
+                or ReferralAttribution.SOURCE_COMMUNITY_INVITE
+            ),
+            community=community,
+        )
     if not created and not membership.active:
         membership.active = True
         membership.left_at = None
@@ -120,6 +169,22 @@ def _activation_email_panel_context(
         "activation_feedback_message": feedback_message,
         "activation_feedback_level": feedback_level,
     }
+
+
+def _queue_pixo_reward_modal(
+    request: HttpRequest,
+    *,
+    amount: int,
+    balance: int,
+    details: str,
+) -> None:
+    request.session["pixo_reward_modal"] = {
+        "amount": int(amount),
+        "balance": int(balance),
+        "details": str(details),
+        "title": "Congratulations!",
+    }
+    request.session.modified = True
 
 
 def register_view(request: HttpRequest) -> HttpResponse:
@@ -171,6 +236,16 @@ def register_view(request: HttpRequest) -> HttpResponse:
 
             return redirect(target_url)
     else:
+        ref_raw = request.GET.get("ref")
+        try:
+            referrer_id = int(str(ref_raw or "").strip())
+        except (TypeError, ValueError):
+            referrer_id = 0
+        if referrer_id > 0:
+            request.session["pending_referrer_user_id"] = referrer_id
+            request.session[
+                "pending_referral_source"
+            ] = ReferralAttribution.SOURCE_PERSONAL_LINK
         form = RegisterForm()
 
     context = {"form": form}
@@ -237,11 +312,63 @@ def login_view(request: HttpRequest) -> HttpResponse:
                         "Run the latest migrations or activate your account again.",
                     )
     else:
+        ref_raw = request.GET.get("ref")
+        try:
+            referrer_id = int(str(ref_raw or "").strip())
+        except (TypeError, ValueError):
+            referrer_id = 0
+        if referrer_id > 0:
+            request.session["pending_referrer_user_id"] = referrer_id
+            request.session[
+                "pending_referral_source"
+            ] = ReferralAttribution.SOURCE_PERSONAL_LINK
         form = LoginForm(request)
 
     context = {"form": form}
     context.update(_base_nav_context(request))
     return render(request, "users/login.html", context)
+
+
+def personal_referral_redirect_view(
+    request: HttpRequest,
+    referrer_id: int,
+) -> HttpResponse:
+    referrer_user = User.objects.filter(pk=referrer_id).first()
+    if referrer_user is None:
+        messages.error(
+            request,
+            _("Referral link is invalid."),
+            extra_tags="auth",
+        )
+        return redirect("register")
+
+    if request.user.is_authenticated:
+        if request.user.id == referrer_user.id:
+            messages.error(
+                request,
+                _("Self-referral is not allowed."),
+                extra_tags="auth",
+            )
+            return redirect("index")
+
+        assign_referrer_if_missing(
+            referred_user=request.user,
+            referrer_user=referrer_user,
+            source=ReferralAttribution.SOURCE_PERSONAL_LINK,
+            community=None,
+        )
+        messages.success(
+            request,
+            _("Referral was registered."),
+            extra_tags="auth",
+        )
+        return redirect("index")
+
+    request.session["pending_referrer_user_id"] = int(referrer_user.id)
+    request.session[
+        "pending_referral_source"
+    ] = ReferralAttribution.SOURCE_PERSONAL_LINK
+    return redirect("register")
 
 
 @login_required
@@ -317,6 +444,10 @@ def profile_settings_view(request: HttpRequest) -> HttpResponse:
             "form": form,
             "avatar_upload_form": avatar_upload_form,
             "avatar_url": avatar_url,
+            "rewarded_pixels_count": int(profile.rewarded_pixels_count) if profile else 0,
+            "personal_referral_link": request.build_absolute_uri(
+                reverse("personal-referral", kwargs={"referrer_id": request.user.id})
+            ),
             "active_tab": None,
             "canvas_url": "/",
             "leaders_url": "/leaders/",
@@ -341,6 +472,7 @@ def upload_avatar_view(request: HttpRequest) -> HttpResponse:
         ),
         "avatar_upload_form": form,
         "avatar_upload_success": False,
+        "rewarded_pixels_count": int(profile.rewarded_pixels_count),
     }
 
     if form.is_valid():
@@ -450,6 +582,14 @@ def activate_account_view(
         sender=type(user),
         user=user,
     )
+    reward = grant_email_verification_pixo(user)
+    if reward:
+        _queue_pixo_reward_modal(
+            request,
+            amount=reward["amount"],
+            balance=reward["balance"],
+            details=reward["details"],
+        )
     return redirect("activation-success")
 
 
@@ -506,6 +646,14 @@ def verify_email_change_view(request: HttpRequest, token: str) -> HttpResponse:
         sender=type(user),
         user=user,
     )
+    reward = grant_email_verification_pixo(user)
+    if reward:
+        _queue_pixo_reward_modal(
+            request,
+            amount=reward["amount"],
+            balance=reward["balance"],
+            details=reward["details"],
+        )
 
     if not request.user.is_authenticated:
         messages.success(
@@ -544,6 +692,26 @@ def activation_success_view(request: HttpRequest) -> HttpResponse:
         "users/activation_success.html",
         _base_nav_context(request),
     )
+
+
+@login_required
+def pixo_transactions_view(request: HttpRequest) -> HttpResponse:
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    transactions_qs = PixoTransaction.objects.filter(profile=profile).order_by(
+        "-created_at", "-id"
+    )
+
+    paginator = Paginator(transactions_qs, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj,
+        "transactions": page_obj.object_list,
+        "pixo_balance": profile.pixo_balance,
+    }
+    context.update(_base_nav_context(request))
+    return render(request, "users/pixo_transactions.html", context)
 
 
 def _user_from_identifier(identifier: str) -> User | None:

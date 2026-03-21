@@ -1,12 +1,25 @@
 from django.contrib import admin
 
-from .models import ContactMessage, UserProfile
+from .models import ContactMessage, PixoTransaction, UserProfile
 
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "avatar")
+    list_display = ("user", "avatar", "pixo_balance", "rewarded_pixels_count")
     search_fields = ("user__username", "user__email")
+
+
+@admin.register(PixoTransaction)
+class PixoTransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "profile",
+        "amount",
+        "reason",
+        "created_at",
+    )
+    search_fields = ("profile__user__username", "profile__user__email", "context_key")
+    list_filter = ("reason", "created_at")
 
 
 @admin.register(ContactMessage)

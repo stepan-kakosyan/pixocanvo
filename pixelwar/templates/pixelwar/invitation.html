@@ -25,7 +25,7 @@
         {% else %}
             <div class="mt-5 flex flex-wrap gap-2">
                 {% if request.user.is_authenticated %}
-                    <form method="post" action="{% url 'invitation-accept' invite_community.invite_token %}">
+                    <form method="post" action="{% url 'invitation-accept' invite_community.invite_token %}{% if invite_ref %}?ref={{ invite_ref }}{% endif %}">
                         {% csrf_token %}
                         <button type="submit"
                                 class="rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
@@ -61,11 +61,11 @@
                     {% trans "To join this community, please login or create an account. After that, open this invitation link again and accept." %}
                 </p>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    <a href="{% url 'login' %}"
+                    <a href="{% url 'login' %}{% if invite_ref %}?ref={{ invite_ref }}{% endif %}"
                        class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">
                         {% trans "Login" %}
                     </a>
-                    <a href="{% url 'register' %}"
+                    <a href="{% url 'register' %}{% if invite_ref %}?ref={{ invite_ref }}{% endif %}"
                        class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50">
                         {% trans "Register" %}
                     </a>
