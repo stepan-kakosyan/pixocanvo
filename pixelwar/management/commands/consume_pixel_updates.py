@@ -138,7 +138,11 @@ class Command(BaseCommand):
                 )
             )
 
-        if rows:
+        if not rows:
+            return
+
+        failed_rows: list[Pixel] = []
+        try:
             with transaction.atomic():
                 try:
                     Pixel.objects.bulk_create(
@@ -147,34 +151,56 @@ class Command(BaseCommand):
                         update_fields=["color", "updated_at"],
                         unique_fields=["community", "x", "y"],
                     )
-
                 except (TypeError, NotSupportedError):
                     for row in rows:
-                        Pixel.objects.update_or_create(
-                            community=row.community,
-                            x=row.x,
-                            y=row.y,
-                            defaults={"color": row.color},
-                        )
+                        try:
+                            Pixel.objects.update_or_create(
+                                community=row.community,
+                                x=row.x,
+                                y=row.y,
+                                defaults={"color": row.color},
+                            )
+                        except Exception:
+                            failed_rows.append(row)
+        except Exception:
+            failed_rows = rows[:]
+
+        if failed_rows:
+            self._send_pixel_reverts(failed_rows)
+
+    def _send_pixel_reverts(self, failed_rows: list[Pixel]) -> None:
+        """Query current DB colours and send pixel_revert events to all clients."""
+        from django.db.models import Q
+        try:
+            coord_q = Q()
+            for row in failed_rows:
+                coord_q |= Q(community=row.community, x=row.x, y=row.y)
+            old_colors = {
+                (p.community.slug, p.x, p.y): p.color
+                for p in Pixel.objects.filter(coord_q).select_related("community")
+            }
+        except Exception:
+            old_colors = {}
 
         channel_layer = get_channel_layer()
-        for point, data in latest_by_coord.items():
-            community_slug = point[0]
-            if community_slug not in communities:
-                continue
-            message = {
-                "x": point[1],
-                "y": point[2],
-                "color": data["color"],
-                "user_key": data.get("user_key", ""),
-            }
-            async_to_sync(channel_layer.group_send)(
-                f"pixel_updates_{community_slug}",
-                {
-                    "type": "pixel_update",
-                    "payload": message,
-                },
-            )
+        for row in failed_rows:
+            slug = row.community.slug
+            revert_color = old_colors.get((slug, row.x, row.y), "#ffffff")
+            try:
+                async_to_sync(channel_layer.group_send)(
+                    f"pixel_updates_{slug}",
+                    {
+                        "type": "pixel_revert",
+                        "payload": {
+                            "type": "pixel_revert",
+                            "x": row.x,
+                            "y": row.y,
+                            "color": revert_color,
+                        },
+                    },
+                )
+            except Exception:
+                pass
 
     def _flush_chat(self, payloads: list[dict[str, Any]]) -> None:
         user_ids = {payload["user_id"] for payload in payloads}
@@ -188,6 +214,7 @@ class Command(BaseCommand):
         )
 
         rows: list[ChatMessage] = []
+        valid_payloads: list[dict[str, Any]] = []
         for payload in payloads:
             user_id = payload["user_id"]
             community = communities.get(payload["community_slug"])
@@ -203,27 +230,33 @@ class Command(BaseCommand):
                     message=message[:500],
                 )
             )
+            valid_payloads.append(payload)
 
-        if rows:
+        if not rows:
+            return
+
+        try:
             ChatMessage.objects.bulk_create(rows, batch_size=500)
-
-        channel_layer = get_channel_layer()
-        for payload in payloads:
-            community_slug = payload["community_slug"]
-            if payload["user_id"] not in existing_users:
-                continue
-            if community_slug not in communities:
-                continue
-            message = {
-                "username": payload["username"],
-                "avatar_url": payload.get("avatar_url", ""),
-                "message": str(payload.get("message", ""))[:500],
-                "created_at": payload.get("created_at"),
-            }
-            async_to_sync(channel_layer.group_send)(
-                f"chat_messages_{community_slug}",
-                {
-                    "type": "chat_message",
-                    "payload": message,
-                },
-            )
+        except Exception:
+            # DB write failed – tell all clients to remove these optimistic messages.
+            channel_layer = get_channel_layer()
+            for payload in valid_payloads:
+                temp_id = payload.get("temp_id")
+                if not temp_id:
+                    continue
+                community_slug = payload["community_slug"]
+                if community_slug not in communities:
+                    continue
+                try:
+                    async_to_sync(channel_layer.group_send)(
+                        f"chat_messages_{community_slug}",
+                        {
+                            "type": "chat_revert",
+                            "payload": {
+                                "type": "chat_revert",
+                                "temp_id": temp_id,
+                            },
+                        },
+                    )
+                except Exception:
+                    pass

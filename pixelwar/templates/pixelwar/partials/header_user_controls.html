@@ -6,9 +6,9 @@
                  data-open-pattern="{% url 'notifications:open' 0 %}"
                  data-ws-path="/ws/notifications/"
                  data-initial-unread-count="{{ header_notifications_unread_count }}">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
+            <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 md:rounded-xl md:px-3 md:py-2">
                 <span class="relative flex items-center justify-center">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <svg class="h-4 w-4 md:h-5 md:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 1 5.454 1.31A8.967 8.967 0 0 1 12 21c-2.331 0-4.468-.893-6.07-2.355a23.848 23.848 0 0 1 5.454-1.31M18 8a6 6 0 1 0-12 0c0 2.887-1.5 5.419-3.75 6.862h19.5C19.5 13.419 18 10.887 18 8Z" />
                     </svg>
                     <span id="notification-unread-badge"
@@ -113,13 +113,13 @@
         </details>
 
         <details class="relative">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
+            <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 md:rounded-xl md:px-3 md:py-2">
                 {% if LANGUAGE_SWITCHER_CURRENT %}
                     <span class="inline-flex items-center justify-center">
-                        <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-4 w-5 rounded-sm"></span>
+                        <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-3.5 w-4 rounded-sm md:h-4 md:w-5"></span>
                     </span>
                 {% else %}
-                    <span class="inline-flex items-center justify-center text-sm">🌐</span>
+                    <span class="inline-flex items-center justify-center text-xs md:text-sm">&#127760;</span>
                 {% endif %}
             </summary>
             <div class="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl">
@@ -136,29 +136,29 @@
         </details>
 
         <a href="{% url 'profile-settings' %}"
-              class="flex items-center gap-2 rounded-xl bg-slate-100 px-2 py-1 transition hover:bg-slate-100"
+           class="flex items-center gap-1 rounded-lg bg-slate-100 px-1.5 py-1 transition hover:bg-slate-100 md:gap-2 md:rounded-xl md:px-2"
            title="Edit profile">
             {% if avatar_url %}
                 <img src="{{ avatar_url }}" alt="avatar"
-                     class="h-8 w-8 rounded-full object-cover ring-2 ring-emerald-500/50 ring-offset-1 ring-offset-white">
+                     class="h-7 w-7 rounded-full object-cover ring-1 ring-emerald-500/40 md:h-8 md:w-8 md:ring-2 md:ring-offset-1 md:ring-offset-white">
             {% else %}
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow-md">
+                <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-xs font-black text-white shadow-md md:h-8 md:w-8 md:text-sm">
                     {{ request.user.username|slice:":1"|upper }}
                 </div>
             {% endif %}
-            <span class="hidden text-sm font-bold text-slate-800 transition hover:text-emerald-600 sm:block">{% firstof request.user.first_name request.user.username %}</span>
+            <span class="hidden text-xs font-bold text-slate-800 transition hover:text-emerald-600 sm:block md:text-sm">{% firstof request.user.first_name request.user.username %}</span>
         </a>
     </div>
 {% else %}
     <div class="flex items-center gap-2">
         <details class="relative">
-            <summary class="list-none cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
+            <summary class="list-none cursor-pointer rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 md:rounded-xl md:px-3 md:py-2">
                 {% if LANGUAGE_SWITCHER_CURRENT %}
                     <span class="inline-flex items-center justify-center">
-                        <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-4 w-5 rounded-sm"></span>
+                        <span class="fi fi-{{ LANGUAGE_SWITCHER_CURRENT.flag }} h-3.5 w-4 rounded-sm md:h-4 md:w-5"></span>
                     </span>
                 {% else %}
-                    <span class="inline-flex items-center justify-center text-sm">🌐</span>
+                    <span class="inline-flex items-center justify-center text-xs md:text-sm">&#127760;</span>
                 {% endif %}
             </summary>
             <div class="absolute right-0 z-50 mt-2 w-72 max-w-[calc(100vw-1rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl">
@@ -174,9 +174,9 @@
             </div>
         </details>
 
-          <a href="{% url 'login' %}"
-              hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-              class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-emerald-500/30 transition hover:bg-emerald-500">
+        <a href="{% url 'login' %}"
+           hx-get="{% url 'login' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
+           class="rounded-lg bg-emerald-600 px-2 py-1 text-xs font-semibold text-white shadow-md shadow-emerald-500/30 transition hover:bg-emerald-500 md:px-3 md:py-1.5">
             {% trans "Login" %}
         </a>
     </div>

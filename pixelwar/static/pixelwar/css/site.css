@@ -51,6 +51,29 @@ body {
     cursor: default;
 }
 
+#canvasViewportSection {
+    transition: margin 180ms ease, box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+
+body.canvas-wide-mode #canvasViewportSection {
+    position: relative;
+    z-index: 15;
+    margin-left: calc(50% - 50vw + 0.75rem);
+    margin-right: calc(50% - 50vw + 0.75rem);
+    border-color: #7dd3fc;
+    box-shadow: 0 18px 40px rgba(14, 165, 233, 0.18);
+}
+
+body.canvas-wide-mode #canvasScrollFrame {
+    max-height: calc(100vh - 12rem);
+}
+
+body.canvas-wide-mode #canvasFullscreen {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
 .canvas-scroll-frame {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -59,16 +82,30 @@ body {
     scrollbar-color: #0ea5e9 #e2e8f0;
 }
 
+.canvas-scrollbar-top {
+    display: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-gutter: stable both-edges;
+    scrollbar-width: auto;
+    scrollbar-color: #0ea5e9 #e2e8f0;
+}
+
+.canvas-scrollbar-top::-webkit-scrollbar,
 .canvas-scroll-frame::-webkit-scrollbar {
     width: 12px;
     height: 12px;
 }
 
+.canvas-scrollbar-top::-webkit-scrollbar-track,
 .canvas-scroll-frame::-webkit-scrollbar-track {
     background: #e2e8f0;
     border-radius: 9999px;
 }
 
+.canvas-scrollbar-top::-webkit-scrollbar-thumb,
 .canvas-scroll-frame::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #10b981, #0ea5e9);
     border-radius: 9999px;
@@ -139,15 +176,22 @@ textarea {
 }
 
 .community-tab.active {
-    background: linear-gradient(120deg, #d946ef, #ec4899);
+    background: linear-gradient(120deg, #10b981, #0ea5e9);
     color: #ffffff;
-    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.28);
     border-color: transparent;
     outline: 0;
 }
 
 .community-tab.active:hover {
-    background: linear-gradient(120deg, #c026d3, #db2777);
+    background: linear-gradient(120deg, #059669, #0284c7);
+}
+
+#chatInput {
+    min-height: 2.5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    font-size: 0.8125rem;
 }
 
 .chat-groups {
@@ -160,10 +204,10 @@ textarea {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    border: 1px solid #f5d0fe;
+    border: 1px solid #a7f3d0;
     border-radius: 9999px;
-    background: #fdf4ff;
-    color: #a21caf;
+    background: #ecfdf5;
+    color: #047857;
     font-size: 0.67rem;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -188,15 +232,15 @@ textarea {
 }
 
 .chat-group-tab:hover {
-    border-color: #f0abfc;
-    background: #fae8ff;
+    border-color: #67e8f9;
+    background: #ecfeff;
 }
 
 .chat-group-tab.active {
     border-color: transparent;
-    background: linear-gradient(120deg, #d946ef, #ec4899);
+    background: linear-gradient(120deg, #10b981, #0ea5e9);
     color: #ffffff;
-    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.32);
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.28);
 }
 
 @media (max-width: 640px) {
@@ -231,6 +275,21 @@ textarea {
         scrollbar-width: thin;
     }
 
+    .canvas-scrollbar-top.canvas-scrollbar-top-active {
+        display: block;
+        scrollbar-width: thin;
+    }
+
+    body.canvas-wide-mode #canvasViewportSection {
+        margin-left: calc(50% - 50vw + 0.5rem);
+        margin-right: calc(50% - 50vw + 0.5rem);
+    }
+
+    body.canvas-wide-mode #canvasScrollFrame {
+        max-height: calc(100vh - 10.5rem);
+    }
+
+    .canvas-scrollbar-top::-webkit-scrollbar,
     .canvas-scroll-frame::-webkit-scrollbar {
         width: 10px;
         height: 10px;

@@ -11,6 +11,8 @@ def _avatar_url_for_request_user(request: HttpRequest) -> str:
     if not request.user.is_authenticated:
         return ""
     profile = getattr(request.user, "profile", None)
+    if profile and profile.avatar_thumbnail:
+        return profile.avatar_thumbnail.url
     if profile and profile.avatar:
         return profile.avatar.url
     return ""

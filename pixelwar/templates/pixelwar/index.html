@@ -79,16 +79,22 @@
             <div class="inline-flex shrink-0 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
                 <button id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-emerald-50">+</button>
                 <button id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out" class="flex h-9 w-9 items-center justify-center border-r border-slate-200 text-lg font-black text-slate-700 transition hover:bg-sky-50">-</button>
-                <button id="canvasFullscreen" type="button" aria-label="Full screen" title="Full screen" class="flex h-9 w-9 items-center justify-center text-base font-bold text-slate-700 transition hover:bg-slate-100">⛶</button>
+                <button id="canvasFullscreen" type="button" aria-label="Expand canvas" title="Expand canvas" class="flex h-9 w-9 items-center justify-center text-base font-bold text-slate-700 transition hover:bg-slate-100">⛶</button>
             </div>
-        
         </div>
 
         <p id="status" class="mt-2 text-sm font-medium text-slate-700">Loading pixels...</p>
     </section>
 
-    <section class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
-        <div class="canvas-scroll-frame max-h-[72vh] overflow-scroll rounded-xl border border-sky-100 bg-white p-2" aria-label="Canvas scroll area">
+    <section id="canvasViewportSection" class="rounded-2xl border border-sky-200 bg-white/85 p-3 shadow-xl shadow-sky-200/50 backdrop-blur">
+        <div id="canvasScrollTop"
+               class="canvas-scrollbar-top mb-2"
+             aria-hidden="true">
+            <div id="canvasScrollTopInner" class="h-px"></div>
+        </div>
+        <div id="canvasScrollFrame"
+             class="canvas-scroll-frame max-h-[72vh] overflow-scroll rounded-xl border border-sky-100 bg-white p-2"
+             aria-label="Canvas scroll area">
             <div class="relative w-fit">
                 <div id="cooldownBadge" class="canvas-cooldown-badge hidden" aria-live="polite">0</div>
                 <canvas id="pixelCanvas"></canvas>
@@ -134,7 +140,7 @@
                 </div>
             {% endif %}
             <form id="chatForm" class="space-y-2">
-                <textarea id="chatInput" rows="2" maxlength="500" {% if not chat_can_send %}disabled{% endif %} class="w-full resize-none rounded-xl border border-cyan-200 px-3 py-2 text-sm outline-none focus:border-emerald-400 {% if not chat_can_send %}cursor-not-allowed bg-slate-100 text-slate-400{% endif %}" placeholder="{% if chat_can_send %}Write a message...{% else %}Validate your email before chat{% endif %}"></textarea>
+                <textarea id="chatInput" rows="1" maxlength="500" {% if not chat_can_send %}disabled{% endif %} class="w-full resize-none rounded-xl border border-cyan-200 px-2.5 py-1.5 text-xs outline-none focus:border-emerald-400 {% if not chat_can_send %}cursor-not-allowed bg-slate-100 text-slate-400{% endif %}" placeholder="{% if chat_can_send %}Write a message...{% else %}Validate your email before chat{% endif %}"></textarea>
                 <button type="submit" {% if not chat_can_send %}disabled{% endif %} class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-3 py-2 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400 {% if not chat_can_send %}cursor-not-allowed opacity-50 hover:from-emerald-500 hover:to-sky-500{% endif %}">Send Message</button>
             </form>
         {% else %}

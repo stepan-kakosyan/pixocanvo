@@ -1,6 +1,7 @@
 import json
 import math
 import re
+import uuid
 from datetime import datetime, timezone
 
 from django.conf import settings
@@ -11,7 +12,7 @@ from django.core.cache import cache
 from django.db.models import Count, Max, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import translate_url
+from django.urls import reverse, translate_url
 from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
@@ -20,6 +21,8 @@ from django.views.decorators.http import require_GET, require_POST
 from django_redis import get_redis_connection
 from kafka.errors import KafkaError, NoBrokersAvailable
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from .kafka_producer import enqueue_chat_message, enqueue_pixel_update
 from .models import ChatMessage, Community, CommunityJoinRequest
 from .models import CommunityMembership, Pixel, UserAction
@@ -28,11 +31,15 @@ HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 MAX_OWNED_COMMUNITIES = 5
 
 
+def _channel_group_send(group: str, message: dict) -> None:
+    """Synchronously send a message to a channel layer group."""
+    async_to_sync(get_channel_layer().group_send)(group, message)
+
+
 @require_GET
 def switch_language(request: HttpRequest) -> HttpResponse:
     lang = str(request.GET.get("lang", "")).strip().lower()
     next_url = str(request.GET.get("next_url", "/")).strip()
-    print("Requested language change to:", lang, "Next URL:", next_url)
     supported = {
         str(code).lower() for code, _name in getattr(settings, "LANGUAGES", [])
     }
@@ -67,7 +74,15 @@ def _avatar_url_for_request_user(request: HttpRequest) -> str:
     if not request.user.is_authenticated:
         return ""
     profile = getattr(request.user, "profile", None)
-    if profile and profile.avatar:
+    return _avatar_url_from_profile(profile)
+
+
+def _avatar_url_from_profile(profile) -> str:
+    if not profile:
+        return ""
+    if profile.avatar_thumbnail:
+        return profile.avatar_thumbnail.url
+    if profile.avatar:
         return profile.avatar.url
     return ""
 
@@ -188,7 +203,7 @@ def _top_users_by_pixels(community: Community, limit: int = 10) -> list[dict]:
         profile = getattr(user, "profile", None)
         user_info[user.id] = {
             "username": user.username,
-            "avatar_url": profile.avatar.url if profile and profile.avatar else "",
+            "avatar_url": _avatar_url_from_profile(profile),
         }
     top = []
     for user_id, pixel_count in counts_by_id.items():
@@ -384,7 +399,7 @@ def _new_unique_slug(name: str) -> str:
 
 def _chat_payload(message: ChatMessage, include_group: bool = False) -> dict:
     profile = getattr(message.user, "profile", None)
-    avatar_url = profile.avatar.url if profile and profile.avatar else ""
+    avatar_url = _avatar_url_from_profile(profile)
     payload = {
         "id": message.id,
         "username": message.user.username,
@@ -462,7 +477,7 @@ def _community_member_rows(community: Community) -> list[dict]:
         profile = getattr(membership.user, "profile", None)
         rows.append({
             "user": membership.user,
-            "avatar_url": profile.avatar.url if profile and profile.avatar else "",
+            "avatar_url": _avatar_url_from_profile(profile),
             "joined_at": membership.joined_at,
             "pixel_count": counts_by_id.get(membership.user_id, 0),
         })
@@ -578,14 +593,21 @@ def communities_lobby(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def global_leaders(request: HttpRequest) -> HttpResponse:
+    is_htmx = request.headers.get("HX-Request") == "true"
+    htmx_target = request.headers.get("HX-Target")
     community = _global_community(request)
     if community is None:
         return redirect("communities")
     context = {
-        **_base_nav_context(request, active_tab="leaders", community=None),
         "top_players": _top_users_by_pixels(community),
-        "memberships": _non_global_memberships_for_user(request.user),
+        "canvas_url": reverse("index"),
     }
+    if is_htmx and htmx_target == "leaders-content":
+        return render(request, "pixelwar/leaders_partial.html", context)
+    context.update({
+        **_base_nav_context(request, active_tab="leaders", community=None),
+        "memberships": _non_global_memberships_for_user(request.user),
+    })
     return render(request, "pixelwar/leaders.html", context)
 
 
@@ -692,20 +714,23 @@ def create_community(request: HttpRequest) -> HttpResponse:
 @login_required
 def request_join_public_community(request: HttpRequest, slug: str) -> HttpResponse:
     community = Community.objects.filter(slug=slug, is_public=True).first()
+    is_htmx = request.headers.get("HX-Request") == "true"
+
     if community is None:
-        messages.error(
-            request,
-            "Public community was not found.",
-            extra_tags="community",
-        )
+        msg = "Public community was not found."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("communities")
 
     if community.owner_id == request.user.id:
-        messages.info(
-            request,
-            "You already own this community.",
-            extra_tags="community",
-        )
+        msg = "You already own this community."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-slate-700">{msg}</span>'
+            )
+        messages.info(request, msg, extra_tags="community")
         return redirect("communities")
 
     is_member = CommunityMembership.objects.filter(
@@ -714,19 +739,23 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
         active=True,
     ).exists()
     if is_member:
-        messages.info(
-            request,
-            "You are already a member of this community.",
-            extra_tags="community",
-        )
+        msg = "You are already a member of this community."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-emerald-700">{msg}</span>'
+            )
+        messages.info(request, msg, extra_tags="community")
         return redirect("communities")
 
     if _is_public_community_full(community):
-        messages.error(
-            request,
-            "This community is full.",
-            extra_tags="community",
-        )
+        msg = "This community is full."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-rose-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-rose-700">{msg}</span>'
+            )
+        messages.error(request, msg, extra_tags="community")
         return redirect("communities")
 
     join_request, created = CommunityJoinRequest.objects.get_or_create(
@@ -741,19 +770,23 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
             requester=request.user,
             community=community,
         )
-        messages.success(
-            request,
-            "Join request sent.",
-            extra_tags="community",
-        )
+        msg = "Join request sent."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-emerald-700">{msg}</span>'
+            )
+        messages.success(request, msg, extra_tags="community")
         return redirect("communities")
 
     if join_request.status == CommunityJoinRequest.STATUS_PENDING:
-        messages.info(
-            request,
-            "You already have a pending join request.",
-            extra_tags="community",
-        )
+        msg = "You already have a pending join request."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-yellow-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-yellow-700">{msg}</span>'
+            )
+        messages.info(request, msg, extra_tags="community")
         return redirect("communities")
 
     if join_request.status == CommunityJoinRequest.STATUS_APPROVED:
@@ -765,11 +798,13 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
             requester=request.user,
             community=community,
         )
-        messages.success(
-            request,
-            "Join request sent.",
-            extra_tags="community",
-        )
+        msg = "Join request sent."
+        if is_htmx:
+            return HttpResponse(
+                f'<span class="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs '
+                f'font-semibold text-emerald-700">{msg}</span>'
+            )
+        messages.success(request, msg, extra_tags="community")
         return redirect("communities")
 
     join_request.status = CommunityJoinRequest.STATUS_PENDING
@@ -780,11 +815,13 @@ def request_join_public_community(request: HttpRequest, slug: str) -> HttpRespon
         requester=request.user,
         community=community,
     )
-    messages.success(
-        request,
-        "Join request re-sent.",
-        extra_tags="community",
-    )
+    msg = "Join request re-sent."
+    if is_htmx:
+        return HttpResponse(
+            f'<span class="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs '
+            f'font-semibold text-emerald-700">{msg}</span>'
+        )
+    messages.success(request, msg, extra_tags="community")
     return redirect("communities")
 
 
@@ -795,27 +832,25 @@ def approve_join_request(
     slug: str,
     request_id: int,
 ) -> HttpResponse:
+    is_htmx = request.headers.get("HX-Request") == "true"
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(
-            request,
-            "Community was not found.",
-            extra_tags="community",
-        )
+        msg = "Community was not found."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("communities")
     if community.owner_id != request.user.id:
-        messages.error(
-            request,
-            "Only owner can review join requests.",
-            extra_tags="community",
-        )
+        msg = "Only owner can review join requests."
+        if is_htmx:
+            return HttpResponse(msg, status=403)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
     if not community.is_public:
-        messages.error(
-            request,
-            "Join requests exist only for public communities.",
-            extra_tags="community",
-        )
+        msg = "Join requests exist only for public communities."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
 
     join_request = CommunityJoinRequest.objects.filter(
@@ -824,18 +859,16 @@ def approve_join_request(
         status=CommunityJoinRequest.STATUS_PENDING,
     ).select_related("user").first()
     if join_request is None:
-        messages.error(
-            request,
-            "Join request was not found.",
-            extra_tags="community",
-        )
+        msg = "Join request was not found."
+        if is_htmx:
+            return HttpResponse(msg, status=404)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
     if _is_public_community_full(community):
-        messages.error(
-            request,
-            "Community is full. Cannot approve more members.",
-            extra_tags="community",
-        )
+        msg = "Community is full. Cannot approve more members."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
 
     _join_community(join_request.user, community)
@@ -848,6 +881,8 @@ def approve_join_request(
         community=community,
         approved=True,
     )
+    if is_htmx:
+        return HttpResponse("")
     messages.success(
         request,
         f"Approved {join_request.user.username}.",
@@ -863,27 +898,25 @@ def decline_join_request(
     slug: str,
     request_id: int,
 ) -> HttpResponse:
+    is_htmx = request.headers.get("HX-Request") == "true"
     community = Community.objects.filter(slug=slug).first()
     if community is None:
-        messages.error(
-            request,
-            "Community was not found.",
-            extra_tags="community",
-        )
+        msg = "Community was not found."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("communities")
     if community.owner_id != request.user.id:
-        messages.error(
-            request,
-            "Only owner can review join requests.",
-            extra_tags="community",
-        )
+        msg = "Only owner can review join requests."
+        if is_htmx:
+            return HttpResponse(msg, status=403)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
     if not community.is_public:
-        messages.error(
-            request,
-            "Join requests exist only for public communities.",
-            extra_tags="community",
-        )
+        msg = "Join requests exist only for public communities."
+        if is_htmx:
+            return HttpResponse(msg, status=400)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
 
     join_request = CommunityJoinRequest.objects.filter(
@@ -892,11 +925,10 @@ def decline_join_request(
         status=CommunityJoinRequest.STATUS_PENDING,
     ).select_related("user").first()
     if join_request is None:
-        messages.error(
-            request,
-            "Join request was not found.",
-            extra_tags="community",
-        )
+        msg = "Join request was not found."
+        if is_htmx:
+            return HttpResponse(msg, status=404)
+        messages.error(request, msg, extra_tags="community")
         return redirect("community-detail", slug=slug)
     join_request.status = CommunityJoinRequest.STATUS_DECLINED
     join_request.reviewed_at = datetime.now(timezone.utc)
@@ -907,6 +939,8 @@ def decline_join_request(
         community=community,
         approved=False,
     )
+    if is_htmx:
+        return HttpResponse("")
     messages.success(
         request,
         f"Declined {join_request.user.username}.",
@@ -1108,15 +1142,22 @@ def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
 @require_GET
 @login_required
 def community_leaders(request: HttpRequest, slug: str) -> HttpResponse:
+    is_htmx = request.headers.get("HX-Request") == "true"
+    htmx_target = request.headers.get("HX-Target")
     community = _community_for_user(request.user, slug)
     if community is None:
         return redirect("communities")
     context = {
+        "top_players": _top_users_by_pixels(community),
+        "canvas_url": reverse("community-canvas", kwargs={"slug": slug}),
+    }
+    if is_htmx and htmx_target == "leaders-content":
+        return render(request, "pixelwar/leaders_partial.html", context)
+    context.update({
         **_base_nav_context(request, active_tab="leaders",
                             community=community),
-        "top_players": _top_users_by_pixels(community),
         "memberships": _non_global_memberships_for_user(request.user),
-    }
+    })
     return render(request, "pixelwar/leaders.html", context)
 
 
@@ -1258,7 +1299,7 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
 
         for join_req in pending_requests:
             profile = getattr(join_req.user, "profile", None)
-            avatar_url = profile.avatar.url if profile and profile.avatar else ""
+            avatar_url = _avatar_url_from_profile(profile)
             pending_join_request_rows.append({
                 "request": join_req,
                 "avatar_url": avatar_url,
@@ -1406,9 +1447,25 @@ def chat_send(request: HttpRequest) -> JsonResponse:
             ttl = 2
         return JsonResponse({"status": "cooldown", "retry_after": ttl}, status=429)
     profile = getattr(request.user, "profile", None)
-    avatar_url = profile.avatar.url if profile and profile.avatar else ""
+    avatar_url = _avatar_url_from_profile(profile)
     display_name = _display_name_for_user(request.user)
     now = datetime.now(timezone.utc)
+    temp_id = str(uuid.uuid4())
+    ws_payload = {
+        "username": request.user.username,
+        "display_name": display_name,
+        "avatar_url": avatar_url,
+        "message": text,
+        "created_at": now.isoformat(),
+        "temp_id": temp_id,
+    }
+    try:
+        _channel_group_send(
+            f"chat_messages_{community.slug}",
+            {"type": "chat_message", "payload": ws_payload},
+        )
+    except Exception:
+        pass
     try:
         enqueue_chat_message({
             "community_slug": community.slug,
@@ -1418,11 +1475,22 @@ def chat_send(request: HttpRequest) -> JsonResponse:
             "avatar_url": avatar_url,
             "message": text,
             "created_at": now.isoformat(),
+            "temp_id": temp_id,
         })
     except (NoBrokersAvailable, KafkaError):
+        try:
+            _channel_group_send(
+                f"chat_messages_{community.slug}",
+                {
+                    "type": "chat_revert",
+                    "payload": {"type": "chat_revert", "temp_id": temp_id},
+                },
+            )
+        except Exception:
+            pass
         cache.delete(cooldown_key)
         return JsonResponse({"status": "service_unavailable"}, status=503)
-    return JsonResponse({"status": "queued"})
+    return JsonResponse({"status": "ok"})
 
 
 @require_POST
@@ -1486,10 +1554,29 @@ def _update_pixel_for_community(
         color=color,
         accepted=True,
     )
+    # Look up the pre-existing pixel colour (used for metrics and revert).
+    old_pixel = Pixel.objects.filter(
+        community=community, x=x, y=y
+    ).values_list("color", flat=True).first()
+    old_color: str = old_pixel if old_pixel else "#ffffff"
+    pixel_exists = old_pixel is not None
+    projected_count = int(metrics_now["filled_pixels"]) + (0 if pixel_exists else 1)
+    projected_metrics = _grid_metrics_for_state(
+        projected_count, max_coord=max(x, y)
+    )
+    # Broadcast immediately so all clients see the pixel without waiting for
+    # the Kafka → DB round-trip.
     try:
-        pixel_exists = Pixel.objects.filter(community=community, x=x, y=y).exists()
-        projected_count = int(metrics_now["filled_pixels"]) + (0 if pixel_exists else 1)
-        projected_metrics = _grid_metrics_for_state(projected_count, max_coord=max(x, y))
+        _channel_group_send(
+            f"pixel_updates_{community.slug}",
+            {
+                "type": "pixel_update",
+                "payload": {"x": x, "y": y, "color": color, "user_key": user_key},
+            },
+        )
+    except Exception:
+        pass  # Channel layer unavailable – clients will see update on next snapshot.
+    try:
         enqueue_pixel_update({
             "community_slug": community.slug,
             "x": x,
@@ -1499,6 +1586,22 @@ def _update_pixel_for_community(
             "at": now.isoformat(),
         })
     except (NoBrokersAvailable, KafkaError):
+        # Kafka is down – revert the optimistic WS update for all clients.
+        try:
+            _channel_group_send(
+                f"pixel_updates_{community.slug}",
+                {
+                    "type": "pixel_revert",
+                    "payload": {
+                        "type": "pixel_revert",
+                        "x": x,
+                        "y": y,
+                        "color": old_color,
+                    },
+                },
+            )
+        except Exception:
+            pass
         cache.delete(cooldown_key)
         action.accepted = False
         action.rejection_reason = "kafka_unavailable"
@@ -1506,7 +1609,7 @@ def _update_pixel_for_community(
         return JsonResponse({"status": "service_unavailable"}, status=503)
 
     return JsonResponse({
-        "status": "queued",
+        "status": "ok",
         "cooldown_seconds": cooldown_seconds,
         "grid_size": projected_metrics["grid_size"],
         "filled_pixels": projected_metrics["filled_pixels"],
@@ -1597,9 +1700,25 @@ def community_chat_send(request: HttpRequest, slug: str) -> JsonResponse:
             ttl = 2
         return JsonResponse({"status": "cooldown", "retry_after": ttl}, status=429)
     profile = getattr(request.user, "profile", None)
-    avatar_url = profile.avatar.url if profile and profile.avatar else ""
+    avatar_url = _avatar_url_from_profile(profile)
     display_name = _display_name_for_user(request.user)
     now = datetime.now(timezone.utc)
+    temp_id = str(uuid.uuid4())
+    ws_payload = {
+        "username": request.user.username,
+        "display_name": display_name,
+        "avatar_url": avatar_url,
+        "message": text,
+        "created_at": now.isoformat(),
+        "temp_id": temp_id,
+    }
+    try:
+        _channel_group_send(
+            f"chat_messages_{community.slug}",
+            {"type": "chat_message", "payload": ws_payload},
+        )
+    except Exception:
+        pass
     try:
         enqueue_chat_message({
             "community_slug": community.slug,
@@ -1609,11 +1728,22 @@ def community_chat_send(request: HttpRequest, slug: str) -> JsonResponse:
             "avatar_url": avatar_url,
             "message": text,
             "created_at": now.isoformat(),
+            "temp_id": temp_id,
         })
     except (NoBrokersAvailable, KafkaError):
+        try:
+            _channel_group_send(
+                f"chat_messages_{community.slug}",
+                {
+                    "type": "chat_revert",
+                    "payload": {"type": "chat_revert", "temp_id": temp_id},
+                },
+            )
+        except Exception:
+            pass
         cache.delete(cooldown_key)
         return JsonResponse({"status": "service_unavailable"}, status=503)
-    return JsonResponse({"status": "queued"})
+    return JsonResponse({"status": "ok"})
 
 
 @require_POST

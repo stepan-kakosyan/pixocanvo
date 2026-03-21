@@ -153,6 +153,13 @@ def env_bool(name: str, default: bool = False) -> bool:
     return os.getenv(name, default_value) == "1"
 
 
+def env_str(name: str, default: str = "") -> str:
+    value = os.getenv(name, default).strip()
+    if value.lower() in {"none", "null"}:
+        return ""
+    return value
+
+
 def build_s3_base_url(
     bucket_name: str,
     region_name: str,
@@ -176,16 +183,22 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 if USE_S3:
-    aws_bucket_name = os.getenv("AWS_STORAGE_BUCKET_NAME", "").strip()
-    aws_region_name = os.getenv("AWS_S3_REGION_NAME", "").strip()
-    aws_custom_domain = os.getenv("AWS_S3_CUSTOM_DOMAIN", "").strip()
-    aws_endpoint_url = os.getenv("AWS_S3_ENDPOINT_URL", "").strip()
-    aws_static_location = os.getenv("AWS_STATIC_LOCATION", "static")
-    aws_media_location = os.getenv("AWS_MEDIA_LOCATION", "media")
-    aws_static_location = aws_static_location.strip("/") or "static"
-    aws_media_location = aws_media_location.strip("/") or "media"
+    aws_bucket_name = env_str("AWS_STORAGE_BUCKET_NAME")
+    aws_region_name = env_str("AWS_S3_REGION_NAME")
+    aws_custom_domain = env_str("AWS_S3_CUSTOM_DOMAIN")
+    aws_endpoint_url = env_str("AWS_S3_ENDPOINT_URL")
+    aws_media_location = env_str("AWS_MEDIA_LOCATION").strip("/")
 
     if not aws_bucket_name:
         raise ImproperlyConfigured(
@@ -199,14 +212,27 @@ if USE_S3:
         "querystring_auth": env_bool("AWS_QUERYSTRING_AUTH"),
     }
 
+    # Django 4.1 reads DEFAULT_FILE_STORAGE for media uploads.
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    AWS_STORAGE_BUCKET_NAME = aws_bucket_name
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = s3_options["file_overwrite"]
+    AWS_QUERYSTRING_AUTH = s3_options["querystring_auth"]
+
     if aws_region_name:
         s3_options["region_name"] = aws_region_name
+        AWS_S3_REGION_NAME = aws_region_name
 
     if aws_custom_domain:
         s3_options["custom_domain"] = aws_custom_domain
+        AWS_S3_CUSTOM_DOMAIN = aws_custom_domain
 
     if aws_endpoint_url:
         s3_options["endpoint_url"] = aws_endpoint_url
+        AWS_S3_ENDPOINT_URL = aws_endpoint_url
+
+    if aws_media_location:
+        AWS_LOCATION = aws_media_location
 
     STORAGES = {
         "default": {
@@ -217,11 +243,7 @@ if USE_S3:
             },
         },
         "staticfiles": {
-            "BACKEND": "storages.backends.s3.S3Storage",
-            "OPTIONS": {
-                **s3_options,
-                "location": aws_static_location,
-            },
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
 
@@ -231,8 +253,10 @@ if USE_S3:
         aws_custom_domain,
         aws_endpoint_url,
     )
-    STATIC_URL = f"{aws_base_url}/{aws_static_location}/"
-    MEDIA_URL = f"{aws_base_url}/{aws_media_location}/"
+    if aws_media_location:
+        MEDIA_URL = f"{aws_base_url}/{aws_media_location}/"
+    else:
+        MEDIA_URL = f"{aws_base_url}/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

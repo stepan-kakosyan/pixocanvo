@@ -78,8 +78,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatDefaultGroup = String(app.dataset.chatDefaultGroup || 'global');
     const pixelsWsUrl = String(app.dataset.pixelsWsUrl || '/ws/pixels/');
     const chatWsUrl = String(app.dataset.chatWsUrl || '/ws/chat/');
+    const canvasViewportSection = document.getElementById(
+        'canvasViewportSection'
+    );
     const canvas = document.getElementById('pixelCanvas');
     const pixelOverlay = document.getElementById('pixelOverlay');
+    const canvasScrollFrame = document.getElementById('canvasScrollFrame');
+    const canvasScrollTop = document.getElementById('canvasScrollTop');
+    const canvasScrollTopInner = document.getElementById(
+        'canvasScrollTopInner'
+    );
     const ctx = canvas.getContext('2d', { alpha: false });
     const overlayCtx = pixelOverlay.getContext('2d');
     const gridMeta = document.getElementById('gridMeta');
@@ -118,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let reconnectTimer = null;
     let groupedChatTimer = null;
     let cooldownTimer = null;
+    let isSyncingCanvasScroll = false;
+    let isCanvasWideMode = false;
     let cooldownRemaining = 0;
     let cooldownUntilTs = 0;
     let isRealtimeConnected = false;
@@ -177,6 +187,63 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.height = gridSize;
     pixelOverlay.width = gridSize;
     pixelOverlay.height = gridSize;
+
+    function syncCanvasScrollbars() {
+        if (!canvasScrollFrame || !canvasScrollTop || !canvasScrollTopInner) {
+            return;
+        }
+
+        window.requestAnimationFrame(() => {
+            const isMobileViewport = window.matchMedia('(max-width: 640px)').matches;
+            const scrollWidth = canvasScrollFrame.scrollWidth;
+            const clientWidth = canvasScrollFrame.clientWidth;
+            canvasScrollTopInner.style.width = `${scrollWidth}px`;
+
+            const hasOverflow = scrollWidth > clientWidth + 1;
+            canvasScrollTop.classList.toggle(
+                'canvas-scrollbar-top-active',
+                isMobileViewport && hasOverflow
+            );
+
+            if (!isMobileViewport || !hasOverflow) {
+                canvasScrollTop.scrollLeft = 0;
+                return;
+            }
+
+            if (!isSyncingCanvasScroll) {
+                canvasScrollTop.scrollLeft = canvasScrollFrame.scrollLeft;
+            }
+        });
+    }
+
+    function bindCanvasScrollbarSync() {
+        if (!canvasScrollFrame || !canvasScrollTop) {
+            return;
+        }
+
+        canvasScrollFrame.addEventListener('scroll', () => {
+            if (isSyncingCanvasScroll) {
+                return;
+            }
+            isSyncingCanvasScroll = true;
+            canvasScrollTop.scrollLeft = canvasScrollFrame.scrollLeft;
+            isSyncingCanvasScroll = false;
+        });
+
+        canvasScrollTop.addEventListener('scroll', () => {
+            if (isSyncingCanvasScroll) {
+                return;
+            }
+            isSyncingCanvasScroll = true;
+            canvasScrollFrame.scrollLeft = canvasScrollTop.scrollLeft;
+            isSyncingCanvasScroll = false;
+        });
+
+        window.addEventListener('resize', syncCanvasScrollbars);
+        syncCanvasScrollbars();
+    }
+
+    bindCanvasScrollbarSync();
 
     function pixelKey(x, y) {
         return `${x}:${y}`;
@@ -392,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
         canvas.style.height = `${gridSize * scale}px`;
         pixelOverlay.style.width = `${gridSize * scale}px`;
         pixelOverlay.style.height = `${gridSize * scale}px`;
+        syncCanvasScrollbars();
     }
 
     function smartScaleForBoard() {
@@ -489,7 +557,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         chatNotice.className = 'mb-2 min-h-4 text-xs font-medium text-slate-500';
 
-        if (String(message).trim() === 'Message queued') {
+        if (
+            String(message).trim() === 'Message queued'
+            || String(message).trim() === 'Message sent'
+        ) {
             chatNoticeTimer = window.setTimeout(() => {
                 setChatNotice('');
             }, 1800);
@@ -581,26 +652,28 @@ document.addEventListener('DOMContentLoaded', function () {
         chatMute.textContent = isChatMuted ? 'Sound Off' : 'Sound On';
     }
 
-    async function toggleCanvasFullscreen() {
-        const container = canvas.parentElement;
-        if (!container) {
+    function toggleCanvasFullscreen() {
+        if (!canvasViewportSection) {
             return;
         }
-
-        if (!document.fullscreenElement) {
-            await container.requestFullscreen();
-        } else {
-            await document.exitFullscreen();
-        }
+        isCanvasWideMode = !isCanvasWideMode;
+        document.body.classList.toggle('canvas-wide-mode', isCanvasWideMode);
+        syncCanvasScrollbars();
+        updateFullscreenButton();
     }
 
     function updateFullscreenButton() {
         if (!canvasFullscreen) {
             return;
         }
-        const isFull = Boolean(document.fullscreenElement);
-        canvasFullscreen.setAttribute('aria-label', isFull ? 'Exit full screen' : 'Full screen');
-        canvasFullscreen.setAttribute('title', isFull ? 'Exit full screen' : 'Full screen');
+        canvasFullscreen.setAttribute(
+            'aria-label',
+            isCanvasWideMode ? 'Exit expanded canvas' : 'Expand canvas'
+        );
+        canvasFullscreen.setAttribute(
+            'title',
+            isCanvasWideMode ? 'Exit expanded canvas' : 'Expand canvas'
+        );
     }
 
     function renderUnreadBadge() {
@@ -731,6 +804,9 @@ document.addEventListener('DOMContentLoaded', function () {
         row.className = isOwn
             ? 'mb-2 ml-auto max-w-[88%] rounded-xl bg-emerald-50 px-2.5 py-2'
             : 'mb-2 mr-auto max-w-[88%] rounded-xl bg-slate-50 px-2.5 py-2';
+        if (item.temp_id) {
+            row.dataset.tempId = item.temp_id;
+        }
 
         const header = document.createElement('div');
         header.className = isOwn
@@ -788,6 +864,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function messageKey(item) {
         if (item && item.id !== undefined && item.id !== null) {
             return `id:${item.id}`;
+        }
+        if (item && item.temp_id) {
+            return `temp:${item.temp_id}`;
         }
         return `raw:${item.username || ''}:${item.created_at || ''}:${item.message || ''}`;
     }
@@ -983,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (response.ok) {
-            setChatNotice('Message queued', 'info');
+            setChatNotice('Message sent', 'info');
             return true;
         }
 
@@ -1121,6 +1200,10 @@ document.addEventListener('DOMContentLoaded', function () {
         socket.onmessage = (event) => {
             try {
                 const payload = JSON.parse(event.data);
+                if (payload.type === 'pixel_revert') {
+                    drawPixel(payload.x, payload.y, payload.color || '#ffffff');
+                    return;
+                }
                 if (payload.x >= gridSize || payload.y >= gridSize) {
                     loadSnapshot().catch(() => {});
                     return;
@@ -1169,6 +1252,18 @@ document.addEventListener('DOMContentLoaded', function () {
         socket.onmessage = (event) => {
             try {
                 const payload = JSON.parse(event.data);
+                if (payload.type === 'chat_revert') {
+                    if (payload.temp_id) {
+                        const el = chatMessages
+                            ? chatMessages.querySelector(
+                                `[data-temp-id="${CSS.escape(payload.temp_id)}"]`
+                            )
+                            : null;
+                        if (el) { el.remove(); }
+                        knownChatMessageKeys.delete(`temp:${payload.temp_id}`);
+                    }
+                    return;
+                }
                 const key = messageKey(payload);
                 if (knownChatMessageKeys.has(key)) {
                     return;
@@ -1253,7 +1348,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (canvasFullscreen) {
         canvasFullscreen.addEventListener('click', () => {
-            toggleCanvasFullscreen().catch(() => {});
+            toggleCanvasFullscreen();
         });
     }
 
@@ -1276,10 +1371,6 @@ document.addEventListener('DOMContentLoaded', function () {
             setHighlightMode(!isHighlightingMine);
         });
     }
-
-    document.addEventListener('fullscreenchange', () => {
-        updateFullscreenButton();
-    });
 
     colorPalette.addEventListener('click', (event) => {
         const target = event.target.closest('button[data-color]');

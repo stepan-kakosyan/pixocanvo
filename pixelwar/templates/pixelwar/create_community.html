@@ -34,7 +34,7 @@
                 {% endblocktrans %}
             </div>
         {% else %}
-            <form method="post" enctype="multipart/form-data" class="mt-5 space-y-4">
+            <form method="post" enctype="multipart/form-data" class="mt-5 space-y-4" id="create-community-form">
                 {% csrf_token %}
                 <div>
                     <label class="mb-1 block text-sm font-semibold">{% trans "New community name" %}</label>
@@ -76,11 +76,28 @@
                     </div>
                 </div>
 
-                <button type="submit"
-                        class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400">
+                <button type="submit" id="create-community-submit"
+                        class="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white hover:from-emerald-400 hover:to-sky-400 disabled:opacity-50 disabled:cursor-not-allowed">
                     {% trans "Create community" %}
                 </button>
             </form>
+            <script>
+            document.getElementById('create-community-form').addEventListener('submit', function(e) {
+                const submitBtn = document.getElementById('create-community-submit');
+                submitBtn.disabled = true;
+            });
+            // Re-enable button if validation errors are shown (page re-renders with messages)
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('create-community-form');
+                const hasErrors = form && form.querySelector('input[required]:invalid');
+                if (form && !form.closest('section').querySelector('.mt-4.space-y-2')) {
+                    const submitBtn = document.getElementById('create-community-submit');
+                    if (submitBtn && submitBtn.disabled) {
+                        submitBtn.disabled = false;
+                    }
+                }
+            });
+            </script>
         {% endif %}
 
         <div class="mt-6">

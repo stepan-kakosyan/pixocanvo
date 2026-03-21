@@ -27,7 +27,7 @@ from .forms import (
     ProfileSettingsForm,
     RegisterForm,
 )
-from .models import UserProfile
+from .models import ContactMessage, UserProfile
 from django.db.models import Q
 
 
@@ -43,6 +43,14 @@ def _base_nav_context(request: HttpRequest) -> dict:
 
 
 def contact_us_view(request: HttpRequest) -> HttpResponse:
+    user_tickets = []
+    if request.user.is_authenticated:
+        ticket_filters = Q(user=request.user)
+        user_email = (request.user.email or "").strip().lower()
+        if user_email:
+            ticket_filters |= Q(email__iexact=user_email)
+        user_tickets = list(ContactMessage.objects.filter(ticket_filters).distinct())
+
     if request.method == "POST":
         form = ContactUsForm(
             request.POST,
@@ -74,6 +82,7 @@ def contact_us_view(request: HttpRequest) -> HttpResponse:
     context = {
         "form": form,
         "active_tab": None,
+        "user_tickets": user_tickets,
     }
     context.update(_base_nav_context(request))
     return render(request, "users/contact_us.html", context)
@@ -296,7 +305,9 @@ def profile_settings_view(request: HttpRequest) -> HttpResponse:
     avatar_upload_form = AvatarUploadForm()
 
     avatar_url = ""
-    if profile and profile.avatar:
+    if profile and profile.avatar_thumbnail:
+        avatar_url = profile.avatar_thumbnail.url
+    elif profile and profile.avatar:
         avatar_url = profile.avatar.url
 
     return render(
@@ -323,15 +334,23 @@ def upload_avatar_view(request: HttpRequest) -> HttpResponse:
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
     form = AvatarUploadForm(request.POST, request.FILES)
     context = {
-        "avatar_url": profile.avatar.url if profile.avatar else "",
+        "avatar_url": (
+            profile.avatar_thumbnail.url
+            if profile.avatar_thumbnail
+            else (profile.avatar.url if profile.avatar else "")
+        ),
         "avatar_upload_form": form,
         "avatar_upload_success": False,
     }
 
     if form.is_valid():
         profile.avatar = form.cleaned_data["avatar"]
-        profile.save(update_fields=["avatar"])
-        context["avatar_url"] = profile.avatar.url
+        profile.save(update_fields=["avatar", "avatar_thumbnail"])
+        context["avatar_url"] = (
+            profile.avatar_thumbnail.url
+            if profile.avatar_thumbnail
+            else profile.avatar.url
+        )
         context["avatar_upload_success"] = True
 
     return render(request, "users/partials/avatar_upload_response.html", context)

@@ -3,6 +3,21 @@ import uuid
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import slugify
+
+
+def community_image_upload_path(instance, filename):
+    """Store optimized community cover at community folder root."""
+    community_name = slugify(instance.name) or f"community-{instance.pk or 'new'}"
+    return f"community_covers/{instance.pk or 'new'}/{community_name}.jpg"
+
+
+def community_image_thumbnail_upload_path(instance, filename):
+    """Store community thumbnail in tmb subfolder."""
+    community_name = slugify(instance.name) or f"community-{instance.pk or 'new'}"
+    return (
+        f"community_covers/{instance.pk or 'new'}/tmb/{community_name}.jpg"
+    )
 
 
 class Community(models.Model):
@@ -23,7 +38,12 @@ class Community(models.Model):
     description = models.CharField(max_length=280, blank=True, default="")
     slug = models.SlugField(max_length=80, unique=True)
     image = models.ImageField(
-        upload_to="community_covers/",
+        upload_to=community_image_upload_path,
+        blank=True,
+        null=True,
+    )
+    image_thumbnail = models.ImageField(
+        upload_to=community_image_thumbnail_upload_path,
         blank=True,
         null=True,
     )

@@ -15,7 +15,8 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    function initializeCommunityModals(root) {
+        const scope = root instanceof Element ? root : document;
         const modalBackdrop = byId('modal-backdrop');
         const invitationModal = byId('invitation-modal');
         const leaveModal = byId('leave-modal');
@@ -36,6 +37,19 @@
             return;
         }
 
+        if (!document.body.dataset.communityModalEscapeBound) {
+            document.body.dataset.communityModalEscapeBound = 'true';
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    hide(modalBackdrop);
+                    hide(invitationModal);
+                    hide(leaveModal);
+                    hide(deleteModal);
+                    hide(removeMemberModal);
+                }
+            });
+        }
+
         const hideAllModals = () => {
             hide(modalBackdrop);
             hide(invitationModal);
@@ -52,7 +66,16 @@
             show(modal);
         };
 
-        document.querySelectorAll('.invitation-link-btn').forEach((btn) => {
+        if (!modalBackdrop.dataset.communityModalBound) {
+            modalBackdrop.dataset.communityModalBound = 'true';
+            modalBackdrop.addEventListener('click', hideAllModals);
+        }
+
+        scope.querySelectorAll('.invitation-link-btn').forEach((btn) => {
+            if (btn.dataset.communityModalBound) {
+                return;
+            }
+            btn.dataset.communityModalBound = 'true';
             btn.addEventListener('click', () => {
                 const url = String(btn.getAttribute('data-invite-url') || '');
                 if (invitationInput) {
@@ -62,7 +85,8 @@
             });
         });
 
-        if (copyInviteButton && invitationInput) {
+        if (copyInviteButton && invitationInput && !copyInviteButton.dataset.communityModalBound) {
+            copyInviteButton.dataset.communityModalBound = 'true';
             copyInviteButton.addEventListener('click', async () => {
                 const url = invitationInput.value;
                 try {
@@ -86,9 +110,12 @@
             });
         }
 
-        document.querySelectorAll('.leave-community-btn').forEach((btn) => {
+        scope.querySelectorAll('.leave-community-btn').forEach((btn) => {
+            if (btn.dataset.communityModalBound) {
+                return;
+            }
+            btn.dataset.communityModalBound = 'true';
             btn.addEventListener('click', () => {
-                const slug = String(btn.getAttribute('data-community-slug') || '');
                 const name = String(btn.getAttribute('data-community-name') || '');
                 const leaveUrl = String(btn.getAttribute('data-leave-url') || '');
                 if (leaveForm) {
@@ -101,9 +128,12 @@
             });
         });
 
-        document.querySelectorAll('.delete-community-btn').forEach((btn) => {
+        scope.querySelectorAll('.delete-community-btn').forEach((btn) => {
+            if (btn.dataset.communityModalBound) {
+                return;
+            }
+            btn.dataset.communityModalBound = 'true';
             btn.addEventListener('click', () => {
-                const slug = String(btn.getAttribute('data-community-slug') || '');
                 const name = String(btn.getAttribute('data-community-name') || '');
                 const deleteUrl = String(btn.getAttribute('data-delete-url') || '');
                 if (deleteForm) {
@@ -116,7 +146,11 @@
             });
         });
 
-        document.querySelectorAll('.remove-member-btn').forEach((btn) => {
+        scope.querySelectorAll('.remove-member-btn').forEach((btn) => {
+            if (btn.dataset.communityModalBound) {
+                return;
+            }
+            btn.dataset.communityModalBound = 'true';
             btn.addEventListener('click', () => {
                 const memberName = String(btn.getAttribute('data-member-name') || '');
                 const removeUrl = String(btn.getAttribute('data-remove-url') || '');
@@ -131,16 +165,20 @@
             });
         });
 
-        document.querySelectorAll('.close-modal-btn').forEach((btn) => {
+        scope.querySelectorAll('.close-modal-btn').forEach((btn) => {
+            if (btn.dataset.communityModalBound) {
+                return;
+            }
+            btn.dataset.communityModalBound = 'true';
             btn.addEventListener('click', hideAllModals);
         });
+    }
 
-        modalBackdrop.addEventListener('click', hideAllModals);
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeCommunityModals(document);
+    });
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                hideAllModals();
-            }
-        });
+    document.body.addEventListener('htmx:load', (event) => {
+        initializeCommunityModals(event.target);
     });
 })();

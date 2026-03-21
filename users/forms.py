@@ -31,7 +31,7 @@ class RegisterForm(UserCreationForm):
             profile, _ = UserProfile.objects.get_or_create(user=user)
             if avatar:
                 profile.avatar = avatar
-                profile.save(update_fields=["avatar"])
+                profile.save(update_fields=["avatar", "avatar_thumbnail"])
         return user
 
 
@@ -131,7 +131,7 @@ class ProfileSettingsForm(forms.Form):
         avatar = self.cleaned_data.get("avatar")
         if avatar:
             profile.avatar = avatar
-            profile.save(update_fields=["avatar"])
+            profile.save(update_fields=["avatar", "avatar_thumbnail"])
 
         new_password = self.cleaned_data.get("new_password1", "")
         if new_password:

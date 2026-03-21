@@ -19,19 +19,19 @@
 <body class="flex min-h-screen flex-col bg-white text-slate-900">
 
 <header class="sticky top-0 z-30 border-b border-white/70 bg-white/85 shadow-lg shadow-slate-200/50 backdrop-blur-md">
-    <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 md:flex-nowrap md:gap-4 md:px-6">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-3 py-2 md:flex-nowrap md:gap-4 md:px-6 md:py-3">
 
         <!-- brand -->
         <a href="{% url 'index' %}" class="group shrink-0 leading-none">
             <p class="hidden text-[0.55rem] font-semibold uppercase tracking-widest text-slate-500 transition group-hover:text-slate-700 sm:block">
                 Realtime Canvas Arena
             </p>
-            <span class="flex items-center gap-2">
+            <span class="flex flex-col items-center gap-0.5 md:flex-row md:gap-2">
                 <img id="headerLogo"
                      src="{% static 'pixelwar/images/logo.png' %}"
                      alt="Pixo Canvo"
-                     class="h-8 w-auto object-contain md:h-9">
-                <span class="bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 bg-clip-text text-lg font-black leading-tight text-transparent md:text-xl">
+                     class="h-6 w-auto object-contain md:h-9">
+                <span class="bg-gradient-to-r from-emerald-400 via-cyan-300 to-sky-400 bg-clip-text text-xs font-black leading-tight text-transparent md:text-xl">
                     Pixo Canvo
                 </span>
             </span>
@@ -41,28 +41,28 @@
          <nav id="main-nav" class="order-3 flex w-full items-center gap-0.5 overflow-x-auto rounded-2xl bg-slate-100 p-1 ring-1 ring-slate-200 md:order-none md:mx-auto md:w-auto"
              aria-label="Main navigation">
             <a href="{% url 'index' %}"
-             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-bold transition-all sm:px-4
+             class="whitespace-nowrap rounded-xl px-2 py-1.5 text-xs font-bold transition-all sm:px-3 sm:py-2 sm:text-sm md:px-4 md:py-2
                       {% if active_tab == 'canvas' %}bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg shadow-emerald-500/30
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 {% trans "Canvas" %}
             </a>
             <a href="{% url 'communities' %}"
                     hx-get="{% url 'communities' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
+             class="whitespace-nowrap rounded-xl px-2 py-1.5 text-xs font-semibold transition-all sm:px-3 sm:py-2 sm:text-sm md:px-4 md:py-2
                       {% if active_tab == 'communities' %}bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg shadow-emerald-500/30
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 {% trans "Communities" %}
             </a>
             <a href="{% url 'leaders' %}"
                     hx-get="{% url 'leaders' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
+             class="whitespace-nowrap rounded-xl px-2 py-1.5 text-xs font-semibold transition-all sm:px-3 sm:py-2 sm:text-sm md:px-4 md:py-2
                       {% if active_tab == 'leaders' %}bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg shadow-emerald-500/30
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 {% trans "Ranking" %}
             </a>
             <a href="{% url 'guide' %}"
                     hx-get="{% url 'guide' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true"
-             class="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition-all sm:px-4
+             class="whitespace-nowrap rounded-xl px-2 py-1.5 text-xs font-semibold transition-all sm:px-3 sm:py-2 sm:text-sm md:px-4 md:py-2
                       {% if active_tab == 'guide' %}bg-gradient-to-r from-emerald-500 to-sky-500 text-white shadow-lg shadow-emerald-500/30
                       {% else %}text-slate-600 hover:bg-white hover:text-slate-900{% endif %}">
                 <span class="hidden sm:inline">{% trans "Rules" %}</span><span class="sm:hidden">{% trans "Rules" %}</span>
@@ -71,7 +71,7 @@
         </nav>
 
         <!-- user controls -->
-        <div id="header-user-controls" class="ml-auto shrink-0 sm:ml-0">
+        <div id="header-user-controls" class="order-2 ml-auto shrink-0 md:order-none md:ml-0">
             {% include "pixelwar/partials/header_user_controls.html" %}
         </div>
 
@@ -84,6 +84,7 @@
 {% endif %}
 
 {% block content %}{% endblock %}
+<script src="{% static 'pixelwar/js/community_lobby.js' %}"></script>
 {% if request.user.is_authenticated and layout != "partial" %}
 <script src="{% static 'Notifications/js/notifications.js' %}"></script>
 {% endif %}
@@ -99,11 +100,11 @@
             <span class="text-xs text-slate-400">&copy; {{ 'now'|date:'Y' }}</span>
         </div>
         <nav class="flex flex-wrap items-center gap-4 text-xs text-slate-500" aria-label="Footer navigation">
-            <a href="{% url 'guide' %}" hx-get="{% url 'guide' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" class="transition hover:text-emerald-600">{% trans "Rules" %}</a>
-            <a href="{% url 'communities' %}" hx-get="{% url 'communities' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" class="transition hover:text-emerald-600">{% trans "Communities" %}</a>
-            <a href="{% url 'contact-us' %}" hx-get="{% url 'contact-us' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" class="transition hover:text-emerald-600">{% trans "Contact Us" %}</a>
-            <a href="{% url 'privacy' %}" hx-get="{% url 'privacy' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" class="transition hover:text-emerald-600">{% trans "Privacy Policy" %}</a>
-            <a href="{% url 'terms' %}" hx-get="{% url 'terms' %}" hx-target="#page-content" hx-swap="innerHTML" hx-push-url="true" class="transition hover:text-emerald-600">{% trans "Terms of Service" %}</a>
+            <a href="{% url 'guide' %}" class="transition hover:text-emerald-600">{% trans "Rules" %}</a>
+            <a href="{% url 'communities' %}" class="transition hover:text-emerald-600">{% trans "Communities" %}</a>
+            <a href="{% url 'contact-us' %}" class="transition hover:text-emerald-600">{% trans "Contact Us" %}</a>
+            <a href="{% url 'privacy' %}" class="transition hover:text-emerald-600">{% trans "Privacy Policy" %}</a>
+            <a href="{% url 'terms' %}" class="transition hover:text-emerald-600">{% trans "Terms of Service" %}</a>
         </nav>
     </div>
 </footer>

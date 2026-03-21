@@ -41,6 +41,9 @@ class PixelStreamConsumer(AsyncWebsocketConsumer):
     async def pixel_update(self, event: dict) -> None:
         await self.send(text_data=json.dumps(event["payload"]))
 
+    async def pixel_revert(self, event: dict) -> None:
+        await self.send(text_data=json.dumps(event["payload"]))
+
 
 class ChatStreamConsumer(AsyncWebsocketConsumer):
     async def connect(self) -> None:
@@ -61,4 +64,7 @@ class ChatStreamConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def chat_message(self, event: dict) -> None:
+        await self.send(text_data=json.dumps(event["payload"]))
+
+    async def chat_revert(self, event: dict) -> None:
         await self.send(text_data=json.dumps(event["payload"]))

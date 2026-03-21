@@ -32,11 +32,46 @@ The web app will be available at http://localhost:8000.
 - `web`: Django + Daphne (HTTP + WebSocket)
 - `consumer`: Kafka consumer that bulk-upserts pixels and broadcasts updates
 - `celery`: background worker for notifications and email delivery tasks
-- `flower`: Celery monitoring UI at `http://localhost:5555` with basic auth
 - `kafka`: Kafka broker
-- `kafka-ui`: Kafka GUI at `http://localhost:8082` with login required
 - `redis`: cooldown cache + Channels layer
 - external MySQL server configured via `.env` (`MYSQL_*` variables)
+
+## AWS S3 storage for images
+
+The project can store uploaded images and collected static assets in an AWS S3
+bucket through Django storage backends.
+
+Set these variables in your `.env` before starting containers:
+
+```env
+USE_S3=1
+AWS_STORAGE_BUCKET_NAME=your-bucket-name
+AWS_S3_REGION_NAME=eu-central-1
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_MEDIA_LOCATION=
+AWS_S3_FILE_OVERWRITE=0
+AWS_QUERYSTRING_AUTH=0
+```
+
+Optional variables:
+
+```env
+AWS_S3_CUSTOM_DOMAIN=cdn.example.com
+AWS_S3_ENDPOINT_URL=
+AWS_SESSION_TOKEN=
+```
+
+Behavior:
+
+- when `USE_S3=1`, `ImageField` uploads are written to S3 under
+	`AWS_MEDIA_LOCATION` (or bucket root when empty)
+- avatar uploads go to `profile-avatars/...` and community covers go to
+	`community_covers/...`
+- when `USE_S3=0`, the project keeps using local `media/` and `staticfiles/`
+
+If your image URLs must be public, configure the S3 bucket policy or CloudFront
+distribution accordingly. The Django config uses unsigned URLs by default.
 
 ## Automated startup behavior
 
@@ -55,15 +90,6 @@ python manage.py migrate
 ```
 
 `redis` is configured with `restart: on-failure:3` (up to 3 restart attempts).
-
-To protect Flower, set superuser credentials in your `.env`:
-
-```bash
-DJANGO_SUPERUSER_USERNAME=your_admin_username
-DJANGO_SUPERUSER_PASSWORD=your_admin_password
-```
-
-Flower and Kafka UI startup are blocked if these values are missing.
 
 ## Technologies used
 

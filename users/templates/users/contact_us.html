@@ -99,5 +99,143 @@
             </button>
         </form>
     </div>
+
+    {% if request.user.is_authenticated and user_tickets %}
+        <section class="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-100/70">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-xl font-black tracking-tight text-slate-900">
+                        {% trans "Your Tickets" %}
+                    </h3>
+                    <p class="mt-1 text-sm text-slate-500">
+                        {% trans "Open any ticket card to see the full message you sent." %}
+                    </p>
+                </div>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600">
+                    {{ user_tickets|length }} {% trans "tickets" %}
+                </span>
+            </div>
+
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                {% for ticket in user_tickets %}
+                    <button type="button"
+                            class="ticket-card rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-white hover:shadow-md"
+                            data-ticket-id="{{ ticket.id }}"
+                            data-ticket-subject="{{ ticket.subject|escape }}"
+                            data-ticket-status="{{ ticket.get_status_display|escape }}"
+                            data-ticket-email="{{ ticket.email|escape }}"
+                            data-ticket-created="{{ ticket.created_at|date:'Y-m-d H:i' }}">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wide text-cyan-700">
+                                    #{{ ticket.id }}
+                                </p>
+                                <p class="mt-1 text-sm font-black text-slate-900">
+                                    {{ ticket.subject }}
+                                </p>
+                            </div>
+                            <span class="rounded-full bg-cyan-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-cyan-700 ring-1 ring-cyan-200">
+                                {{ ticket.get_status_display }}
+                            </span>
+                        </div>
+                        <p class="mt-2 line-clamp-3 text-sm text-slate-600">
+                            {{ ticket.description|truncatechars:140 }}
+                        </p>
+                        <span class="hidden" data-ticket-description-source>{{ ticket.description }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </section>
+
+        <div id="ticket-modal-backdrop" class="fixed inset-0 z-50 hidden bg-slate-950/50"></div>
+        <div id="ticket-modal"
+             class="fixed left-1/2 top-1/2 z-[60] hidden w-[calc(100vw-1.5rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p id="ticket-modal-id" class="text-xs font-bold uppercase tracking-wide text-cyan-700"></p>
+                    <h4 id="ticket-modal-subject" class="mt-1 text-xl font-black tracking-tight text-slate-900"></h4>
+                </div>
+                <button type="button"
+                        id="ticket-modal-close"
+                        class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-600 transition hover:bg-slate-200">
+                    {% trans "Close" %}
+                </button>
+            </div>
+
+            <div class="mt-4 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 sm:grid-cols-3">
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500">{% trans "Status" %}</p>
+                    <p id="ticket-modal-status" class="mt-1 font-semibold text-slate-900"></p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500">{% trans "Email" %}</p>
+                    <p id="ticket-modal-email" class="mt-1 break-all font-semibold text-slate-900"></p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500">{% trans "Created" %}</p>
+                    <p id="ticket-modal-created" class="mt-1 font-semibold text-slate-900"></p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500">{% trans "Full message" %}</p>
+                <div id="ticket-modal-description" class="mt-2 max-h-[45vh] overflow-y-auto whitespace-pre-wrap rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"></div>
+            </div>
+        </div>
+    {% endif %}
 </main>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    {% if request.user.is_authenticated and user_tickets %}
+        <script>
+        (function () {
+            const cards = document.querySelectorAll('.ticket-card');
+            const modal = document.getElementById('ticket-modal');
+            const backdrop = document.getElementById('ticket-modal-backdrop');
+            const closeButton = document.getElementById('ticket-modal-close');
+            if (!cards.length || !modal || !backdrop || !closeButton) {
+                return;
+            }
+
+            const fields = {
+                id: document.getElementById('ticket-modal-id'),
+                subject: document.getElementById('ticket-modal-subject'),
+                status: document.getElementById('ticket-modal-status'),
+                email: document.getElementById('ticket-modal-email'),
+                created: document.getElementById('ticket-modal-created'),
+                description: document.getElementById('ticket-modal-description'),
+            };
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                backdrop.classList.add('hidden');
+            };
+
+            cards.forEach((card) => {
+                card.addEventListener('click', () => {
+                    fields.id.textContent = `#${card.dataset.ticketId || ''}`;
+                    fields.subject.textContent = card.dataset.ticketSubject || '';
+                    fields.status.textContent = card.dataset.ticketStatus || '';
+                    fields.email.textContent = card.dataset.ticketEmail || '';
+                    fields.created.textContent = card.dataset.ticketCreated || '';
+                    fields.description.textContent =
+                        card.querySelector('[data-ticket-description-source]')
+                            ?.textContent || '';
+                    backdrop.classList.remove('hidden');
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            closeButton.addEventListener('click', closeModal);
+            backdrop.addEventListener('click', closeModal);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        })();
+        </script>
+    {% endif %}
 {% endblock %}

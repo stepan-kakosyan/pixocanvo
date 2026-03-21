@@ -19,6 +19,8 @@ urlpatterns += i18n_patterns(
     prefix_default_language=False,
 )
 
-if settings.DEBUG and not getattr(settings, "USE_S3", False):
+if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
+
+if settings.DEBUG and not getattr(settings, "USE_S3", False):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

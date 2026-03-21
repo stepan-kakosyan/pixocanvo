@@ -25,22 +25,6 @@ services:
       retries: 5
       start_period: 30s
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:v0.7.2
-    restart: unless-stopped
-    depends_on:
-      kafka:
-        condition: service_healthy
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      DYNAMIC_CONFIG_ENABLED: "true"
-      AUTH_TYPE: LOGIN_FORM
-      SPRING_SECURITY_USER_NAME: ${DJANGO_SUPERUSER_USERNAME:-}
-      SPRING_SECURITY_USER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-}
-    ports:
-      - "8082:8080"
-
   redis:
     image: redis:7.2-alpine
     restart: on-failure:3
@@ -62,6 +46,17 @@ services:
       DJANGO_DEBUG: "1"
       DJANGO_AUTORELOAD: "1"
       DJANGO_ALLOWED_HOSTS: "*"
+      USE_S3: ${USE_S3:-0}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN:-}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      AWS_MEDIA_LOCATION: ${AWS_MEDIA_LOCATION-}
+      AWS_S3_FILE_OVERWRITE: ${AWS_S3_FILE_OVERWRITE:-0}
+      AWS_QUERYSTRING_AUTH: ${AWS_QUERYSTRING_AUTH:-0}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
       MYSQL_USER: ${MYSQL_USER:-root}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
@@ -99,6 +94,17 @@ services:
       DJANGO_SECRET_KEY: dev-secret-key-change-me
       DJANGO_DEBUG: "1"
       DJANGO_ALLOWED_HOSTS: "*"
+      USE_S3: ${USE_S3:-0}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN:-}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      AWS_MEDIA_LOCATION: ${AWS_MEDIA_LOCATION-}
+      AWS_S3_FILE_OVERWRITE: ${AWS_S3_FILE_OVERWRITE:-0}
+      AWS_QUERYSTRING_AUTH: ${AWS_QUERYSTRING_AUTH:-0}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
       MYSQL_USER: ${MYSQL_USER:-root}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
@@ -129,6 +135,17 @@ services:
       DJANGO_SECRET_KEY: dev-secret-key-change-me
       DJANGO_DEBUG: "1"
       DJANGO_ALLOWED_HOSTS: "*"
+      USE_S3: ${USE_S3:-0}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-}
+      AWS_S3_CUSTOM_DOMAIN: ${AWS_S3_CUSTOM_DOMAIN:-}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      AWS_MEDIA_LOCATION: ${AWS_MEDIA_LOCATION-}
+      AWS_S3_FILE_OVERWRITE: ${AWS_S3_FILE_OVERWRITE:-0}
+      AWS_QUERYSTRING_AUTH: ${AWS_QUERYSTRING_AUTH:-0}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
       MYSQL_USER: ${MYSQL_USER:-root}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
@@ -141,35 +158,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_PIXEL_TOPIC: pixel-updates
       KAFKA_CHAT_TOPIC: chat-messages
-    command: sh -c "celery -A config worker -l info"
+    command: sh -c "celery -A config worker -l info -c 2"
     volumes:
       - .:/app
 
-  flower:
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - redis
-      - celery
-    environment:
-      DJANGO_SECRET_KEY: dev-secret-key-change-me
-      DJANGO_DEBUG: "1"
-      DJANGO_ALLOWED_HOSTS: "*"
-      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME:-}
-      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-pixelwar}
-      MYSQL_USER: ${MYSQL_USER:-root}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
-      MYSQL_HOST: ${MYSQL_HOST:-host.docker.internal}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
-      REDIS_URL: redis://redis:6379/1
-      CHANNEL_REDIS_URL: redis://redis:6379/2
-      CELERY_BROKER_URL: redis://redis:6379/3
-      CELERY_RESULT_BACKEND: redis://redis:6379/4
-    command: sh -c "if [ -z \"$DJANGO_SUPERUSER_USERNAME\" ] || [ -z \"$DJANGO_SUPERUSER_PASSWORD\" ]; then echo 'Missing DJANGO_SUPERUSER_USERNAME or DJANGO_SUPERUSER_PASSWORD for Flower auth.' && exit 1; fi; celery -A config flower --port=5555 --basic_auth=\"$DJANGO_SUPERUSER_USERNAME:$DJANGO_SUPERUSER_PASSWORD\""
-    volumes:
-      - .:/app
-    ports:
-      - "5555:5555"

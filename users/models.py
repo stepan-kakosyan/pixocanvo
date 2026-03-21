@@ -1,5 +1,18 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import slugify
+
+
+def avatar_upload_path(instance, filename):
+    """Store optimized avatar at user folder root."""
+    username = slugify(instance.user.username) or f"user-{instance.user_id}"
+    return f"profile-avatars/{instance.user_id}/{username}.jpg"
+
+
+def avatar_thumbnail_upload_path(instance, filename):
+    """Store avatar thumbnail in tmb subfolder."""
+    username = slugify(instance.user.username) or f"user-{instance.user_id}"
+    return f"profile-avatars/{instance.user_id}/tmb/{username}.jpg"
 
 
 class UserProfile(models.Model):
@@ -8,7 +21,12 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile",
     )
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to=avatar_upload_path, blank=True, null=True
+    )
+    avatar_thumbnail = models.ImageField(
+        upload_to=avatar_thumbnail_upload_path, blank=True, null=True
+    )
     email_confirmed = models.BooleanField(default=False)
     pending_email = models.EmailField(blank=True, null=True)
 
