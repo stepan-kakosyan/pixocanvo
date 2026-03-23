@@ -69,7 +69,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_PIXEL_TOPIC: pixel-updates
       KAFKA_CHAT_TOPIC: chat-messages
-      PIXEL_COOLDOWN_SECONDS: "60"
+      PIXEL_COOLDOWN_SECONDS: "30"
       PIXEL_INITIAL_GRID_SIZE: "200"
       PIXEL_GRID_EXPAND_STEP: "20"
       PIXEL_GRID_FILL_EXPAND_THRESHOLD: "0.8"
@@ -117,7 +117,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_PIXEL_TOPIC: pixel-updates
       KAFKA_CHAT_TOPIC: chat-messages
-      PIXEL_COOLDOWN_SECONDS: "60"
+      PIXEL_COOLDOWN_SECONDS: "30"
       PIXEL_GRID_SIZE: "500"
     command: sh -c "python manage.py consume_pixel_updates"
     volumes:

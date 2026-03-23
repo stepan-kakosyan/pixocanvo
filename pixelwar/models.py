@@ -1,9 +1,33 @@
+import base64
 import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.crypto import get_random_string
 from django.utils.text import slugify
+
+
+def generate_community_invite_token() -> str:
+    """Generate compact URL-safe invite token."""
+    return get_random_string(
+        length=22,
+        allowed_chars=(
+            "abcdefghijklmnopqrstuvwxyz"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "0123456789-_"
+        ),
+    )
+
+
+def compact_legacy_invite_uuid(value: str) -> str | None:
+    """Convert UUID text into compact base64url token."""
+    try:
+        legacy_uuid = uuid.UUID(str(value))
+    except (TypeError, ValueError, AttributeError):
+        return None
+    token = base64.urlsafe_b64encode(legacy_uuid.bytes).decode("ascii")
+    return token.rstrip("=")
 
 
 def community_image_upload_path(instance, filename):
@@ -21,14 +45,6 @@ def community_image_thumbnail_upload_path(instance, filename):
 
 
 class Community(models.Model):
-    MAX_MEMBER_CHOICES = (
-        (5, "5"),
-        (10, "10"),
-        (20, "20"),
-        (30, "30"),
-        (50, "50"),
-    )
-
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -48,11 +64,12 @@ class Community(models.Model):
         null=True,
     )
     is_public = models.BooleanField(default=False)
-    max_members = models.PositiveSmallIntegerField(
-        choices=MAX_MEMBER_CHOICES,
-        default=50,
+    invite_token = models.CharField(
+        max_length=22,
+        default=generate_community_invite_token,
+        unique=True,
+        editable=False,
     )
-    invite_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:

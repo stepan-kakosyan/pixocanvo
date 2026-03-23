@@ -78,7 +78,7 @@ def on_community_join_requested(sender, requester, community, **kwargs):
             "username": requester.username,
             "community": community.name,
         },
-        target_url=f"/c/{community.slug}/details/",
+        target_url=f"/comunity/{community.slug}/details/",
         visual_type=requester_visual["visual_type"],
         image_url=requester_visual["image_url"],
         initials=requester_visual["initials"],
@@ -110,7 +110,7 @@ def on_community_join_reviewed(
         % {
             "community": community.name,
         },
-        target_url=f"/c/{community.slug}/details/",
+        target_url=f"/comunity/{community.slug}/details/",
         visual_type=community_visual["visual_type"],
         image_url=community_visual["image_url"],
         initials=community_visual["initials"],

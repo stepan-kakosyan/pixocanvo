@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path("contact-us/", views.contact_us_view, name="contact-us"),
-    path("r/<int:referrer_id>/", views.personal_referral_redirect_view, name="personal-referral"),
+    path("r/<str:token>/", views.personal_referral_redirect_view, name="personal-referral"),
     path("register/", views.register_view, name="register"),
     path("login/", views.login_view, name="login"),
     path("forgot-password/", views.forgot_password_view, name="forgot-password"),

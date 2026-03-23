@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-17 14:29+0000\n"
+"POT-Creation-Date: 2026-03-21 14:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,370 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: Notifications/signals.py:24
+msgid "Confirm your email"
+msgstr "이메일을 확인하세요"
+
+#: Notifications/signals.py:26
+msgid ""
+"Validate your email to unlock chat and community creation. If you did not "
+"receive the email, open Profile Details and resend it."
+msgstr ""
+"채팅 및 커뮤니티 생성을 잠금 해제하려면 이메일을 확인하세요. 이메일을 받지 못한 경우 프로필 세부정보를 열고 다시 보내세요."
+
+#: Notifications/signals.py:42
+msgid "Verify your new email"
+msgstr "새 이메일을 확인하세요"
+
+#: Notifications/signals.py:44
+#, python-format
+msgid ""
+"You requested to change your email to %(email)s. We've sent a verification "
+"link there — click it to confirm the update."
+msgstr ""
+"이메일을 %(email)s으로 변경해 달라고 요청하셨습니다. 거기로 확인 링크를 보냈습니다. 업데이트를 확인하려면 클릭하세요."
+
+#: Notifications/signals.py:60
+msgid "Email confirmed"
+msgstr "이메일 확인됨"
+
+#: Notifications/signals.py:61
+msgid "Congratulations. Your email has been confirmed successfully."
+msgstr "축하해요. 귀하의 이메일이 성공적으로 확인되었습니다."
+
+#: Notifications/signals.py:75
+msgid "New join request"
+msgstr "새로운 가입 요청"
+
+#: Notifications/signals.py:76
+#, python-format
+msgid "%(username)s requested to join %(community)s."
+msgstr "%(username)s이 %(community)s 가입을 요청했습니다."
+
+#: Notifications/signals.py:104
+msgid "Join request approved"
+msgstr "가입 요청이 승인되었습니다."
+
+#: Notifications/signals.py:104
+msgid "Join request declined"
+msgstr "가입 요청이 거부되었습니다."
+
+#: Notifications/signals.py:106
+#, python-format
+msgid "Your request to join %(community)s was approved."
+msgstr "%(community)s 가입 요청이 승인되었습니다."
+
+#: Notifications/signals.py:108
+#, python-format
+msgid "Your request to join %(community)s was declined."
+msgstr "%(community)s 가입 요청이 거부되었습니다."
+
+#: Notifications/templates/Notifications/notifications_list.html:4
+#: Notifications/templates/Notifications/notifications_list.html:11
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:42
+msgid "Notifications"
+msgstr "알림"
+
+#: Notifications/templates/Notifications/notifications_list.html:12
+msgid "Track join requests, approvals, and other account updates."
+msgstr "가입 요청, 승인 및 기타 계정 업데이트를 추적합니다."
+
+#: Notifications/templates/Notifications/notifications_list.html:23
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:55
+msgid "Mark all as read"
+msgstr "모두 읽음으로 표시"
+
+#: Notifications/templates/Notifications/notifications_list.html:41
+#, python-format
+msgid "%(counter)s unread"
+msgid_plural "%(counter)s unread"
+msgstr[0] "%(counter)s 읽지 않음"
+
+#: Notifications/templates/Notifications/notifications_list.html:106
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:128
+msgid "No notifications yet."
+msgstr "아직 알림이 없습니다."
+
+#: env/Lib/site-packages/click/_termui_impl.py:613
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: env/Lib/site-packages/click/_termui_impl.py:617
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1114
+#: env/Lib/site-packages/click/core.py:1151
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1170
+#, fuzzy
+#| msgid "optional"
+msgid "Options"
+msgstr "선택 과목"
+
+#: env/Lib/site-packages/click/core.py:1245
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/core.py:1264
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1448
+msgid "Aborted!"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1822
+#, fuzzy
+#| msgid "Communities"
+msgid "Commands"
+msgstr "커뮤니티"
+
+#: env/Lib/site-packages/click/core.py:1853
+msgid "Missing command."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1931
+msgid "No such command {name!r}."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2355
+msgid "Value must be an iterable."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2378
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/core.py:2567
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3015
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3018
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3082
+msgid "(dynamic)"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:50
+#: env/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:289
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:199
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:381
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:444
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/shell_completion.py:332
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: env/Lib/site-packages/click/shell_completion.py:339
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:165
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:181
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:183
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:194
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:253
+msgid "Error: invalid input"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:872
+msgid "Press any key to continue..."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:369
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/types.py:460
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/types.py:482
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:719
+msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:747
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:937
+msgid "file"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:939
+msgid "directory"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:941
+msgid "path"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:988
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:997
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1005
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1014
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1023
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1032
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1099
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
 
 #: env/Lib/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -83,8 +447,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:297
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:309
@@ -298,8 +662,8 @@ msgstr ""
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1570
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1575
@@ -478,7 +842,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: env/Lib/site-packages/django/forms/boundfield.py:185
 msgid ":?.!"
 msgstr ""
@@ -528,7 +893,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/forms/fields.py:643
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -632,7 +998,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1450
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1594
@@ -733,30 +1100,37 @@ msgid "noon"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:7
+#: env/Lib/site-packages/tornado/locale.py:295
 msgid "Monday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:8
+#: env/Lib/site-packages/tornado/locale.py:296
 msgid "Tuesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:9
+#: env/Lib/site-packages/tornado/locale.py:297
 msgid "Wednesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:10
+#: env/Lib/site-packages/tornado/locale.py:298
 msgid "Thursday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:11
+#: env/Lib/site-packages/tornado/locale.py:299
 msgid "Friday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:12
+#: env/Lib/site-packages/tornado/locale.py:300
 msgid "Saturday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:13
+#: env/Lib/site-packages/tornado/locale.py:301
 msgid "Sunday"
 msgstr ""
 
@@ -789,54 +1163,66 @@ msgid "Sun"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:25
+#: env/Lib/site-packages/tornado/locale.py:281
 msgid "January"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:26
+#: env/Lib/site-packages/tornado/locale.py:282
 msgid "February"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:27
+#: env/Lib/site-packages/tornado/locale.py:283
 msgid "March"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:28
+#: env/Lib/site-packages/tornado/locale.py:284
 msgid "April"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:29
+#: env/Lib/site-packages/tornado/locale.py:285
 msgid "May"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:30
+#: env/Lib/site-packages/tornado/locale.py:286
 msgid "June"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:31
+#: env/Lib/site-packages/tornado/locale.py:287
 msgid "July"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:32
+#: env/Lib/site-packages/tornado/locale.py:288
 msgid "August"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:33
+#: env/Lib/site-packages/tornado/locale.py:289
 #, fuzzy
 #| msgid "Member"
 msgid "September"
 msgstr "회원"
 
 #: env/Lib/site-packages/django/utils/dates.py:34
+#: env/Lib/site-packages/tornado/locale.py:290
 msgid "October"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:35
+#: env/Lib/site-packages/tornado/locale.py:291
 #, fuzzy
 #| msgid "Member"
 msgid "November"
 msgstr "회원"
 
 #: env/Lib/site-packages/django/utils/dates.py:36
+#: env/Lib/site-packages/tornado/locale.py:292
 #, fuzzy
 #| msgid "Member"
 msgid "December"
@@ -1099,10 +1485,10 @@ msgstr ""
 
 #: env/Lib/site-packages/django/views/csrf.py:45
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -1213,10 +1599,10 @@ msgstr ""
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:208
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:217
@@ -1245,69 +1631,155 @@ msgstr "커뮤니티 탈퇴"
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:37
+#: env/Lib/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:377
+msgid "1 second ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:383
+msgid "1 minute ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:388
+msgid "1 hour ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:391
+#, python-format
+msgid "%(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+msgid "yesterday"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+#, python-format
+msgid "yesterday at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:398
+#: env/Lib/site-packages/tornado/locale.py:451
+#, python-format
+msgid "%(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:400
+#, python-format
+msgid "%(month_name)s %(day)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:405
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:407
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:445
+#, python-format
+msgid "%(weekday)s, %(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:468
+#, python-format
+msgid "%(commas)s and %(last)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:68
+msgctxt "law"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:69
+msgctxt "good"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:70
+#: env/Lib/site-packages/tornado/test/locale_test.py:72
+msgctxt "organization"
+msgid "club"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:74
+#: env/Lib/site-packages/tornado/test/locale_test.py:75
+msgctxt "stick"
+msgid "club"
+msgstr ""
+
+#: pixelwar/templates/pixelwar/base.html:54
+#: pixelwar/templates/pixelwar/base.html:378
 msgid "Canvas"
 msgstr "캔버스"
 
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Top"
-msgstr "상위"
-
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Players"
-msgstr "플레이어"
-
-#: pixelwar/templates/pixelwar/base.html:49
-#: pixelwar/templates/pixelwar/base.html:134
-#: pixelwar/templates/pixelwar/guide.html:4
-#: pixelwar/templates/pixelwar/guide.html:10
-msgid "Rules"
-msgstr ""
-
-#: pixelwar/templates/pixelwar/base.html:49
-msgid "Guide"
-msgstr "가이드"
-
-#: pixelwar/templates/pixelwar/base.html:55
-#: pixelwar/templates/pixelwar/base.html:135
+#: pixelwar/templates/pixelwar/base.html:61
+#: pixelwar/templates/pixelwar/base.html:362
+#: pixelwar/templates/pixelwar/base.html:385
+#: pixelwar/templates/pixelwar/community_detail.html:163
 #: pixelwar/templates/pixelwar/community_lobby.html:4
 #: pixelwar/templates/pixelwar/community_lobby.html:10
 #: pixelwar/templates/pixelwar/guide.html:89
 msgid "Communities"
 msgstr "커뮤니티"
 
-#: pixelwar/templates/pixelwar/base.html:73
-#: users/templates/users/profile_settings.html:34
-msgid "Signed in as"
-msgstr "로그인 계정"
+#: pixelwar/templates/pixelwar/base.html:68
+#: pixelwar/templates/pixelwar/base.html:392
+#: pixelwar/templates/pixelwar/guide.html:146
+#: pixelwar/templates/pixelwar/leaders.html:4
+msgid "Ranking"
+msgstr "순위"
 
-#: pixelwar/templates/pixelwar/base.html:79
-msgid "Logout"
-msgstr "로그아웃"
-
-#: pixelwar/templates/pixelwar/base.html:86
-#: pixelwar/templates/pixelwar/community_lobby.html:104
-#: pixelwar/templates/pixelwar/invitation.html:66
-#: users/templates/users/login.html:7 users/templates/users/login.html:48
-msgid "Login"
-msgstr "로그인"
-
-#: pixelwar/templates/pixelwar/base.html:90
-#: pixelwar/templates/pixelwar/community_lobby.html:100
-#: pixelwar/templates/pixelwar/invitation.html:70
-#: users/templates/users/register.html:7 users/templates/users/register.html:66
-msgid "Register"
-msgstr "회원가입"
+#: pixelwar/templates/pixelwar/base.html:75
+#: pixelwar/templates/pixelwar/base.html:361
+#: pixelwar/templates/pixelwar/base.html:399
+#: pixelwar/templates/pixelwar/guide.html:4
+#: pixelwar/templates/pixelwar/guide.html:10
+msgid "Rules"
+msgstr "규칙"
 
 #: pixelwar/templates/pixelwar/base.html:103
-msgid "Language"
-msgstr "언어"
+msgid "Congratulations!"
+msgstr "축하해요!"
 
-#: pixelwar/templates/pixelwar/base.html:136
+#: pixelwar/templates/pixelwar/base.html:363
+#: users/templates/users/contact_us.html:4
+#: users/templates/users/contact_us.html:10
+msgid "Contact Us"
+msgstr "문의하기"
+
+#: pixelwar/templates/pixelwar/base.html:364
 msgid "Privacy Policy"
-msgstr "개인정보 처리방침"
+msgstr "개인 정보 보호 정책"
 
-#: pixelwar/templates/pixelwar/base.html:137
+#: pixelwar/templates/pixelwar/base.html:365
 msgid "Terms of Service"
 msgstr "서비스 약관"
 
@@ -1319,200 +1791,446 @@ msgstr "커뮤니티 세부정보"
 msgid "Community details, members, and quick actions."
 msgstr "커뮤니티 세부정보, 회원, 빠른 작업."
 
-#: pixelwar/templates/pixelwar/community_detail.html:16
-#: pixelwar/templates/pixelwar/community_lobby.html:54
-msgid "Slug"
-msgstr "강타"
+#: pixelwar/templates/pixelwar/community_detail.html:19
+msgid "No cover image yet"
+msgstr "아직 표지 이미지가 없습니다."
 
-#: pixelwar/templates/pixelwar/community_detail.html:20
-msgid "Members"
-msgstr "회원"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+#: pixelwar/templates/pixelwar/community_lobby.html:128
+#: pixelwar/templates/pixelwar/community_lobby.html:204
+msgid "Public"
+msgstr "공공의"
 
-#: pixelwar/templates/pixelwar/community_detail.html:24
-msgid "Created"
-msgstr "생성됨"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+msgid "Private"
+msgstr "사적인"
 
-#: pixelwar/templates/pixelwar/community_detail.html:28
-#: pixelwar/templates/pixelwar/community_detail.html:130
+#: pixelwar/templates/pixelwar/community_detail.html:29
+#: pixelwar/templates/pixelwar/community_detail.html:292
+#: pixelwar/templates/pixelwar/community_lobby.html:125
+#: pixelwar/templates/pixelwar/community_lobby.html:201
 msgid "Owner"
 msgstr "소유자"
 
-#: pixelwar/templates/pixelwar/community_detail.html:35
-#: pixelwar/templates/pixelwar/community_lobby.html:58
-msgid "Open canvas"
-msgstr "캔버스 열기"
+#: pixelwar/templates/pixelwar/community_detail.html:30
+#: pixelwar/templates/pixelwar/community_detail.html:164
+#: users/templates/users/contact_us.html:175
+msgid "Created"
+msgstr "생성됨"
 
-#: pixelwar/templates/pixelwar/community_detail.html:40
-#: pixelwar/templates/pixelwar/community_lobby.html:67
-msgid "Invitation link"
-msgstr "초대링크"
+#: pixelwar/templates/pixelwar/community_detail.html:38
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Update image"
+msgstr "이미지 업데이트"
 
-#: pixelwar/templates/pixelwar/community_detail.html:48
-#: pixelwar/templates/pixelwar/community_lobby.html:75
-msgid "Delete community"
-msgstr "커뮤니티 삭제"
+#: pixelwar/templates/pixelwar/community_detail.html:47
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit details"
+msgstr "세부정보 수정"
 
-#: pixelwar/templates/pixelwar/community_detail.html:56
-#: pixelwar/templates/pixelwar/community_lobby.html:83
-msgid "Leave community"
-msgstr "커뮤니티 탈퇴"
-
-#: pixelwar/templates/pixelwar/community_detail.html:60
-msgid "Back to communities"
-msgstr "커뮤니티로 돌아가기"
-
-#: pixelwar/templates/pixelwar/community_detail.html:66
-msgid "Canvas preview"
-msgstr "캔버스 미리보기"
-
-#: pixelwar/templates/pixelwar/community_detail.html:69
-msgid "Click to enlarge"
-msgstr "확대하려면 클릭하세요."
-
-#: pixelwar/templates/pixelwar/community_detail.html:73
-msgid "click to enlarge"
-msgstr "확대하려면 클릭하세요"
-
-#: pixelwar/templates/pixelwar/community_detail.html:92
-msgid "Community members"
-msgstr "커뮤니티 회원"
-
-#: pixelwar/templates/pixelwar/community_detail.html:94
-msgid "Sort"
-msgstr "종류"
-
-#: pixelwar/templates/pixelwar/community_detail.html:97
-msgid "Join date"
-msgstr "가입 날짜"
-
-#: pixelwar/templates/pixelwar/community_detail.html:101
-#: pixelwar/templates/pixelwar/community_detail.html:113
-msgid "Pixel count"
-msgstr "픽셀 수"
-
-#: pixelwar/templates/pixelwar/community_detail.html:111
-msgid "Member"
+#: pixelwar/templates/pixelwar/community_detail.html:54
+msgid "Members"
 msgstr "회원"
 
-#: pixelwar/templates/pixelwar/community_detail.html:112
-msgid "Joined"
-msgstr "가입됨"
+#: pixelwar/templates/pixelwar/community_detail.html:58
+#, fuzzy
+#| msgid "Pixels placed"
+msgid "Pixels"
+msgstr "픽셀"
 
-#: pixelwar/templates/pixelwar/community_detail.html:142
-msgid "No active members found."
-msgstr "활동 중인 회원이 없습니다."
+#: pixelwar/templates/pixelwar/community_detail.html:62
+#: pixelwar/templates/pixelwar/community_detail.html:83
+#: pixelwar/templates/pixelwar/create_community.html:43
+#: users/templates/users/contact_us.html:84
+#: users/templates/users/emails/contact_us_notification.html:67
+#: users/templates/users/emails/contact_us_notification.txt:11
+msgid "Description"
+msgstr "설명"
 
-#: pixelwar/templates/pixelwar/community_detail.html:150
-#: pixelwar/templates/pixelwar/community_lobby.html:114
-msgid "Community Invitation Link"
-msgstr "커뮤니티 초대 링크"
+#: pixelwar/templates/pixelwar/community_detail.html:67
+msgid "No description provided."
+msgstr "설명이 제공되지 않았습니다."
 
-#: pixelwar/templates/pixelwar/community_detail.html:152
-#: pixelwar/templates/pixelwar/community_lobby.html:116
-msgid ""
-"Share this link to invite others to your community. Anyone with the link can "
-"join."
-msgstr ""
-"이 링크를 공유하여 다른 사람들을 커뮤니티에 초대하세요. 링크가 있는 사람은 누"
-"구나 참여할 수 있습니다."
+#: pixelwar/templates/pixelwar/community_detail.html:75
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit community details"
+msgstr "커뮤니티 세부정보 수정"
 
-#: pixelwar/templates/pixelwar/community_detail.html:158
-#: pixelwar/templates/pixelwar/community_lobby.html:122
-msgid "Copy URL"
-msgstr "URL 복사"
+#: pixelwar/templates/pixelwar/community_detail.html:79
+#, fuzzy
+#| msgid "New community name"
+msgid "Community name"
+msgstr "커뮤니티 이름"
 
-#: pixelwar/templates/pixelwar/community_detail.html:159
-#: pixelwar/templates/pixelwar/community_lobby.html:123
-#: pixelwar/templates/pixelwar/invitation.html:74
-msgid "Close"
-msgstr "닫다"
+#: pixelwar/templates/pixelwar/community_detail.html:87
+#: pixelwar/templates/pixelwar/create_community.html:56
+msgid "Visibility"
+msgstr "시계"
 
-#: pixelwar/templates/pixelwar/community_detail.html:163
-#: pixelwar/templates/pixelwar/community_lobby.html:127
-msgid "Leave Community"
-msgstr "커뮤니티 탈퇴"
+#: pixelwar/templates/pixelwar/community_detail.html:89
+#: pixelwar/templates/pixelwar/create_community.html:59
+#, fuzzy
+#| msgid "Delete community"
+msgid "Public community"
+msgstr "공개 커뮤니티"
 
-#: pixelwar/templates/pixelwar/community_detail.html:165
-#: pixelwar/templates/pixelwar/community_lobby.html:129
-msgid "Are you sure you want to leave this community?"
-msgstr "정말로 이 커뮤니티를 떠나시겠습니까?"
+#: pixelwar/templates/pixelwar/community_detail.html:90
+#: pixelwar/templates/pixelwar/create_community.html:58
+#, fuzzy
+#| msgid "Create community"
+msgid "Private community"
+msgstr "비공개 커뮤니티"
 
-#: pixelwar/templates/pixelwar/community_detail.html:169
-#: pixelwar/templates/pixelwar/community_lobby.html:133
-msgid "Yes, leave"
-msgstr "응, 떠나"
+#: pixelwar/templates/pixelwar/community_detail.html:95
+msgid "Save details"
+msgstr "세부정보 저장"
 
-#: pixelwar/templates/pixelwar/community_detail.html:170
-#: pixelwar/templates/pixelwar/community_detail.html:182
-#: pixelwar/templates/pixelwar/community_lobby.html:134
-#: pixelwar/templates/pixelwar/community_lobby.html:146
+#: pixelwar/templates/pixelwar/community_detail.html:98
+#: pixelwar/templates/pixelwar/community_detail.html:348
+#: pixelwar/templates/pixelwar/community_detail.html:360
+#: pixelwar/templates/pixelwar/community_detail.html:372
+#: pixelwar/templates/pixelwar/community_lobby.html:255
+#: pixelwar/templates/pixelwar/community_lobby.html:267
+#: users/templates/users/partials/pending_email_panel.html:27
 msgid "Cancel"
 msgstr "취소"
 
-#: pixelwar/templates/pixelwar/community_detail.html:175
-#: pixelwar/templates/pixelwar/community_lobby.html:139
+#: pixelwar/templates/pixelwar/community_detail.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:68
+#: pixelwar/templates/pixelwar/community_lobby.html:142
+msgid "Open canvas"
+msgstr "캔버스 열기"
+
+#: pixelwar/templates/pixelwar/community_detail.html:113
+#: pixelwar/templates/pixelwar/community_lobby.html:77
+msgid "Invitation link"
+msgstr "초대링크"
+
+#: pixelwar/templates/pixelwar/community_detail.html:121
+#: pixelwar/templates/pixelwar/community_lobby.html:85
+msgid "Delete community"
+msgstr "커뮤니티 삭제"
+
+#: pixelwar/templates/pixelwar/community_detail.html:129
+#: pixelwar/templates/pixelwar/community_lobby.html:93
+msgid "Leave community"
+msgstr "커뮤니티 탈퇴"
+
+#: pixelwar/templates/pixelwar/community_detail.html:139
+#: pixelwar/templates/pixelwar/community_lobby.html:154
+msgid "Ask Join"
+msgstr "가입 요청"
+
+#: pixelwar/templates/pixelwar/community_detail.html:143
+msgid "Login to request join"
+msgstr "가입을 요청하려면 로그인하세요"
+
+#: pixelwar/templates/pixelwar/community_detail.html:147
+#: pixelwar/templates/pixelwar/create_community.html:90
+msgid "Back to communities"
+msgstr "커뮤니티로 돌아가기"
+
+#: pixelwar/templates/pixelwar/community_detail.html:154
+msgid "Join requests"
+msgstr "가입 요청"
+
+#: pixelwar/templates/pixelwar/community_detail.html:160
+#: pixelwar/templates/pixelwar/community_detail.html:267
+msgid "Member"
+msgstr "회원"
+
+#: pixelwar/templates/pixelwar/community_detail.html:161
+#: users/templates/users/contact_us.html:62
+#: users/templates/users/contact_us.html:171
+#: users/templates/users/emails/contact_us_notification.html:49
+#: users/templates/users/emails/contact_us_notification.txt:6
+#: users/templates/users/profile_settings.html:68
+#: users/templates/users/register.html:31
+msgid "Email"
+msgstr "이메일"
+
+#: pixelwar/templates/pixelwar/community_detail.html:162
+#, fuzzy
+#| msgid "Placing pixels"
+msgid "Global pixels"
+msgstr "글로벌 픽셀"
+
+#: pixelwar/templates/pixelwar/community_detail.html:165
+#: pixelwar/templates/pixelwar/community_detail.html:271
+msgid "Actions"
+msgstr "행위"
+
+#: pixelwar/templates/pixelwar/community_detail.html:197
+msgid "Approve"
+msgstr "승인하다"
+
+#: pixelwar/templates/pixelwar/community_detail.html:204
+msgid "Decline"
+msgstr "감소"
+
+#: pixelwar/templates/pixelwar/community_detail.html:214
+msgid "No pending join requests."
+msgstr "대기 중인 가입 요청이 없습니다."
+
+#: pixelwar/templates/pixelwar/community_detail.html:220
+msgid "Canvas preview"
+msgstr "캔버스 미리보기"
+
+#: pixelwar/templates/pixelwar/community_detail.html:223
+msgid "Click to enlarge"
+msgstr "확대하려면 클릭하세요."
+
+#: pixelwar/templates/pixelwar/community_detail.html:227
+msgid "click to enlarge"
+msgstr "확대하려면 클릭하세요"
+
+#: pixelwar/templates/pixelwar/community_detail.html:246
+msgid "Community members"
+msgstr "커뮤니티 회원"
+
+#: pixelwar/templates/pixelwar/community_detail.html:249
+msgid "Sort"
+msgstr "종류"
+
+#: pixelwar/templates/pixelwar/community_detail.html:252
+msgid "Join date"
+msgstr "가입 날짜"
+
+#: pixelwar/templates/pixelwar/community_detail.html:256
+#: pixelwar/templates/pixelwar/community_detail.html:269
+msgid "Pixel count"
+msgstr "픽셀 수"
+
+#: pixelwar/templates/pixelwar/community_detail.html:268
+msgid "Joined"
+msgstr "가입됨"
+
+#: pixelwar/templates/pixelwar/community_detail.html:305
+msgid "Remove"
+msgstr "제거하다"
+
+#: pixelwar/templates/pixelwar/community_detail.html:316
+msgid "No active members found."
+msgstr "활동 중인 회원이 없습니다."
+
+#: pixelwar/templates/pixelwar/community_detail.html:319
+msgid "Members list is visible only to community members."
+msgstr "회원 목록은 커뮤니티 회원에게만 표시됩니다."
+
+#: pixelwar/templates/pixelwar/community_detail.html:328
+#: pixelwar/templates/pixelwar/community_lobby.html:235
+msgid "Community Invitation Link"
+msgstr "커뮤니티 초대 링크"
+
+#: pixelwar/templates/pixelwar/community_detail.html:330
+#: pixelwar/templates/pixelwar/community_lobby.html:237
+msgid ""
+"Share this link to invite others to your community. Anyone with the link can"
+" join."
+msgstr "이 링크를 공유하여 다른 사람들을 커뮤니티에 초대하세요. 링크가 있는 사람은 누구나 참여할 수 있습니다."
+
+#: pixelwar/templates/pixelwar/community_detail.html:336
+#: pixelwar/templates/pixelwar/community_lobby.html:243
+msgid "Copy URL"
+msgstr "URL 복사"
+
+#: pixelwar/templates/pixelwar/community_detail.html:337
+#: pixelwar/templates/pixelwar/community_lobby.html:244
+#: pixelwar/templates/pixelwar/invitation.html:74
+#: users/templates/users/contact_us.html:161
+msgid "Close"
+msgstr "닫다"
+
+#: pixelwar/templates/pixelwar/community_detail.html:341
+#: pixelwar/templates/pixelwar/community_lobby.html:248
+msgid "Leave Community"
+msgstr "커뮤니티 탈퇴"
+
+#: pixelwar/templates/pixelwar/community_detail.html:343
+#: pixelwar/templates/pixelwar/community_lobby.html:250
+msgid "Are you sure you want to leave this community?"
+msgstr "정말로 이 커뮤니티를 떠나시겠습니까?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:347
+#: pixelwar/templates/pixelwar/community_lobby.html:254
+msgid "Yes, leave"
+msgstr "응, 떠나"
+
+#: pixelwar/templates/pixelwar/community_detail.html:353
+#: pixelwar/templates/pixelwar/community_lobby.html:260
 msgid "Delete Community"
 msgstr "커뮤니티 삭제"
 
-#: pixelwar/templates/pixelwar/community_detail.html:177
-#: pixelwar/templates/pixelwar/community_lobby.html:141
+#: pixelwar/templates/pixelwar/community_detail.html:355
+#: pixelwar/templates/pixelwar/community_lobby.html:262
 msgid ""
 "This action cannot be undone. All information will be deleted and cannot be "
 "restored."
 msgstr "이 작업은 취소할 수 없습니다. 모든 정보는 삭제되며 복원할 수 없습니다."
 
-#: pixelwar/templates/pixelwar/community_detail.html:181
-#: pixelwar/templates/pixelwar/community_lobby.html:145
+#: pixelwar/templates/pixelwar/community_detail.html:359
+#: pixelwar/templates/pixelwar/community_lobby.html:266
 msgid "Yes, delete permanently"
 msgstr "예, 영구적으로 삭제합니다."
+
+#: pixelwar/templates/pixelwar/community_detail.html:365
+#, fuzzy
+#| msgid "Member"
+msgid "Remove Member"
+msgstr "회원 삭제"
+
+#: pixelwar/templates/pixelwar/community_detail.html:367
+#, fuzzy
+#| msgid "Are you sure you want to leave this community?"
+msgid "Are you sure you want to remove this member from the community?"
+msgstr "커뮤니티에서 이 회원을 삭제하시겠습니까?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:371
+msgid "Yes, remove member"
+msgstr "예, 회원을 삭제합니다"
 
 #: pixelwar/templates/pixelwar/community_lobby.html:13
 msgid ""
 "Create your own community or join one using an invitation link. Each "
 "community has its own canvas, leaderboard, and chat."
 msgstr ""
-"나만의 커뮤니티를 만들거나 초대 링크를 사용하여 커뮤니티에 가입하세요. 각 커"
-"뮤니티에는 자체 캔버스, 리더보드 및 채팅이 있습니다."
+"나만의 커뮤니티를 만들거나 초대 링크를 사용하여 커뮤니티에 가입하세요. 각 커뮤니티에는 자체 캔버스, 리더보드 및 채팅이 있습니다."
 
-#: pixelwar/templates/pixelwar/community_lobby.html:35
-msgid "New community name"
-msgstr "새 커뮤니티 이름"
+#: pixelwar/templates/pixelwar/community_lobby.html:34
+#: pixelwar/templates/pixelwar/create_community.html:30
+msgid "Confirm your email before creating your own community."
+msgstr "나만의 커뮤니티를 만들기 전에 이메일을 확인하세요."
 
-#: pixelwar/templates/pixelwar/community_lobby.html:38
+#: pixelwar/templates/pixelwar/community_lobby.html:39
+#, python-format
+msgid ""
+"\n"
+"                        You own %(current)s communities. Creating a new one costs %(cost)s Pixo.\n"
+"                        "
+msgstr ""
+"귀하는 %(current)s 커뮤니티를 소유하고 있습니다. 새로운 것을 만드는 데에는 %(cost)s Pixo의 비용이 듭니다."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:45
+#: pixelwar/templates/pixelwar/create_community.html:65
 msgid "Create community"
 msgstr "커뮤니티 만들기"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:43
-msgid "You already own a community, so you cannot create another one."
-msgstr "이미 커뮤니티를 소유하고 있으므로 다른 커뮤니티를 만들 수 없습니다."
-
-#: pixelwar/templates/pixelwar/community_lobby.html:48
+#: pixelwar/templates/pixelwar/community_lobby.html:51
 msgid "Your active communities"
 msgstr "활동적인 커뮤니티"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:62
+#: pixelwar/templates/pixelwar/community_lobby.html:60
+msgid "Requests"
+msgstr "요청사항"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:64
+msgid "Slug"
+msgstr "강타"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:72
+#: pixelwar/templates/pixelwar/community_lobby.html:137
+#: pixelwar/templates/pixelwar/community_lobby.html:213
 msgid "Community details"
 msgstr "커뮤니티 세부정보"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:92
+#: pixelwar/templates/pixelwar/community_lobby.html:102
 msgid "You have not joined any communities yet."
 msgstr "아직 가입한 커뮤니티가 없습니다."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:184
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Public communities"
+msgstr "공개 커뮤니티"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:110
+#: pixelwar/templates/pixelwar/community_lobby.html:186
+msgid "Discover open communities and request to join."
+msgstr "열려 있는 커뮤니티를 찾아보고 가입을 요청하세요."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:132
+#: pixelwar/templates/pixelwar/community_lobby.html:208
+#, fuzzy
+#| msgid "Members"
+msgid "members"
+msgstr "회원"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:146
+msgid "Request sent"
+msgstr "요청이 전송되었습니다."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:159
+#: pixelwar/templates/pixelwar/community_lobby.html:179
+#: pixelwar/templates/pixelwar/community_lobby.html:217
+#: pixelwar/templates/pixelwar/invitation.html:66
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:202
+#: users/templates/users/login.html:4 users/templates/users/login.html:45
+msgid "Login"
+msgstr "로그인"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:168
+#: pixelwar/templates/pixelwar/community_lobby.html:225
+#, fuzzy
+#| msgid "Your active communities"
+msgid "No public communities yet."
+msgstr "아직 공개 커뮤니티가 없습니다."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:175
+#: pixelwar/templates/pixelwar/invitation.html:70
+#: users/templates/users/register.html:4
+#: users/templates/users/register.html:54
+msgid "Register"
+msgstr "등록하다"
+
+#: pixelwar/templates/pixelwar/create_community.html:4
+#: pixelwar/templates/pixelwar/create_community.html:9
+#, fuzzy
+#| msgid "Create community"
+msgid "Create Community"
+msgstr "커뮤니티 만들기"
+
+#: pixelwar/templates/pixelwar/create_community.html:11
+#, python-format
+msgid ""
+"\n"
+"            Choose a name, upload a cover image, and decide whether your community is private or public. Each creation costs %(cost)s Pixo.\n"
+"            "
+msgstr ""
+"이름을 선택하고 표지 이미지를 업로드한 후 커뮤니티가 비공개인지 공개인지 결정하세요. 각 창작 비용은 %(cost)s Pixo입니다."
+
+#: pixelwar/templates/pixelwar/create_community.html:36
+#: pixelwar/templates/pixelwar/create_community.html:39
+msgid "New community name"
+msgstr "새 커뮤니티 이름"
+
+#: pixelwar/templates/pixelwar/create_community.html:46
+msgid "Tell others what this community is about."
+msgstr "이 커뮤니티가 무엇인지 다른 사람들에게 알려주세요."
+
+#: pixelwar/templates/pixelwar/create_community.html:50
+#, fuzzy
+#| msgid "Community details page"
+msgid "Community cover image"
+msgstr "커뮤니티 표지 이미지"
 
 #: pixelwar/templates/pixelwar/guide.html:11
 #, fuzzy
 #| msgid "Everything you need to know to play Global Pixel War."
 msgid "Everything you need to know to play Pixo Canvo."
-msgstr "Global Pixel War를 플레이하기 위해 알아야 할 모든 것."
+msgstr "Pixo Canvo를 플레이하기 위해 알아야 할 모든 것."
 
 #: pixelwar/templates/pixelwar/guide.html:19
 #, fuzzy
 #| msgid ""
 #| "<strong class=\"text-slate-900\">Global Pixel War</strong> is a real-time "
-#| "collaborative canvas. Each registered player can place <strong "
-#| "class=\"text-slate-900\">one pixel every 60 seconds</strong>. Every "
-#| "placement is queued, validated, and then broadcast live via WebSocket to "
-#| "every connected player. Work together — or compete — to claim space on "
-#| "the shared canvas."
+#| "collaborative canvas. Each registered player can place <strong class=\"text-"
+#| "slate-900\">one pixel every 60 seconds</strong>. Every placement is queued, "
+#| "validated, and then broadcast live via WebSocket to every connected player. "
+#| "Work together — or compete — to claim space on the shared canvas."
 msgid ""
 "<strong class=\"text-slate-900\">Pixo Canvo</strong> is a real-time "
 "collaborative canvas. Each registered player can place <strong class=\"text-"
@@ -1520,11 +2238,10 @@ msgid ""
 "validated, and then broadcast live via WebSocket to every connected player. "
 "Work together — or compete — to claim space on the shared canvas."
 msgstr ""
-"<strong class=\"text-slate-900\">글로벌 픽셀 전쟁</strong>은 실시간 협업 캔버"
-"스입니다. 등록된 각 플레이어는 <strong class=\"text-slate-900\">60초마다 1픽"
-"셀</strong>을 배치할 수 있습니다. 모든 배치는 대기열에 추가되고 검증된 후 "
-"WebSocket을 통해 연결된 모든 플레이어에게 실시간으로 방송됩니다. 함께 작업하"
-"거나 경쟁하여 공유 캔버스의 공간을 차지하세요."
+"<strong class=\"text-slate-900\">Pixo Canvo</strong>는 실시간 공동작업 캔버스입니다. 등록된 각"
+" 플레이어는 <strong class=\"text-slate-900\">60초마다 1픽셀</strong>을 배치할 수 있습니다. 모든 "
+"배치는 대기열에 추가되고 검증된 후 WebSocket을 통해 연결된 모든 플레이어에게 실시간으로 방송됩니다. 함께 작업하거나 경쟁하여 "
+"공유 캔버스의 공간을 차지하세요."
 
 #: pixelwar/templates/pixelwar/guide.html:31
 msgid "Placing pixels"
@@ -1540,9 +2257,8 @@ msgid ""
 "<strong>Custom Color</strong> picker next to the palette for any hex color "
 "you like. Your active selection is highlighted with a ring."
 msgstr ""
-"캔버스 페이지 상단에 있는 21가지 색상 팔레트에서 선택하세요. 원하는 16진수 색"
-"상에 대해 팔레트 옆에 있는 <strong>사용자 정의 색상</strong> 선택기를 사용하"
-"세요. 활성 선택 항목은 링으로 강조 표시됩니다."
+"캔버스 페이지 상단에 있는 21가지 색상 팔레트에서 선택하세요. 원하는 16진수 색상에 대해 팔레트 옆에 있는 <strong>맞춤 "
+"색상</strong> 선택기를 사용하세요. 활성 선택 항목은 링으로 강조 표시됩니다."
 
 #: pixelwar/templates/pixelwar/guide.html:44
 msgid "Zoom and navigate"
@@ -1555,14 +2271,12 @@ msgid ""
 "distraction-free experience. Zoom in before placing to avoid missing your "
 "target cell."
 msgstr ""
-"확대/축소하려면 <strong>+</strong> 및 <strong>−</strong> 버튼을 사용하세요. "
-"스크롤하거나 드래그하여 이동하세요. 방해 없는 경험을 위해 ⛶ 버튼을 누르면 전"
-"체 화면 모드로 전환됩니다. 대상 셀을 놓치지 않으려면 배치하기 전에 확대하세"
-"요."
+"확대/축소하려면 <strong>+</strong> 및 <strong>−</strong> 버튼을 사용하세요. 스크롤하거나 드래그하여 "
+"이동하세요. 방해 없는 경험을 위해 ⛶ 버튼을 누르면 전체 화면 모드로 전환됩니다. 대상 셀을 놓치지 않으려면 배치하기 전에 확대하세요."
 
 #: pixelwar/templates/pixelwar/guide.html:51
 msgid "Click to place"
-msgstr "클릭하여 배치하세요"
+msgstr "클릭해서 배치하세요"
 
 #: pixelwar/templates/pixelwar/guide.html:52
 msgid ""
@@ -1570,9 +2284,8 @@ msgid ""
 "sent to the server, validated (cooldown, bounds, auth), and if accepted it "
 "appears on every connected player's screen within milliseconds."
 msgstr ""
-"색상이 선택된 상태에서 캔버스의 아무 셀이나 클릭합니다. 귀하의 배치는 서버로 "
-"전송되어 검증되고(쿨다운, 경계, 인증) 승인되면 밀리초 내에 연결된 모든 플레이"
-"어의 화면에 표시됩니다."
+"색상이 선택된 상태에서 캔버스의 아무 셀이나 클릭합니다. 귀하의 배치는 서버로 전송되어 검증되고(쿨다운, 경계, 인증) 승인되면 밀리초 "
+"내에 연결된 모든 플레이어의 화면에 표시됩니다."
 
 #: pixelwar/templates/pixelwar/guide.html:58
 msgid "Wait out the cooldown"
@@ -1584,9 +2297,8 @@ msgid ""
 "before placing again. The status bar shows how long remains. Rejected "
 "attempts do not reset the cooldown."
 msgstr ""
-"각 배치가 승인된 후 다시 배치하기 전에 <strong>60초</strong> 기다려야 합니"
-"다. 상태 표시줄에는 남은 시간이 표시됩니다. 거부된 시도는 재사용 대기시간을 "
-"재설정하지 않습니다."
+"각 배치를 수락한 후 다시 배치하기 전에 <strong>60초</strong>를 기다려야 합니다. 상태 표시줄에는 남은 시간이 "
+"표시됩니다. 거부된 시도는 재사용 대기시간을 재설정하지 않습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:65
 msgid "Highlight your pixels"
@@ -1597,8 +2309,8 @@ msgid ""
 "Press <strong>Highlight My Pixels</strong> to dim everything else and see "
 "exactly which pixels you own on the current canvas."
 msgstr ""
-"<strong>내 픽셀 강조 표시</strong>을 눌러 다른 모든 항목을 어둡게 하고 현재 "
-"캔버스에 어떤 픽셀이 있는지 정확하게 확인하세요."
+"<strong>내 픽셀 강조 표시</strong>를 누르면 다른 모든 항목이 어두워지고 현재 캔버스에서 내가 소유하고 있는 픽셀이 정확히"
+" 무엇인지 확인할 수 있습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:75
 msgid "Dynamic canvas size"
@@ -1612,37 +2324,42 @@ msgid ""
 "by a set number of rows and columns, up to a configured maximum. This keeps "
 "the canvas competitive — there is always new space to claim."
 msgstr ""
-"The canvas starts at a fixed size and <strong>automatically grows</strong> "
-"as more pixels are placed. Once 80 %% of cells are filled the grid expands "
-"by a set number of rows and columns, up to a configured maximum. This keeps "
-"the canvas competitive — there is always new space to claim."
+"캔버스는 고정된 크기로 시작하고 더 많은 픽셀이 배치됨에 따라 <strong>자동으로 커집니다</strong>. 셀의 80%%가 채워지면"
+" 그리드는 구성된 최대값까지 설정된 행과 열 수만큼 확장됩니다. 이는 캔버스의 경쟁력을 유지합니다. 항상 새로운 공간을 확보할 수 "
+"있습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:93
 #, python-format
 msgid ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"Beyond the global canvas you can play inside <strong>private "
+"communities</strong>. Each community has its own independent canvas, "
+"leaderboard, and chat room. Go to the <a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-amber-800\">Communities</a> "
+"page to manage yours."
 msgstr ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"글로벌 캔버스 외에도 <strong>비공개 커뮤니티</strong>에서 플레이할 수 있습니다. 각 커뮤니티에는 자체적인 독립 캔버스, "
+"리더보드 및 채팅방이 있습니다. <a href=\"%(communities_url)s\" class=\"font-semibold "
+"text-amber-600 hover:text-amber-800\">커뮤니티</a> 페이지로 이동하여 관리하세요."
 
 #: pixelwar/templates/pixelwar/guide.html:102
 msgid "Creating a community"
 msgstr "커뮤니티 만들기"
 
 #: pixelwar/templates/pixelwar/guide.html:103
+#, fuzzy
+#| msgid ""
+#| "Any logged-in user can create <strong>one community</strong>. Enter a name "
+#| "and click <em>Create community</em>. A URL-friendly slug is generated "
+#| "automatically. You become the owner and are added as the first member."
 msgid ""
-"Any logged-in user can create <strong>one community</strong>. Enter a name "
-"and click <em>Create community</em>. A URL-friendly slug is generated "
-"automatically. You become the owner and are added as the first member."
+"Any logged-in user can create communities without a hard limit. Each new "
+"community costs <strong>60 Pixo</strong>. Enter a name and click <em>Create "
+"community</em>. A URL-friendly slug is generated automatically. You become "
+"the owner and are added as the first member."
 msgstr ""
-"로그인한 모든 사용자는 <strong>하나의 커뮤니티</strong>를 만들 수 있습니다. "
-"이름을 입력하고 <em>커뮤니티 만들기</em>를 클릭하세요. URL 친화적인 슬러그가 "
-"자동으로 생성됩니다. 귀하가 소유자가 되고 첫 번째 구성원으로 추가됩니다."
+"로그인한 모든 사용자는 엄격한 제한 없이 커뮤니티를 만들 수 있습니다. 새로운 커뮤니티마다 <strong>60 Pixo</strong>의"
+" 비용이 듭니다. 이름을 입력하고 <em>커뮤니티 만들기</em>를 클릭하세요. URL 친화적인 슬러그가 자동으로 생성됩니다. 귀하가 "
+"소유자가 되고 첫 번째 구성원으로 추가됩니다."
 
 #: pixelwar/templates/pixelwar/guide.html:109
 msgid "Inviting members"
@@ -1654,9 +2371,8 @@ msgid ""
 "shareable URL. Anyone who opens that link and is logged in will be added to "
 "the community immediately."
 msgstr ""
-"커뮤니티 카드에서 <em>초대 링크</em>을 클릭하면 공유 가능한 URL이 포함된 팝업"
-"이 열립니다. 해당 링크를 열고 로그인한 사람은 누구나 즉시 커뮤니티에 추가됩니"
-"다."
+"커뮤니티 카드에서 <em>초대 링크</em>를 클릭하면 공유 가능한 URL이 포함된 팝업이 열립니다. 해당 링크를 열고 로그인한 사람은 "
+"누구나 즉시 커뮤니티에 추가됩니다."
 
 #: pixelwar/templates/pixelwar/guide.html:116
 msgid "Leaving a community"
@@ -1668,9 +2384,8 @@ msgid ""
 "community</em> and confirm. The owner cannot leave — they must delete the "
 "community instead."
 msgstr ""
-"회원은 자신이 만들지 않은 커뮤니티를 탈퇴할 수 있습니다. <em>커뮤니티 탈퇴</"
-"em>을 클릭하고 확인하세요. 소유자는 떠날 수 없습니다. 대신 커뮤니티를 삭제해"
-"야 합니다."
+"회원은 자신이 만들지 않은 커뮤니티를 탈퇴할 수 있습니다. <em>커뮤니티 탈퇴</em>를 클릭하고 확인하세요. 소유자는 떠날 수 "
+"없습니다. 대신 커뮤니티를 삭제해야 합니다."
 
 #: pixelwar/templates/pixelwar/guide.html:123
 msgid "Deleting a community"
@@ -1682,9 +2397,8 @@ msgid ""
 "confirm. This permanently removes the community, all its pixels, chat "
 "messages, and membership records — it cannot be undone."
 msgstr ""
-"소유자만 커뮤니티를 삭제할 수 있습니다. <em>커뮤니티 삭제</em>을 클릭하고 확"
-"인하세요. 이렇게 하면 커뮤니티, 모든 픽셀, 채팅 메시지, 멤버십 기록이 영구적"
-"으로 제거되며 취소할 수 없습니다."
+"소유자만 커뮤니티를 삭제할 수 있습니다. <em>커뮤니티 삭제</em>를 클릭하고 확인하세요. 이렇게 하면 커뮤니티, 모든 픽셀, 채팅 "
+"메시지, 멤버십 기록이 영구적으로 제거되며 취소할 수 없습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:130
 msgid "Community details page"
@@ -1696,36 +2410,29 @@ msgid ""
 "showing: community info, a live canvas preview (click to enlarge), and a "
 "sortable member table with each member's join date and pixel count."
 msgstr ""
-"카드에서 <em>커뮤니티 세부정보</em>을 클릭하면 커뮤니티 정보, 실시간 캔버스 "
-"미리보기(확대하려면 클릭), 각 회원의 가입 날짜와 픽셀 수가 포함된 정렬 가능"
-"한 회원 표를 보여주는 전용 페이지가 열립니다."
+"카드에서 <em>커뮤니티 세부정보</em>를 클릭하면 커뮤니티 정보, 실시간 캔버스 미리보기(확대하려면 클릭), 각 회원의 가입 날짜와 "
+"픽셀 수가 포함된 정렬 가능한 회원 표를 보여주는 전용 페이지가 열립니다."
 
 #: pixelwar/templates/pixelwar/guide.html:140
 msgid "Leaderboard & chat"
 msgstr "리더보드 및 채팅"
 
-#: pixelwar/templates/pixelwar/guide.html:146
-#: pixelwar/templates/pixelwar/leaders.html:4
-msgid "Ranking"
-msgstr ""
-
 #: pixelwar/templates/pixelwar/guide.html:147
 #, fuzzy, python-format
 #| msgid ""
 #| "The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by "
-#| "the number of accepted pixels currently on the canvas. The list is "
-#| "available for the global canvas and for each community you belong to."
+#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the"
+#| " number of accepted pixels currently on the canvas. The list is available "
+#| "for the global canvas and for each community you belong to."
 msgid ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Ranking</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-emerald-800\">Ranking</a> page ranks every contributor by the "
+"number of accepted pixels currently on the canvas. The list is available for"
+" the global canvas and for each community you belong to."
 msgstr ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"<a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-emerald-800\">순위</a> 페이지에서는 현재 캔버스에 허용되는 픽셀 수를 기준으로 모든 기여자의 순위를 "
+"매깁니다. 목록은 전역 캔버스와 귀하가 속한 각 커뮤니티에 대해 사용할 수 있습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:153
 msgid "Live chat"
@@ -1738,10 +2445,8 @@ msgid ""
 "read them. Community chat is scoped — messages in one community are not "
 "visible in another."
 msgstr ""
-"각 캔버스에는 실시간 채팅 사이드바가 있습니다. 오른쪽 하단에 있는 플로팅 버튼"
-"으로 전환하세요. 로그인한 사용자는 메시지를 보낼 수 있습니다. 누구나 읽을 수 "
-"있습니다. 커뮤니티 채팅은 범위가 지정됩니다. 한 커뮤니티의 메시지는 다른 커뮤"
-"니티에 표시되지 않습니다."
+"각 캔버스에는 실시간 채팅 사이드바가 있습니다. 오른쪽 하단에 있는 플로팅 버튼으로 전환하세요. 로그인한 사용자는 메시지를 보낼 수 "
+"있습니다. 누구나 읽을 수 있습니다. 커뮤니티 채팅은 범위가 지정됩니다. 한 커뮤니티의 메시지는 다른 커뮤니티에 표시되지 않습니다."
 
 #: pixelwar/templates/pixelwar/guide.html:162
 msgid "Your account"
@@ -1751,37 +2456,36 @@ msgstr "귀하의 계정"
 msgid ""
 "Click your <strong>avatar</strong> in the top navigation to open Profile "
 "Settings."
-msgstr ""
-"상단 탐색 메뉴에서 <strong>아바타</strong>을 클릭하여 프로필 설정을 엽니다."
+msgstr "프로필 설정을 열려면 상단 탐색 메뉴에서 <strong>아바타</strong>를 클릭하세요."
 
 #: pixelwar/templates/pixelwar/guide.html:165
 msgid ""
-"Change your <strong>username</strong>, upload a custom <strong>avatar</"
-"strong>, or update your <strong>password</strong> at any time."
+"Change your <strong>username</strong>, upload a custom "
+"<strong>avatar</strong>, or update your <strong>password</strong> at any "
+"time."
 msgstr ""
-"언제든지 <strong>사용자 이름</strong>을 변경하거나 맞춤 <strong>아바타</"
-"strong>을 업로드하거나 <strong>비밀번호</strong>을 업데이트하세요."
+"언제든지 <strong>사용자 이름</strong>을 변경하고, 맞춤 <strong>아바타</strong>를 업로드하거나 "
+"<strong>비밀번호</strong>를 업데이트하세요."
 
 #: pixelwar/templates/pixelwar/guide.html:166
 msgid ""
 "You must be logged in to place pixels, send chat messages, create or join "
 "communities."
-msgstr ""
-"픽셀을 배치하고, 채팅 메시지를 보내고, 커뮤니티를 만들거나 가입하려면 로그인"
-"해야 합니다."
+msgstr "픽셀을 배치하고, 채팅 메시지를 보내고, 커뮤니티를 만들거나 가입하려면 로그인해야 합니다."
 
 #: pixelwar/templates/pixelwar/guide.html:172
-#: users/templates/users/login.html:54 users/templates/users/register.html:14
+#: users/templates/users/login.html:58 users/templates/users/register.html:9
 msgid "Create account"
 msgstr "계정 만들기"
 
 #: pixelwar/templates/pixelwar/guide.html:176
-#: users/templates/users/register.html:72
+#: users/templates/users/register.html:60
 msgid "Log in"
 msgstr "로그인"
 
 #: pixelwar/templates/pixelwar/guide.html:185
-#: pixelwar/templates/pixelwar/leaders.html:77
+#: pixelwar/templates/pixelwar/leaders_partial.html:54
+#: users/templates/users/activation_success.html:27
 msgid "Go to Canvas"
 msgstr "캔버스로 이동"
 
@@ -1815,18 +2519,19 @@ msgid "Maybe later"
 msgstr "어쩌면 나중에"
 
 #: pixelwar/templates/pixelwar/invitation.html:49
-msgid "You need an account to join. Accepting will take you to register/login."
+msgid ""
+"You need an account to join. Accepting will take you to register/login."
 msgstr "가입하려면 계정이 필요합니다. 수락하면 등록/로그인이 진행됩니다."
 
 #: pixelwar/templates/pixelwar/invitation.html:59
 msgid "Login or register required"
-msgstr ""
+msgstr "로그인 또는 등록이 필요합니다"
 
 #: pixelwar/templates/pixelwar/invitation.html:61
 msgid ""
 "To join this community, please login or create an account. After that, open "
 "this invitation link again and accept."
-msgstr ""
+msgstr "이 커뮤니티에 가입하려면 로그인하거나 계정을 만드십시오. 그런 다음 이 초대 링크를 다시 열고 수락하세요."
 
 #: pixelwar/templates/pixelwar/leaders.html:9
 msgid "Top Players"
@@ -1836,47 +2541,361 @@ msgstr "최고의 플레이어"
 msgid "Ranked by accepted pixel placements on the shared canvas."
 msgstr "공유 캔버스에서 허용되는 픽셀 배치에 따라 순위가 매겨집니다."
 
-#: pixelwar/templates/pixelwar/leaders.html:17
+#: pixelwar/templates/pixelwar/leaders.html:22
 msgid "Global"
 msgstr "글로벌"
 
-#: pixelwar/templates/pixelwar/leaders.html:31
+#: pixelwar/templates/pixelwar/leaders_partial.html:5
 msgid "Player"
 msgstr "플레이어"
 
-#: pixelwar/templates/pixelwar/leaders.html:32
+#: pixelwar/templates/pixelwar/leaders_partial.html:6
 msgid "Pixels placed"
 msgstr "배치된 픽셀"
 
-#: pixelwar/templates/pixelwar/leaders.html:74
+#: pixelwar/templates/pixelwar/leaders_partial.html:51
 msgid "No ranked players yet."
 msgstr "아직 순위가 매겨진 플레이어가 없습니다."
 
-#: pixelwar/templates/pixelwar/leaders.html:75
+#: pixelwar/templates/pixelwar/leaders_partial.html:52
 msgid "Start drawing to become the first legend."
 msgstr "첫 번째 전설이 되려면 그리기를 시작하세요."
 
-#: users/templates/users/login.html:14
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:43
+msgid "Latest 10 updates"
+msgstr "최신 10개 업데이트"
+
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:65
+msgid "View all"
+msgstr "모두 보기"
+
+#: users/email_service.py:76
+#: users/templates/users/emails/account_activation.html:7
+#, fuzzy
+#| msgid "Your account"
+msgid "Activate your account"
+msgstr "계정을 활성화하세요"
+
+#: users/email_service.py:177
+#: users/templates/users/emails/password_reset.html:7
+#, fuzzy
+#| msgid "New password"
+msgid "Reset your password"
+msgstr "비밀번호 재설정"
+
+#: users/email_service.py:282
+#: users/templates/users/emails/email_verify_change.html:7
+msgid "Verify your new email address"
+msgstr "새 이메일 주소를 확인하세요"
+
+#: users/email_service.py:339
+#, python-format
+msgid "New Contact Us message: %(subject)s"
+msgstr "새로운 문의 메시지: %(subject)s"
+
+#: users/templates/users/activation_success.html:4
+msgid "Email Activated"
+msgstr "이메일이 활성화되었습니다"
+
+#: users/templates/users/activation_success.html:18
+msgid "Email Successfully Activated"
+msgstr "이메일이 성공적으로 활성화되었습니다"
+
+#: users/templates/users/activation_success.html:21
+msgid ""
+"Your account is now verified and ready to use. You can continue to the app "
+"and start placing pixels, joining communities, and competing on the ranking."
+msgstr ""
+"이제 귀하의 계정이 확인되었으며 사용할 준비가 되었습니다. 계속해서 앱을 사용하여 픽셀 배치, 커뮤니티 가입 및 순위 경쟁을 시작할 수 "
+"있습니다."
+
+#: users/templates/users/contact_us.html:13
+msgid "Share your question, issue, or feedback. Everyone can contact us."
+msgstr "질문, 문제 또는 피드백을 공유하세요. 누구나 저희에게 연락하실 수 있습니다."
+
+#: users/templates/users/contact_us.html:41
+msgid "Signed-in contact details"
+msgstr "로그인한 연락처 세부정보"
+
+#: users/templates/users/contact_us.html:43
+#, python-format
+msgid ""
+"\n"
+"                            Your message will be sent using your account details: %(name)s (%(email)s).\n"
+"                        "
+msgstr "귀하의 계정 세부정보를 사용하여 메시지가 전송됩니다: %(name)s(%(email)s)."
+
+#: users/templates/users/contact_us.html:53
+#: users/templates/users/emails/contact_us_notification.html:45
+#: users/templates/users/emails/contact_us_notification.txt:5
+msgid "Name"
+msgstr "이름"
+
+#: users/templates/users/contact_us.html:74
+#: users/templates/users/emails/contact_us_notification.html:53
+#: users/templates/users/emails/contact_us_notification.txt:7
+msgid "Subject"
+msgstr "주제"
+
+#: users/templates/users/contact_us.html:93
+msgid ""
+"For security reasons, code-like markup and scripts are blocked in this form."
+msgstr "보안상의 이유로 이 형식에서는 코드와 유사한 마크업 및 스크립트가 차단됩니다."
+
+#: users/templates/users/contact_us.html:98
+msgid "Send message"
+msgstr "메시지 보내기"
+
+#: users/templates/users/contact_us.html:108
+msgid "Your Tickets"
+msgstr "귀하의 티켓"
+
+#: users/templates/users/contact_us.html:111
+msgid "Open any ticket card to see the full message you sent."
+msgstr "티켓 카드를 열어서 보낸 전체 메시지를 확인하세요."
+
+#: users/templates/users/contact_us.html:115
+msgid "tickets"
+msgstr "티켓"
+
+#: users/templates/users/contact_us.html:167
+#: users/templates/users/emails/contact_us_notification.html:57
+#: users/templates/users/emails/contact_us_notification.txt:8
+msgid "Status"
+msgstr "상태"
+
+#: users/templates/users/contact_us.html:181
+msgid "Full message"
+msgstr "전체 메시지"
+
+#: users/templates/users/emails/account_activation.html:33
+#: users/templates/users/emails/account_activation.txt:2
+#: users/templates/users/emails/email_verify_change.html:33
+#: users/templates/users/emails/email_verify_change.txt:2
+#: users/templates/users/emails/password_reset.html:33
+#: users/templates/users/emails/password_reset.txt:2
+#, python-format
+msgid "Hello %(username)s,"
+msgstr "%(username)s님, 안녕하세요."
+
+#: users/templates/users/emails/account_activation.html:36
+#: users/templates/users/emails/account_activation.txt:4
+msgid ""
+"Thanks for registering. Please confirm your email address to activate your "
+"account."
+msgstr "등록해 주셔서 감사합니다. 계정을 활성화하려면 이메일 주소를 확인하세요."
+
+#: users/templates/users/emails/account_activation.html:40
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account"
+msgstr "계정 활성화"
+
+#: users/templates/users/emails/account_activation.html:44
+#: users/templates/users/emails/account_activation.txt:9
+#: users/templates/users/emails/email_verify_change.html:47
+#: users/templates/users/emails/email_verify_change.txt:11
+#, python-format
+msgid "This link expires in %(hours)s hours."
+msgstr "이 링크는 %(hours)s 시간 후에 만료됩니다."
+
+#: users/templates/users/emails/account_activation.html:53
+#: users/templates/users/emails/email_verify_change.html:56
+#: users/templates/users/emails/password_reset.html:53
+msgid ""
+"If the button does not work, copy and paste this link into your browser:"
+msgstr "버튼이 작동하지 않으면 다음 링크를 복사하여 브라우저에 붙여넣으세요."
+
+#: users/templates/users/emails/account_activation.html:63
+msgid "Built with bright pixels and bold colors."
+msgstr "밝은 픽셀과 대담한 색상으로 제작되었습니다."
+
+#: users/templates/users/emails/account_activation.txt:6
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account:"
+msgstr "계정 활성화:"
+
+#: users/templates/users/emails/contact_us_notification.html:7
+msgid "New Contact Us message"
+msgstr "새로운 문의 메시지"
+
+#: users/templates/users/emails/contact_us_notification.html:33
+#: users/templates/users/emails/contact_us_notification.txt:2
+msgid "New Contact Us submission"
+msgstr "새로운 문의하기 제출"
+
+#: users/templates/users/emails/contact_us_notification.html:36
+msgid "A new message was submitted from the Contact Us page."
+msgstr "문의처 페이지에서 새 메시지가 제출되었습니다."
+
+#: users/templates/users/emails/contact_us_notification.html:41
+#: users/templates/users/emails/contact_us_notification.txt:4
+msgid "Message ID"
+msgstr "메시지 ID"
+
+#: users/templates/users/emails/contact_us_notification.html:61
+#: users/templates/users/emails/contact_us_notification.txt:9
+msgid "Submitted at"
+msgstr "제출 시간:"
+
+#: users/templates/users/emails/email_verify_change.html:36
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the button below to complete the update."
+msgstr "이메일 주소 변경을 요청하셨습니다. 업데이트를 완료하려면 아래 버튼을 클릭하여 새 이메일을 확인하세요."
+
+#: users/templates/users/emails/email_verify_change.html:39
+#: users/templates/users/emails/email_verify_change.txt:6
+msgid "New email:"
+msgstr "새 이메일:"
+
+#: users/templates/users/emails/email_verify_change.html:43
+msgid "Verify email address"
+msgstr "이메일 주소 확인"
+
+#: users/templates/users/emails/email_verify_change.html:66
+#: users/templates/users/emails/email_verify_change.txt:13
+msgid "This is an automated email. Please do not reply to this message."
+msgstr "이것은 자동 이메일입니다. 이 메시지에 회신하지 마십시오."
+
+#: users/templates/users/emails/email_verify_change.txt:4
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the link below to complete the update."
+msgstr "이메일 주소 변경을 요청하셨습니다. 업데이트를 완료하려면 아래 링크를 클릭하여 새 이메일을 확인하세요."
+
+#: users/templates/users/emails/email_verify_change.txt:8
+msgid "Verify email address:"
+msgstr "이메일 주소 확인:"
+
+#: users/templates/users/emails/password_reset.html:36
+msgid ""
+"You requested to reset your password. Click the button below to set a new "
+"one."
+msgstr "비밀번호 재설정을 요청하셨습니다. 새로운 버튼을 설정하려면 아래 버튼을 클릭하세요."
+
+#: users/templates/users/emails/password_reset.html:40
+#, fuzzy
+#| msgid "New password"
+msgid "Reset password"
+msgstr "비밀번호 재설정"
+
+#: users/templates/users/emails/password_reset.html:44
+#: users/templates/users/emails/password_reset.txt:7
+#, python-format
+msgid "This link expires in %(minutes)s minutes."
+msgstr "이 링크는 %(minutes)s분 후에 만료됩니다."
+
+#: users/templates/users/emails/password_reset.txt:4
+msgid "You requested to reset your password. Use this link to set a new one:"
+msgstr "비밀번호 재설정을 요청하셨습니다. 이 링크를 사용하여 새 링크를 설정하세요."
+
+#: users/templates/users/forgot_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Forgot Password"
+msgstr "비밀번호를 잊으셨나요?"
+
+#: users/templates/users/forgot_password.html:9
+msgid "Forgot your password?"
+msgstr "비밀번호를 잊으셨나요?"
+
+#: users/templates/users/forgot_password.html:11
+msgid ""
+"Enter your username or email. We will send you a reset link valid for 30 "
+"minutes."
+msgstr "사용자 이름이나 이메일을 입력하세요. 30분 동안 유효한 재설정 링크를 보내드립니다."
+
+#: users/templates/users/forgot_password.html:23
+#: users/templates/users/login.html:33
+#, fuzzy
+#| msgid "Username"
+msgid "Username or email"
+msgstr "사용자 이름 또는 이메일"
+
+#: users/templates/users/forgot_password.html:29
+msgid "Send reset link"
+msgstr "재설정 링크 보내기"
+
+#: users/templates/users/forgot_password.html:37
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Back to login"
+msgstr "로그인으로 돌아가기"
+
+#: users/templates/users/login.html:9
 msgid "Welcome back"
 msgstr "돌아온 것을 환영합니다"
 
-#: users/templates/users/login.html:15
+#: users/templates/users/login.html:10
 msgid "Sign in to place pixels and join the battle."
 msgstr "픽셀을 배치하고 전투에 참여하려면 로그인하세요."
 
-#: users/templates/users/login.html:36
-#: users/templates/users/profile_settings.html:48
-#: users/templates/users/register.html:36
-msgid "Username"
-msgstr "사용자 이름"
-
-#: users/templates/users/login.html:42 users/templates/users/register.html:48
+#: users/templates/users/login.html:39 users/templates/users/register.html:36
+#: users/templates/users/reset_password.html:21
 msgid "Password"
 msgstr "비밀번호"
 
-#: users/templates/users/login.html:53
+#: users/templates/users/login.html:52
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Forgot password?"
+msgstr "비밀번호를 잊으셨나요?"
+
+#: users/templates/users/login.html:57
 msgid "New here?"
 msgstr "여기에 새로 왔나요?"
+
+#: users/templates/users/partials/activation_email_panel.html:18
+msgid "Send activation email"
+msgstr "활성화 이메일 보내기"
+
+#: users/templates/users/partials/pending_email_panel.html:7
+msgid "Email verification pending"
+msgstr "이메일 확인 대기 중"
+
+#: users/templates/users/partials/pending_email_panel.html:10
+#, python-format
+msgid ""
+"\n"
+"                        We sent a verification email to <strong>%(email)s</strong>.\n"
+"                        Please verify your new email address to complete the update.\n"
+"                    "
+msgstr ""
+"<strong>%(email)s</strong>으로 확인 이메일을 보냈습니다.\n"
+"                        업데이트를 완료하려면 새 이메일 주소를 확인하세요."
+
+#: users/templates/users/partials/pending_email_panel.html:16
+msgid "Check your spam folder if you don't see the email."
+msgstr "이메일이 보이지 않으면 스팸 폴더를 확인해 보세요."
+
+#: users/templates/users/partials/pending_email_panel.html:22
+msgid "Cancel the email change? Your current email will stay unchanged."
+msgstr "이메일 변경을 취소하시겠습니까? 현재 이메일은 변경되지 않습니다."
+
+#: users/templates/users/partials/profile_avatar_card.html:32
+msgid "Upload avatar"
+msgstr "아바타 업로드"
+
+#: users/templates/users/partials/profile_avatar_card.html:41
+msgid "Signed in as"
+msgstr "다음 계정으로 로그인됨"
+
+#: users/templates/users/partials/profile_avatar_card.html:43
+msgid "Click + icon to upload instantly"
+msgstr "즉시 업로드하려면 + 아이콘을 클릭하세요."
+
+#: users/templates/users/partials/profile_avatar_card.html:49
+#: users/templates/users/partials/profile_avatar_card.html:54
+msgid "Logout"
+msgstr "로그아웃"
+
+#: users/templates/users/partials/profile_avatar_card.html:59
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Avatar updated."
+msgstr "아바타가 업데이트되었습니다."
 
 #: users/templates/users/profile_settings.html:4
 #: users/templates/users/profile_settings.html:9
@@ -1887,50 +2906,118 @@ msgstr "프로필 설정"
 msgid "Update your account details, avatar, and password."
 msgstr "계정 세부정보, 아바타, 비밀번호를 업데이트하세요."
 
-#: users/templates/users/profile_settings.html:54
-#: users/templates/users/register.html:42
-msgid "Email"
-msgstr "이메일"
+#: users/templates/users/profile_settings.html:18
+msgid "Referral Program"
+msgstr "추천 프로그램"
 
-#: users/templates/users/profile_settings.html:60
-msgid "Avatar image"
-msgstr "아바타 이미지"
+#: users/templates/users/profile_settings.html:19
+msgid ""
+"Share your personal referral link. You earn 5 Pixo when a referred user "
+"reaches 10 accepted pixels."
+msgstr "개인 추천 링크를 공유하세요. 추천된 사용자가 허용 픽셀 10개에 도달하면 Pixo 5개를 얻게 됩니다."
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:25
+#, fuzzy
+#| msgid "Copy URL"
+msgid "Copy"
+msgstr "복사"
+
+#: users/templates/users/profile_settings.html:56
+msgid "General details"
+msgstr "일반 세부정보"
+
+#: users/templates/users/profile_settings.html:58
+#: users/templates/users/register.html:25
+msgid "Username"
+msgstr "사용자 이름"
+
+#: users/templates/users/profile_settings.html:63
+#: users/templates/users/register.html:20
+msgid "Full Name"
+msgstr "성명"
+
+#: users/templates/users/profile_settings.html:75
+#: users/templates/users/reset_password.html:33
 msgid "Change password"
 msgstr "비밀번호 변경"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:75
 msgid "optional"
 msgstr "선택 과목"
 
-#: users/templates/users/profile_settings.html:69
+#: users/templates/users/profile_settings.html:77
 msgid "New password"
 msgstr "새 비밀번호"
 
-#: users/templates/users/profile_settings.html:74
+#: users/templates/users/profile_settings.html:82
 msgid "Confirm new password"
 msgstr "새 비밀번호 확인"
 
-#: users/templates/users/profile_settings.html:83
+#: users/templates/users/profile_settings.html:91
 msgid "Save changes"
 msgstr "변경사항 저장"
 
-#: users/templates/users/register.html:15
-msgid "Email is required. Avatar is optional."
-msgstr "이메일이 필요합니다. 아바타는 선택사항입니다."
+#: users/templates/users/register.html:10
+#, fuzzy
+#| msgid "Email is required. Avatar is optional."
+msgid "Email and Full Name are optional. Avatar is optional."
+msgstr "이메일과 성명은 선택사항입니다. 아바타는 선택사항입니다."
 
-#: users/templates/users/register.html:54
+#: users/templates/users/register.html:42
+#: users/templates/users/reset_password.html:27
 msgid "Confirm password"
 msgstr "비밀번호 확인"
 
-#: users/templates/users/register.html:60
+#: users/templates/users/register.html:48
 msgid "Avatar image (optional)"
 msgstr "아바타 이미지(선택사항)"
 
-#: users/templates/users/register.html:71
+#: users/templates/users/register.html:59
 msgid "Already have an account?"
 msgstr "이미 계정이 있나요?"
+
+#: users/templates/users/reset_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Reset Password"
+msgstr "비밀번호 재설정"
+
+#: users/templates/users/reset_password.html:9
+#, fuzzy
+#| msgid "New password"
+msgid "Set a new password"
+msgstr "새 비밀번호를 설정하세요"
+
+#: users/templates/users/reset_password.html:10
+msgid "Enter your new password and confirm it."
+msgstr "새 비밀번호를 입력하고 확인하세요."
+
+#: users/views.py:340
+msgid "Referral link is invalid."
+msgstr "추천 링크가 잘못되었습니다."
+
+#: users/views.py:349
+msgid "Self-referral is not allowed."
+msgstr "본인 추천은 허용되지 않습니다."
+
+#: users/views.py:362
+msgid "Referral was registered."
+msgstr "추천인이 등록되었습니다."
+
+#~ msgid "Top"
+#~ msgstr "상위"
+
+#~ msgid "Players"
+#~ msgstr "플레이어"
+
+#~ msgid "Guide"
+#~ msgstr "가이드"
+
+#~ msgid "Language"
+#~ msgstr "언어"
+
+#~ msgid "You already own a community, so you cannot create another one."
+#~ msgstr "이미 커뮤니티를 소유하고 있으므로 다른 커뮤니티를 만들 수 없습니다."
 
 #~ msgid "How It Works"
 #~ msgstr "이용 방법"

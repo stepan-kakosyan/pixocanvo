@@ -88,6 +88,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvasScrollTopInner = document.getElementById(
         'canvasScrollTopInner'
     );
+    const canvasLoadingOverlay = document.getElementById(
+        'canvasLoadingOverlay'
+    );
     const ctx = canvas.getContext('2d', { alpha: false });
     const overlayCtx = pixelOverlay.getContext('2d');
     const gridMeta = document.getElementById('gridMeta');
@@ -130,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isCanvasWideMode = false;
     let cooldownRemaining = 0;
     let cooldownUntilTs = 0;
-    let lastKnownCooldown = 60;
+    let lastKnownCooldown = 30;
     let isRealtimeConnected = false;
     let hasLoadedSnapshot = false;
     let requestInFlight = false;
@@ -189,6 +192,19 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.height = gridSize;
     pixelOverlay.width = gridSize;
     pixelOverlay.height = gridSize;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, gridSize, gridSize);
+
+    function setCanvasLoading(isLoading) {
+        if (!canvasLoadingOverlay) {
+            return;
+        }
+        canvasLoadingOverlay.classList.toggle('hidden', !isLoading);
+        canvasLoadingOverlay.setAttribute(
+            'aria-busy',
+            isLoading ? 'true' : 'false'
+        );
+    }
 
     function syncCanvasScrollbars() {
         if (!canvasScrollFrame || !canvasScrollTop || !canvasScrollTopInner) {
@@ -1166,31 +1182,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function loadSnapshot(options = {}) {
         const applySmartZoom = Boolean(options.applySmartZoom);
-        const response = await fetch(pixelSnapshotUrl, {
-            cache: 'no-store',
-        });
-        if (!response.ok) {
-            throw new Error('Failed to load initial snapshot');
-        }
+        setCanvasLoading(true);
+        try {
+            const response = await fetch(pixelSnapshotUrl, {
+                cache: 'no-store',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to load initial snapshot');
+            }
 
-        const payload = await response.json();
-        filledPixels = Number(payload.filled_pixels || payload.pixels.length || 0);
-        hasLoadedSnapshot = true;
-        setGridSize(Number(payload.grid_size || gridSize));
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, gridSize, gridSize);
+            const payload = await response.json();
+            filledPixels = Number(payload.filled_pixels || payload.pixels.length || 0);
+            hasLoadedSnapshot = true;
+            setGridSize(Number(payload.grid_size || gridSize));
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, gridSize, gridSize);
 
-        for (const pixel of payload.pixels) {
-            drawPixel(pixel.x, pixel.y, pixel.color);
-        }
+            for (const pixel of payload.pixels) {
+                drawPixel(pixel.x, pixel.y, pixel.color);
+            }
 
-        updateGridMeta();
-        renderMineHighlightMask();
-        if (applySmartZoom && !didInitialSmartZoom) {
-            maybeAutoZoom(true);
-            didInitialSmartZoom = true;
+            updateGridMeta();
+            renderMineHighlightMask();
+            if (applySmartZoom && !didInitialSmartZoom) {
+                maybeAutoZoom(true);
+                didInitialSmartZoom = true;
+            }
+            setStatus(`Loaded ${payload.pixels.length} pixels on ${gridSize}x${gridSize}`);
+        } finally {
+            setCanvasLoading(false);
         }
-        setStatus(`Loaded ${payload.pixels.length} pixels on ${gridSize}x${gridSize}`);
     }
 
     async function sendPixel(x, y, color) {
@@ -1220,7 +1241,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return {
                 ok: true,
-                cooldown: Number(info.cooldown_seconds || 60),
+                cooldown: Number(info.cooldown_seconds || 30),
             };
         }
 
@@ -1361,7 +1382,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (group && group.ws_url) {
             return String(group.ws_url);
         }
-        return `/ws/c/${slug}/chat/`;
+        return `/ws/comunity/${slug}/chat/`;
     }
 
     function connectGroupedChatWebsocket(groupSlug) {
@@ -1505,6 +1526,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     applyScale();
+    maybeAutoZoom(true);
+    setCanvasLoading(true);
     updatePaletteSelection();
     updateGridMeta();
     updateMineHighlightButton();

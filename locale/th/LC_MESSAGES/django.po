@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-17 14:29+0000\n"
+"POT-Creation-Date: 2026-03-21 14:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,372 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: Notifications/signals.py:24
+msgid "Confirm your email"
+msgstr "ยืนยันอีเมลของคุณ"
+
+#: Notifications/signals.py:26
+msgid ""
+"Validate your email to unlock chat and community creation. If you did not "
+"receive the email, open Profile Details and resend it."
+msgstr ""
+"ตรวจสอบอีเมลของคุณเพื่อปลดล็อกการแชทและการสร้างชุมชน หากคุณไม่ได้รับอีเมล "
+"ให้เปิดรายละเอียดโปรไฟล์แล้วส่งอีกครั้ง"
+
+#: Notifications/signals.py:42
+msgid "Verify your new email"
+msgstr "ยืนยันอีเมลใหม่ของคุณ"
+
+#: Notifications/signals.py:44
+#, python-format
+msgid ""
+"You requested to change your email to %(email)s. We've sent a verification "
+"link there — click it to confirm the update."
+msgstr ""
+"คุณขอเปลี่ยนอีเมลของคุณเป็น %(email)s เราได้ส่งลิงก์การยืนยันไปที่นั่นแล้ว "
+"คลิกลิงก์เพื่อยืนยันการอัปเดต"
+
+#: Notifications/signals.py:60
+msgid "Email confirmed"
+msgstr "ยืนยันอีเมลแล้ว"
+
+#: Notifications/signals.py:61
+msgid "Congratulations. Your email has been confirmed successfully."
+msgstr "ยินดีด้วย. อีเมลของคุณได้รับการยืนยันเรียบร้อยแล้ว"
+
+#: Notifications/signals.py:75
+msgid "New join request"
+msgstr "คำขอเข้าร่วมใหม่"
+
+#: Notifications/signals.py:76
+#, python-format
+msgid "%(username)s requested to join %(community)s."
+msgstr "%(username)s ขอเข้าร่วม %(community)s"
+
+#: Notifications/signals.py:104
+msgid "Join request approved"
+msgstr "อนุมัติคำขอเข้าร่วมแล้ว"
+
+#: Notifications/signals.py:104
+msgid "Join request declined"
+msgstr "คำขอเข้าร่วมถูกปฏิเสธ"
+
+#: Notifications/signals.py:106
+#, python-format
+msgid "Your request to join %(community)s was approved."
+msgstr "คำขอของคุณเพื่อเข้าร่วม %(community)s ได้รับการอนุมัติแล้ว"
+
+#: Notifications/signals.py:108
+#, python-format
+msgid "Your request to join %(community)s was declined."
+msgstr "คำขอเข้าร่วม %(community)s ของคุณถูกปฏิเสธ"
+
+#: Notifications/templates/Notifications/notifications_list.html:4
+#: Notifications/templates/Notifications/notifications_list.html:11
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:42
+msgid "Notifications"
+msgstr "การแจ้งเตือน"
+
+#: Notifications/templates/Notifications/notifications_list.html:12
+msgid "Track join requests, approvals, and other account updates."
+msgstr "ติดตามคำขอเข้าร่วม การอนุมัติ และการอัปเดตบัญชีอื่นๆ"
+
+#: Notifications/templates/Notifications/notifications_list.html:23
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:55
+msgid "Mark all as read"
+msgstr "ทำเครื่องหมายทั้งหมดว่าอ่านแล้ว"
+
+#: Notifications/templates/Notifications/notifications_list.html:41
+#, python-format
+msgid "%(counter)s unread"
+msgid_plural "%(counter)s unread"
+msgstr[0] "%(counter)s ยังไม่ได้อ่าน"
+
+#: Notifications/templates/Notifications/notifications_list.html:106
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:128
+msgid "No notifications yet."
+msgstr "ยังไม่มีการแจ้งเตือน"
+
+#: env/Lib/site-packages/click/_termui_impl.py:613
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: env/Lib/site-packages/click/_termui_impl.py:617
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1114
+#: env/Lib/site-packages/click/core.py:1151
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1170
+#, fuzzy
+#| msgid "optional"
+msgid "Options"
+msgstr "ไม่จำเป็น"
+
+#: env/Lib/site-packages/click/core.py:1245
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/core.py:1264
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1448
+msgid "Aborted!"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1822
+#, fuzzy
+#| msgid "Communities"
+msgid "Commands"
+msgstr "ชุมชน"
+
+#: env/Lib/site-packages/click/core.py:1853
+msgid "Missing command."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1931
+msgid "No such command {name!r}."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2355
+msgid "Value must be an iterable."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2378
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/core.py:2567
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3015
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3018
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3082
+msgid "(dynamic)"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:50
+#: env/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:289
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:199
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:381
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:444
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/shell_completion.py:332
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: env/Lib/site-packages/click/shell_completion.py:339
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:165
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:181
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:183
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:194
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:253
+msgid "Error: invalid input"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:872
+msgid "Press any key to continue..."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:369
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/types.py:460
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+
+#: env/Lib/site-packages/click/types.py:482
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:719
+msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:747
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:937
+msgid "file"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:939
+msgid "directory"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:941
+msgid "path"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:988
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:997
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1005
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1014
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1023
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1032
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1099
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
 
 #: env/Lib/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -83,8 +449,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:297
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:309
@@ -298,8 +664,8 @@ msgstr ""
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1570
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1575
@@ -478,7 +844,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: env/Lib/site-packages/django/forms/boundfield.py:185
 msgid ":?.!"
 msgstr ""
@@ -528,7 +895,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/forms/fields.py:643
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -632,7 +1000,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1450
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1594
@@ -733,30 +1102,37 @@ msgid "noon"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:7
+#: env/Lib/site-packages/tornado/locale.py:295
 msgid "Monday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:8
+#: env/Lib/site-packages/tornado/locale.py:296
 msgid "Tuesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:9
+#: env/Lib/site-packages/tornado/locale.py:297
 msgid "Wednesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:10
+#: env/Lib/site-packages/tornado/locale.py:298
 msgid "Thursday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:11
+#: env/Lib/site-packages/tornado/locale.py:299
 msgid "Friday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:12
+#: env/Lib/site-packages/tornado/locale.py:300
 msgid "Saturday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:13
+#: env/Lib/site-packages/tornado/locale.py:301
 msgid "Sunday"
 msgstr ""
 
@@ -789,54 +1165,66 @@ msgid "Sun"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:25
+#: env/Lib/site-packages/tornado/locale.py:281
 msgid "January"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:26
+#: env/Lib/site-packages/tornado/locale.py:282
 msgid "February"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:27
+#: env/Lib/site-packages/tornado/locale.py:283
 msgid "March"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:28
+#: env/Lib/site-packages/tornado/locale.py:284
 msgid "April"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:29
+#: env/Lib/site-packages/tornado/locale.py:285
 msgid "May"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:30
+#: env/Lib/site-packages/tornado/locale.py:286
 msgid "June"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:31
+#: env/Lib/site-packages/tornado/locale.py:287
 msgid "July"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:32
+#: env/Lib/site-packages/tornado/locale.py:288
 msgid "August"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:33
+#: env/Lib/site-packages/tornado/locale.py:289
 #, fuzzy
 #| msgid "Member"
 msgid "September"
 msgstr "สมาชิก"
 
 #: env/Lib/site-packages/django/utils/dates.py:34
+#: env/Lib/site-packages/tornado/locale.py:290
 msgid "October"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:35
+#: env/Lib/site-packages/tornado/locale.py:291
 #, fuzzy
 #| msgid "Member"
 msgid "November"
 msgstr "สมาชิก"
 
 #: env/Lib/site-packages/django/utils/dates.py:36
+#: env/Lib/site-packages/tornado/locale.py:292
 #, fuzzy
 #| msgid "Member"
 msgid "December"
@@ -1099,10 +1487,10 @@ msgstr ""
 
 #: env/Lib/site-packages/django/views/csrf.py:45
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -1213,10 +1601,10 @@ msgstr ""
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:208
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:217
@@ -1245,71 +1633,157 @@ msgstr "ออกจากชุมชน"
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:37
-msgid "Canvas"
-msgstr "ผืนผ้าใบ"
-
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Top"
-msgstr "อันดับสูงสุด"
-
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Players"
-msgstr "ผู้เล่น"
-
-#: pixelwar/templates/pixelwar/base.html:49
-#: pixelwar/templates/pixelwar/base.html:134
-#: pixelwar/templates/pixelwar/guide.html:4
-#: pixelwar/templates/pixelwar/guide.html:10
-msgid "Rules"
+#: env/Lib/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
 msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:49
-msgid "Guide"
-msgstr "คู่มือ"
+#: env/Lib/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:55
-#: pixelwar/templates/pixelwar/base.html:135
+#: env/Lib/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:377
+msgid "1 second ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:383
+msgid "1 minute ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:388
+msgid "1 hour ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:391
+#, python-format
+msgid "%(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+msgid "yesterday"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+#, python-format
+msgid "yesterday at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:398
+#: env/Lib/site-packages/tornado/locale.py:451
+#, python-format
+msgid "%(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:400
+#, python-format
+msgid "%(month_name)s %(day)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:405
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:407
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:445
+#, python-format
+msgid "%(weekday)s, %(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:468
+#, python-format
+msgid "%(commas)s and %(last)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:68
+msgctxt "law"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:69
+msgctxt "good"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:70
+#: env/Lib/site-packages/tornado/test/locale_test.py:72
+msgctxt "organization"
+msgid "club"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:74
+#: env/Lib/site-packages/tornado/test/locale_test.py:75
+msgctxt "stick"
+msgid "club"
+msgstr ""
+
+#: pixelwar/templates/pixelwar/base.html:54
+#: pixelwar/templates/pixelwar/base.html:378
+msgid "Canvas"
+msgstr "ผ้าใบ"
+
+#: pixelwar/templates/pixelwar/base.html:61
+#: pixelwar/templates/pixelwar/base.html:362
+#: pixelwar/templates/pixelwar/base.html:385
+#: pixelwar/templates/pixelwar/community_detail.html:163
 #: pixelwar/templates/pixelwar/community_lobby.html:4
 #: pixelwar/templates/pixelwar/community_lobby.html:10
 #: pixelwar/templates/pixelwar/guide.html:89
 msgid "Communities"
 msgstr "ชุมชน"
 
-#: pixelwar/templates/pixelwar/base.html:73
-#: users/templates/users/profile_settings.html:34
-msgid "Signed in as"
-msgstr "ลงชื่อเข้าใช้เป็น"
+#: pixelwar/templates/pixelwar/base.html:68
+#: pixelwar/templates/pixelwar/base.html:392
+#: pixelwar/templates/pixelwar/guide.html:146
+#: pixelwar/templates/pixelwar/leaders.html:4
+msgid "Ranking"
+msgstr "การจัดอันดับ"
 
-#: pixelwar/templates/pixelwar/base.html:79
-msgid "Logout"
-msgstr "ออกจากระบบ"
-
-#: pixelwar/templates/pixelwar/base.html:86
-#: pixelwar/templates/pixelwar/community_lobby.html:104
-#: pixelwar/templates/pixelwar/invitation.html:66
-#: users/templates/users/login.html:7 users/templates/users/login.html:48
-msgid "Login"
-msgstr "เข้าสู่ระบบ"
-
-#: pixelwar/templates/pixelwar/base.html:90
-#: pixelwar/templates/pixelwar/community_lobby.html:100
-#: pixelwar/templates/pixelwar/invitation.html:70
-#: users/templates/users/register.html:7 users/templates/users/register.html:66
-msgid "Register"
-msgstr "สมัครสมาชิก"
+#: pixelwar/templates/pixelwar/base.html:75
+#: pixelwar/templates/pixelwar/base.html:361
+#: pixelwar/templates/pixelwar/base.html:399
+#: pixelwar/templates/pixelwar/guide.html:4
+#: pixelwar/templates/pixelwar/guide.html:10
+msgid "Rules"
+msgstr "กฎ"
 
 #: pixelwar/templates/pixelwar/base.html:103
-msgid "Language"
-msgstr "ภาษา"
+msgid "Congratulations!"
+msgstr "ยินดีด้วย!"
 
-#: pixelwar/templates/pixelwar/base.html:136
+#: pixelwar/templates/pixelwar/base.html:363
+#: users/templates/users/contact_us.html:4
+#: users/templates/users/contact_us.html:10
+msgid "Contact Us"
+msgstr "ติดต่อเรา"
+
+#: pixelwar/templates/pixelwar/base.html:364
 msgid "Privacy Policy"
 msgstr "นโยบายความเป็นส่วนตัว"
 
-#: pixelwar/templates/pixelwar/base.html:137
+#: pixelwar/templates/pixelwar/base.html:365
 msgid "Terms of Service"
-msgstr "ข้อกำหนดการให้บริการ"
+msgstr "ข้อกำหนดในการให้บริการ"
 
 #: pixelwar/templates/pixelwar/community_detail.html:4
 msgid "Community Details"
@@ -1319,198 +1793,451 @@ msgstr "รายละเอียดชุมชน"
 msgid "Community details, members, and quick actions."
 msgstr "รายละเอียดชุมชน สมาชิก และการดำเนินการด่วน"
 
-#: pixelwar/templates/pixelwar/community_detail.html:16
-#: pixelwar/templates/pixelwar/community_lobby.html:54
-msgid "Slug"
-msgstr "กระสุน"
+#: pixelwar/templates/pixelwar/community_detail.html:19
+msgid "No cover image yet"
+msgstr "ยังไม่มีภาพหน้าปก"
 
-#: pixelwar/templates/pixelwar/community_detail.html:20
-msgid "Members"
-msgstr "สมาชิก"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+#: pixelwar/templates/pixelwar/community_lobby.html:128
+#: pixelwar/templates/pixelwar/community_lobby.html:204
+msgid "Public"
+msgstr "สาธารณะ"
 
-#: pixelwar/templates/pixelwar/community_detail.html:24
-msgid "Created"
-msgstr "สร้าง"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+msgid "Private"
+msgstr "ส่วนตัว"
 
-#: pixelwar/templates/pixelwar/community_detail.html:28
-#: pixelwar/templates/pixelwar/community_detail.html:130
+#: pixelwar/templates/pixelwar/community_detail.html:29
+#: pixelwar/templates/pixelwar/community_detail.html:292
+#: pixelwar/templates/pixelwar/community_lobby.html:125
+#: pixelwar/templates/pixelwar/community_lobby.html:201
 msgid "Owner"
 msgstr "เจ้าของ"
 
-#: pixelwar/templates/pixelwar/community_detail.html:35
-#: pixelwar/templates/pixelwar/community_lobby.html:58
-msgid "Open canvas"
-msgstr "เปิดผ้าใบ"
+#: pixelwar/templates/pixelwar/community_detail.html:30
+#: pixelwar/templates/pixelwar/community_detail.html:164
+#: users/templates/users/contact_us.html:175
+msgid "Created"
+msgstr "สร้าง"
 
-#: pixelwar/templates/pixelwar/community_detail.html:40
-#: pixelwar/templates/pixelwar/community_lobby.html:67
-msgid "Invitation link"
-msgstr "ลิงค์คำเชิญ"
+#: pixelwar/templates/pixelwar/community_detail.html:38
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Update image"
+msgstr "อัปเดตรูปภาพ"
 
-#: pixelwar/templates/pixelwar/community_detail.html:48
-#: pixelwar/templates/pixelwar/community_lobby.html:75
-msgid "Delete community"
-msgstr "ลบชุมชน"
+#: pixelwar/templates/pixelwar/community_detail.html:47
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit details"
+msgstr "แก้ไขรายละเอียด"
 
-#: pixelwar/templates/pixelwar/community_detail.html:56
-#: pixelwar/templates/pixelwar/community_lobby.html:83
-msgid "Leave community"
-msgstr "ออกจากชุมชน"
-
-#: pixelwar/templates/pixelwar/community_detail.html:60
-msgid "Back to communities"
-msgstr "กลับสู่ชุมชน"
-
-#: pixelwar/templates/pixelwar/community_detail.html:66
-msgid "Canvas preview"
-msgstr "การแสดงตัวอย่างแคนวาส"
-
-#: pixelwar/templates/pixelwar/community_detail.html:69
-msgid "Click to enlarge"
-msgstr "คลิกเพื่อขยาย"
-
-#: pixelwar/templates/pixelwar/community_detail.html:73
-msgid "click to enlarge"
-msgstr "คลิกเพื่อขยาย"
-
-#: pixelwar/templates/pixelwar/community_detail.html:92
-msgid "Community members"
-msgstr "สมาชิกชุมชน"
-
-#: pixelwar/templates/pixelwar/community_detail.html:94
-msgid "Sort"
-msgstr "เรียงลำดับ"
-
-#: pixelwar/templates/pixelwar/community_detail.html:97
-msgid "Join date"
-msgstr "เข้าร่วมวันที่"
-
-#: pixelwar/templates/pixelwar/community_detail.html:101
-#: pixelwar/templates/pixelwar/community_detail.html:113
-msgid "Pixel count"
-msgstr "จำนวนพิกเซล"
-
-#: pixelwar/templates/pixelwar/community_detail.html:111
-msgid "Member"
+#: pixelwar/templates/pixelwar/community_detail.html:54
+msgid "Members"
 msgstr "สมาชิก"
 
-#: pixelwar/templates/pixelwar/community_detail.html:112
-msgid "Joined"
-msgstr "เข้าร่วม"
+#: pixelwar/templates/pixelwar/community_detail.html:58
+#, fuzzy
+#| msgid "Pixels placed"
+msgid "Pixels"
+msgstr "พิกเซล"
 
-#: pixelwar/templates/pixelwar/community_detail.html:142
-msgid "No active members found."
-msgstr "ไม่พบสมาชิกที่ใช้งานอยู่"
+#: pixelwar/templates/pixelwar/community_detail.html:62
+#: pixelwar/templates/pixelwar/community_detail.html:83
+#: pixelwar/templates/pixelwar/create_community.html:43
+#: users/templates/users/contact_us.html:84
+#: users/templates/users/emails/contact_us_notification.html:67
+#: users/templates/users/emails/contact_us_notification.txt:11
+msgid "Description"
+msgstr "คำอธิบาย"
 
-#: pixelwar/templates/pixelwar/community_detail.html:150
-#: pixelwar/templates/pixelwar/community_lobby.html:114
-msgid "Community Invitation Link"
-msgstr "ลิงค์คำเชิญของชุมชน"
+#: pixelwar/templates/pixelwar/community_detail.html:67
+msgid "No description provided."
+msgstr "ไม่มีคำอธิบาย"
 
-#: pixelwar/templates/pixelwar/community_detail.html:152
-#: pixelwar/templates/pixelwar/community_lobby.html:116
-msgid ""
-"Share this link to invite others to your community. Anyone with the link can "
-"join."
-msgstr "แชร์ลิงก์นี้เพื่อเชิญผู้อื่นเข้าร่วมชุมชนของคุณ ทุกคนที่มีลิงก์สามารถเข้าร่วมได้"
+#: pixelwar/templates/pixelwar/community_detail.html:75
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit community details"
+msgstr "แก้ไขรายละเอียดชุมชน"
 
-#: pixelwar/templates/pixelwar/community_detail.html:158
-#: pixelwar/templates/pixelwar/community_lobby.html:122
-msgid "Copy URL"
-msgstr "คัดลอก URL"
+#: pixelwar/templates/pixelwar/community_detail.html:79
+#, fuzzy
+#| msgid "New community name"
+msgid "Community name"
+msgstr "ชื่อชุมชน"
 
-#: pixelwar/templates/pixelwar/community_detail.html:159
-#: pixelwar/templates/pixelwar/community_lobby.html:123
-#: pixelwar/templates/pixelwar/invitation.html:74
-msgid "Close"
-msgstr "ปิด"
+#: pixelwar/templates/pixelwar/community_detail.html:87
+#: pixelwar/templates/pixelwar/create_community.html:56
+msgid "Visibility"
+msgstr "การมองเห็น"
 
-#: pixelwar/templates/pixelwar/community_detail.html:163
-#: pixelwar/templates/pixelwar/community_lobby.html:127
-msgid "Leave Community"
-msgstr "ออกจากชุมชน"
+#: pixelwar/templates/pixelwar/community_detail.html:89
+#: pixelwar/templates/pixelwar/create_community.html:59
+#, fuzzy
+#| msgid "Delete community"
+msgid "Public community"
+msgstr "ชุมชนสาธารณะ"
 
-#: pixelwar/templates/pixelwar/community_detail.html:165
-#: pixelwar/templates/pixelwar/community_lobby.html:129
-msgid "Are you sure you want to leave this community?"
-msgstr "คุณแน่ใจหรือไม่ว่าต้องการออกจากชุมชนนี้?"
+#: pixelwar/templates/pixelwar/community_detail.html:90
+#: pixelwar/templates/pixelwar/create_community.html:58
+#, fuzzy
+#| msgid "Create community"
+msgid "Private community"
+msgstr "ชุมชนส่วนตัว"
 
-#: pixelwar/templates/pixelwar/community_detail.html:169
-#: pixelwar/templates/pixelwar/community_lobby.html:133
-msgid "Yes, leave"
-msgstr "ใช่ออกไป"
+#: pixelwar/templates/pixelwar/community_detail.html:95
+msgid "Save details"
+msgstr "บันทึกรายละเอียด"
 
-#: pixelwar/templates/pixelwar/community_detail.html:170
-#: pixelwar/templates/pixelwar/community_detail.html:182
-#: pixelwar/templates/pixelwar/community_lobby.html:134
-#: pixelwar/templates/pixelwar/community_lobby.html:146
+#: pixelwar/templates/pixelwar/community_detail.html:98
+#: pixelwar/templates/pixelwar/community_detail.html:348
+#: pixelwar/templates/pixelwar/community_detail.html:360
+#: pixelwar/templates/pixelwar/community_detail.html:372
+#: pixelwar/templates/pixelwar/community_lobby.html:255
+#: pixelwar/templates/pixelwar/community_lobby.html:267
+#: users/templates/users/partials/pending_email_panel.html:27
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: pixelwar/templates/pixelwar/community_detail.html:175
-#: pixelwar/templates/pixelwar/community_lobby.html:139
+#: pixelwar/templates/pixelwar/community_detail.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:68
+#: pixelwar/templates/pixelwar/community_lobby.html:142
+msgid "Open canvas"
+msgstr "เปิดผ้าใบ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:113
+#: pixelwar/templates/pixelwar/community_lobby.html:77
+msgid "Invitation link"
+msgstr "ลิงค์คำเชิญ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:121
+#: pixelwar/templates/pixelwar/community_lobby.html:85
+msgid "Delete community"
+msgstr "ลบชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:129
+#: pixelwar/templates/pixelwar/community_lobby.html:93
+msgid "Leave community"
+msgstr "ออกจากชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:139
+#: pixelwar/templates/pixelwar/community_lobby.html:154
+msgid "Ask Join"
+msgstr "ถามเข้าร่วม"
+
+#: pixelwar/templates/pixelwar/community_detail.html:143
+msgid "Login to request join"
+msgstr "เข้าสู่ระบบเพื่อขอเข้าร่วม"
+
+#: pixelwar/templates/pixelwar/community_detail.html:147
+#: pixelwar/templates/pixelwar/create_community.html:90
+msgid "Back to communities"
+msgstr "กลับสู่ชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:154
+msgid "Join requests"
+msgstr "คำขอเข้าร่วม"
+
+#: pixelwar/templates/pixelwar/community_detail.html:160
+#: pixelwar/templates/pixelwar/community_detail.html:267
+msgid "Member"
+msgstr "สมาชิก"
+
+#: pixelwar/templates/pixelwar/community_detail.html:161
+#: users/templates/users/contact_us.html:62
+#: users/templates/users/contact_us.html:171
+#: users/templates/users/emails/contact_us_notification.html:49
+#: users/templates/users/emails/contact_us_notification.txt:6
+#: users/templates/users/profile_settings.html:68
+#: users/templates/users/register.html:31
+msgid "Email"
+msgstr "อีเมล"
+
+#: pixelwar/templates/pixelwar/community_detail.html:162
+#, fuzzy
+#| msgid "Placing pixels"
+msgid "Global pixels"
+msgstr "พิกเซลทั่วโลก"
+
+#: pixelwar/templates/pixelwar/community_detail.html:165
+#: pixelwar/templates/pixelwar/community_detail.html:271
+msgid "Actions"
+msgstr "การดำเนินการ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:197
+msgid "Approve"
+msgstr "อนุมัติ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:204
+msgid "Decline"
+msgstr "ปฏิเสธ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:214
+msgid "No pending join requests."
+msgstr "ไม่มีคำขอเข้าร่วมที่รอดำเนินการ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:220
+msgid "Canvas preview"
+msgstr "การแสดงตัวอย่างแคนวาส"
+
+#: pixelwar/templates/pixelwar/community_detail.html:223
+msgid "Click to enlarge"
+msgstr "คลิกเพื่อขยาย"
+
+#: pixelwar/templates/pixelwar/community_detail.html:227
+msgid "click to enlarge"
+msgstr "คลิกเพื่อขยาย"
+
+#: pixelwar/templates/pixelwar/community_detail.html:246
+msgid "Community members"
+msgstr "สมาชิกชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:249
+msgid "Sort"
+msgstr "เรียงลำดับ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:252
+msgid "Join date"
+msgstr "เข้าร่วมวันที่"
+
+#: pixelwar/templates/pixelwar/community_detail.html:256
+#: pixelwar/templates/pixelwar/community_detail.html:269
+msgid "Pixel count"
+msgstr "จำนวนพิกเซล"
+
+#: pixelwar/templates/pixelwar/community_detail.html:268
+msgid "Joined"
+msgstr "เข้าร่วม"
+
+#: pixelwar/templates/pixelwar/community_detail.html:305
+msgid "Remove"
+msgstr "ลบ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:316
+msgid "No active members found."
+msgstr "ไม่พบสมาชิกที่ใช้งานอยู่"
+
+#: pixelwar/templates/pixelwar/community_detail.html:319
+msgid "Members list is visible only to community members."
+msgstr "รายชื่อสมาชิกจะปรากฏเฉพาะสมาชิกชุมชนเท่านั้น"
+
+#: pixelwar/templates/pixelwar/community_detail.html:328
+#: pixelwar/templates/pixelwar/community_lobby.html:235
+msgid "Community Invitation Link"
+msgstr "ลิงค์คำเชิญของชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:330
+#: pixelwar/templates/pixelwar/community_lobby.html:237
+msgid ""
+"Share this link to invite others to your community. Anyone with the link can"
+" join."
+msgstr ""
+"แชร์ลิงก์นี้เพื่อเชิญผู้อื่นเข้าร่วมชุมชนของคุณ "
+"ทุกคนที่มีลิงก์สามารถเข้าร่วมได้"
+
+#: pixelwar/templates/pixelwar/community_detail.html:336
+#: pixelwar/templates/pixelwar/community_lobby.html:243
+msgid "Copy URL"
+msgstr "คัดลอก URL"
+
+#: pixelwar/templates/pixelwar/community_detail.html:337
+#: pixelwar/templates/pixelwar/community_lobby.html:244
+#: pixelwar/templates/pixelwar/invitation.html:74
+#: users/templates/users/contact_us.html:161
+msgid "Close"
+msgstr "ปิด"
+
+#: pixelwar/templates/pixelwar/community_detail.html:341
+#: pixelwar/templates/pixelwar/community_lobby.html:248
+msgid "Leave Community"
+msgstr "ออกจากชุมชน"
+
+#: pixelwar/templates/pixelwar/community_detail.html:343
+#: pixelwar/templates/pixelwar/community_lobby.html:250
+msgid "Are you sure you want to leave this community?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการออกจากชุมชนนี้?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:347
+#: pixelwar/templates/pixelwar/community_lobby.html:254
+msgid "Yes, leave"
+msgstr "ใช่ออกไป"
+
+#: pixelwar/templates/pixelwar/community_detail.html:353
+#: pixelwar/templates/pixelwar/community_lobby.html:260
 msgid "Delete Community"
 msgstr "ลบชุมชน"
 
-#: pixelwar/templates/pixelwar/community_detail.html:177
-#: pixelwar/templates/pixelwar/community_lobby.html:141
+#: pixelwar/templates/pixelwar/community_detail.html:355
+#: pixelwar/templates/pixelwar/community_lobby.html:262
 msgid ""
 "This action cannot be undone. All information will be deleted and cannot be "
 "restored."
-msgstr "การดำเนินการนี้ไม่สามารถยกเลิกได้ ข้อมูลทั้งหมดจะถูกลบและไม่สามารถกู้คืนได้"
+msgstr ""
+"การดำเนินการนี้ไม่สามารถยกเลิกได้ ข้อมูลทั้งหมดจะถูกลบและไม่สามารถกู้คืนได้"
 
-#: pixelwar/templates/pixelwar/community_detail.html:181
-#: pixelwar/templates/pixelwar/community_lobby.html:145
+#: pixelwar/templates/pixelwar/community_detail.html:359
+#: pixelwar/templates/pixelwar/community_lobby.html:266
 msgid "Yes, delete permanently"
 msgstr "ใช่ ลบอย่างถาวร"
+
+#: pixelwar/templates/pixelwar/community_detail.html:365
+#, fuzzy
+#| msgid "Member"
+msgid "Remove Member"
+msgstr "ลบสมาชิก"
+
+#: pixelwar/templates/pixelwar/community_detail.html:367
+#, fuzzy
+#| msgid "Are you sure you want to leave this community?"
+msgid "Are you sure you want to remove this member from the community?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกรายนี้ออกจากชุมชน?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:371
+msgid "Yes, remove member"
+msgstr "ใช่ ลบสมาชิกออก"
 
 #: pixelwar/templates/pixelwar/community_lobby.html:13
 msgid ""
 "Create your own community or join one using an invitation link. Each "
 "community has its own canvas, leaderboard, and chat."
 msgstr ""
-"สร้างชุมชนของคุณเองหรือเข้าร่วมโดยใช้ลิงก์คำเชิญ แต่ละชุมชนมีผืนผ้าใบ ลีดเดอร์บอร์ด "
-"และแชทของตัวเอง"
+"สร้างชุมชนของคุณเองหรือเข้าร่วมโดยใช้ลิงก์คำเชิญ แต่ละชุมชนมีผืนผ้าใบ "
+"ลีดเดอร์บอร์ด และแชทของตัวเอง"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:35
-msgid "New community name"
-msgstr "ชื่อชุมชนใหม่"
+#: pixelwar/templates/pixelwar/community_lobby.html:34
+#: pixelwar/templates/pixelwar/create_community.html:30
+msgid "Confirm your email before creating your own community."
+msgstr "ยืนยันอีเมลของคุณก่อนที่จะสร้างชุมชนของคุณเอง"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:38
+#: pixelwar/templates/pixelwar/community_lobby.html:39
+#, python-format
+msgid ""
+"\n"
+"                        You own %(current)s communities. Creating a new one costs %(cost)s Pixo.\n"
+"                        "
+msgstr "คุณเป็นเจ้าของชุมชน %(current)s การสร้างอันใหม่ต้องใช้ %(cost)s Pixo"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:45
+#: pixelwar/templates/pixelwar/create_community.html:65
 msgid "Create community"
 msgstr "สร้างชุมชน"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:43
-msgid "You already own a community, so you cannot create another one."
-msgstr "คุณเป็นเจ้าของชุมชนอยู่แล้ว ดังนั้นคุณจึงไม่สามารถสร้างชุมชนใหม่ได้"
-
-#: pixelwar/templates/pixelwar/community_lobby.html:48
+#: pixelwar/templates/pixelwar/community_lobby.html:51
 msgid "Your active communities"
 msgstr "ชุมชนที่ใช้งานอยู่ของคุณ"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:62
+#: pixelwar/templates/pixelwar/community_lobby.html:60
+msgid "Requests"
+msgstr "คำขอ"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:64
+msgid "Slug"
+msgstr "กระสุน"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:72
+#: pixelwar/templates/pixelwar/community_lobby.html:137
+#: pixelwar/templates/pixelwar/community_lobby.html:213
 msgid "Community details"
 msgstr "รายละเอียดชุมชน"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:92
+#: pixelwar/templates/pixelwar/community_lobby.html:102
 msgid "You have not joined any communities yet."
 msgstr "คุณยังไม่ได้เข้าร่วมชุมชนใดๆ"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:184
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Public communities"
+msgstr "ชุมชนสาธารณะ"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:110
+#: pixelwar/templates/pixelwar/community_lobby.html:186
+msgid "Discover open communities and request to join."
+msgstr "ค้นพบชุมชนที่เปิดกว้างและขอเข้าร่วม"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:132
+#: pixelwar/templates/pixelwar/community_lobby.html:208
+#, fuzzy
+#| msgid "Members"
+msgid "members"
+msgstr "สมาชิก"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:146
+msgid "Request sent"
+msgstr "ส่งคำขอแล้ว"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:159
+#: pixelwar/templates/pixelwar/community_lobby.html:179
+#: pixelwar/templates/pixelwar/community_lobby.html:217
+#: pixelwar/templates/pixelwar/invitation.html:66
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:202
+#: users/templates/users/login.html:4 users/templates/users/login.html:45
+msgid "Login"
+msgstr "เข้าสู่ระบบ"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:168
+#: pixelwar/templates/pixelwar/community_lobby.html:225
+#, fuzzy
+#| msgid "Your active communities"
+msgid "No public communities yet."
+msgstr "ยังไม่มีชุมชนสาธารณะ"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:175
+#: pixelwar/templates/pixelwar/invitation.html:70
+#: users/templates/users/register.html:4
+#: users/templates/users/register.html:54
+msgid "Register"
+msgstr "ลงทะเบียน"
+
+#: pixelwar/templates/pixelwar/create_community.html:4
+#: pixelwar/templates/pixelwar/create_community.html:9
+#, fuzzy
+#| msgid "Create community"
+msgid "Create Community"
+msgstr "สร้างชุมชน"
+
+#: pixelwar/templates/pixelwar/create_community.html:11
+#, python-format
+msgid ""
+"\n"
+"            Choose a name, upload a cover image, and decide whether your community is private or public. Each creation costs %(cost)s Pixo.\n"
+"            "
+msgstr ""
+"เลือกชื่อ อัปโหลดภาพหน้าปก "
+"และตัดสินใจว่าชุมชนของคุณเป็นแบบส่วนตัวหรือสาธารณะ "
+"การสร้างแต่ละครั้งมีค่าใช้จ่าย %(cost)s Pixo"
+
+#: pixelwar/templates/pixelwar/create_community.html:36
+#: pixelwar/templates/pixelwar/create_community.html:39
+msgid "New community name"
+msgstr "ชื่อชุมชนใหม่"
+
+#: pixelwar/templates/pixelwar/create_community.html:46
+msgid "Tell others what this community is about."
+msgstr "บอกคนอื่นว่าชุมชนนี้เกี่ยวกับอะไร"
+
+#: pixelwar/templates/pixelwar/create_community.html:50
+#, fuzzy
+#| msgid "Community details page"
+msgid "Community cover image"
+msgstr "ภาพหน้าปกชุมชน"
 
 #: pixelwar/templates/pixelwar/guide.html:11
 #, fuzzy
 #| msgid "Everything you need to know to play Global Pixel War."
 msgid "Everything you need to know to play Pixo Canvo."
-msgstr "ทุกสิ่งที่คุณจำเป็นต้องรู้เพื่อเล่น Global Pixel War"
+msgstr "ทุกสิ่งที่คุณจำเป็นต้องรู้เพื่อเล่น Pixo Canvo"
 
 #: pixelwar/templates/pixelwar/guide.html:19
 #, fuzzy
 #| msgid ""
 #| "<strong class=\"text-slate-900\">Global Pixel War</strong> is a real-time "
-#| "collaborative canvas. Each registered player can place <strong "
-#| "class=\"text-slate-900\">one pixel every 60 seconds</strong>. Every "
-#| "placement is queued, validated, and then broadcast live via WebSocket to "
-#| "every connected player. Work together — or compete — to claim space on "
-#| "the shared canvas."
+#| "collaborative canvas. Each registered player can place <strong class=\"text-"
+#| "slate-900\">one pixel every 60 seconds</strong>. Every placement is queued, "
+#| "validated, and then broadcast live via WebSocket to every connected player. "
+#| "Work together — or compete — to claim space on the shared canvas."
 msgid ""
 "<strong class=\"text-slate-900\">Pixo Canvo</strong> is a real-time "
 "collaborative canvas. Each registered player can place <strong class=\"text-"
@@ -1518,10 +2245,11 @@ msgid ""
 "validated, and then broadcast live via WebSocket to every connected player. "
 "Work together — or compete — to claim space on the shared canvas."
 msgstr ""
-"<strong class=\"text-slate-900\">Global Pixel War</strong> "
-"เป็นพื้นที่การทำงานร่วมกันแบบเรียลไทม์ ผู้เล่นที่ลงทะเบียนแต่ละคนสามารถวาง <strong "
-"class=\"text-slate-900\">หนึ่งพิกเซลทุกๆ 60 วินาที</strong> ทุกตำแหน่งจะถูกจัดคิว "
-"ตรวจสอบความถูกต้อง จากนั้นถ่ายทอดสดผ่าน WebSocket ไปยังผู้เล่นทุกคนที่เชื่อมต่อ "
+"<strong class=\"text-slate-900\">Pixo Canvo</strong> "
+"เป็นพื้นที่การทำงานร่วมกันแบบเรียลไทม์ ผู้เล่นที่ลงทะเบียนแต่ละคนสามารถวาง "
+"<strong class=\"text-slate-900\">หนึ่งพิกเซลทุกๆ 60 วินาที</strong> "
+"ทุกตำแหน่งจะถูกจัดคิว ตรวจสอบความถูกต้อง จากนั้นถ่ายทอดสดผ่าน WebSocket "
+"ไปยังผู้เล่นทุกคนที่เชื่อมต่อ "
 "ทำงานร่วมกันหรือแข่งขันเพื่ออ้างสิทธิ์ในพื้นที่บนผืนผ้าใบที่ใช้ร่วมกัน"
 
 #: pixelwar/templates/pixelwar/guide.html:31
@@ -1538,8 +2266,9 @@ msgid ""
 "<strong>Custom Color</strong> picker next to the palette for any hex color "
 "you like. Your active selection is highlighted with a ring."
 msgstr ""
-"เลือกจากชุดสี 21 สีที่ด้านบนของหน้า Canvas ใช้ตัวเลือก <strong>สีที่กำหนดเอง</strong> "
-"ถัดจากจานสีสำหรับสีฐานสิบหกที่คุณต้องการ สิ่งที่คุณเลือกอยู่จะถูกเน้นด้วยวงแหวน"
+"เลือกจากชุดสี 21 สีที่ด้านบนของหน้า Canvas ใช้ตัวเลือก "
+"<strong>สีที่กำหนดเอง</strong> ถัดจากจานสีสำหรับสีฐานสิบหกที่คุณต้องการ "
+"สิ่งที่คุณเลือกอยู่จะถูกเน้นด้วยวงแหวน"
 
 #: pixelwar/templates/pixelwar/guide.html:44
 msgid "Zoom and navigate"
@@ -1552,8 +2281,9 @@ msgid ""
 "distraction-free experience. Zoom in before placing to avoid missing your "
 "target cell."
 msgstr ""
-"ใช้ปุ่ม <strong>+</strong> และ <strong>−</strong> เพื่อซูม เลื่อนโดยการเลื่อนหรือลาก ปุ่ม "
-"⛶ เข้าสู่โหมดเต็มหน้าจอเพื่อประสบการณ์ที่ไร้สิ่งรบกวน "
+"ใช้ปุ่ม <strong>+</strong> และ <strong>−</strong> เพื่อซูม "
+"เลื่อนโดยการเลื่อนหรือลาก ปุ่ม ⛶ "
+"เข้าสู่โหมดเต็มหน้าจอเพื่อประสบการณ์ที่ไร้สิ่งรบกวน "
 "ซูมเข้าก่อนวางเพื่อหลีกเลี่ยงไม่ให้เซลล์เป้าหมายหายไป"
 
 #: pixelwar/templates/pixelwar/guide.html:51
@@ -1566,8 +2296,9 @@ msgid ""
 "sent to the server, validated (cooldown, bounds, auth), and if accepted it "
 "appears on every connected player's screen within milliseconds."
 msgstr ""
-"คลิกเซลล์ใดก็ได้บนผืนผ้าใบขณะเลือกสี ตำแหน่งของคุณถูกส่งไปยังเซิร์ฟเวอร์ ได้รับการตรวจสอบแล้ว "
-"(คูลดาวน์ ขอบเขต การรับรองความถูกต้อง) และหากได้รับการยอมรับ "
+"คลิกเซลล์ใดก็ได้บนผืนผ้าใบขณะเลือกสี ตำแหน่งของคุณถูกส่งไปยังเซิร์ฟเวอร์ "
+"ได้รับการตรวจสอบแล้ว (คูลดาวน์ ขอบเขต การรับรองความถูกต้อง) "
+"และหากได้รับการยอมรับ "
 "ตำแหน่งของคุณก็จะถูกส่งไปยังหน้าจอของผู้เล่นที่เชื่อมต่อทุกรายภายในเสี้ยววินาที"
 
 #: pixelwar/templates/pixelwar/guide.html:58
@@ -1580,8 +2311,9 @@ msgid ""
 "before placing again. The status bar shows how long remains. Rejected "
 "attempts do not reset the cooldown."
 msgstr ""
-"หลังจากแต่ละตำแหน่งที่ยอมรับ คุณต้องรอ <strong>60 วินาที</strong> ก่อนที่จะวางอีกครั้ง "
-"แถบสถานะจะแสดงระยะเวลาที่เหลืออยู่ ความพยายามที่ถูกปฏิเสธจะไม่รีเซ็ตคูลดาวน์"
+"หลังจากแต่ละตำแหน่งที่ยอมรับ คุณต้องรอ <strong>60 วินาที</strong> "
+"ก่อนที่จะวางอีกครั้ง แถบสถานะจะแสดงระยะเวลาที่เหลืออยู่ "
+"ความพยายามที่ถูกปฏิเสธจะไม่รีเซ็ตคูลดาวน์"
 
 #: pixelwar/templates/pixelwar/guide.html:65
 msgid "Highlight your pixels"
@@ -1593,7 +2325,7 @@ msgid ""
 "exactly which pixels you own on the current canvas."
 msgstr ""
 "กด <strong>ไฮไลต์พิกเซลของฉัน</strong> "
-"เพื่อหรี่แสงทุกอย่างและดูว่าพิกเซลใดที่คุณเป็นเจ้าของบนผืนผ้าใบปัจจุบัน"
+"เพื่อหรี่แสงทุกสิ่งทุกอย่างและดูว่าพิกเซลใดที่คุณเป็นเจ้าของบนผืนผ้าใบปัจจุบัน"
 
 #: pixelwar/templates/pixelwar/guide.html:75
 msgid "Dynamic canvas size"
@@ -1607,36 +2339,46 @@ msgid ""
 "by a set number of rows and columns, up to a configured maximum. This keeps "
 "the canvas competitive — there is always new space to claim."
 msgstr ""
-"The canvas starts at a fixed size and <strong>automatically grows</strong> "
-"as more pixels are placed. Once 80 %% of cells are filled the grid expands "
-"by a set number of rows and columns, up to a configured maximum. This keeps "
-"the canvas competitive — there is always new space to claim."
+"ผืนผ้าใบเริ่มต้นที่ขนาดคงที่และ<strong>ขยายโดยอัตโนมัติ</strong>เมื่อมีการวางพิกเซลมากขึ้น"
+" เมื่อเซลล์เต็ม 80 %% ตารางจะขยายตามจำนวนแถวและคอลัมน์ที่กำหนด "
+"จนถึงค่าสูงสุดที่กำหนดค่าไว้ สิ่งนี้ทำให้ผืนผ้าใบสามารถแข่งขันได้ — "
+"มีพื้นที่ใหม่ให้อ้างสิทธิ์อยู่เสมอ"
 
 #: pixelwar/templates/pixelwar/guide.html:93
 #, python-format
 msgid ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"Beyond the global canvas you can play inside <strong>private "
+"communities</strong>. Each community has its own independent canvas, "
+"leaderboard, and chat room. Go to the <a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-amber-800\">Communities</a> "
+"page to manage yours."
 msgstr ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"นอกเหนือจากผืนผ้าใบระดับโลก "
+"คุณสามารถเล่นภายใน<strong>ชุมชนส่วนตัว</strong>ได้ แต่ละชุมชนมีผืนผ้าใบ "
+"กระดานผู้นำ และห้องสนทนาแยกกัน ไปที่หน้า<a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-"
+"amber-800\">ชุมชน</a>เพื่อจัดการชุมชนของคุณ"
 
 #: pixelwar/templates/pixelwar/guide.html:102
 msgid "Creating a community"
 msgstr "การสร้างชุมชน"
 
 #: pixelwar/templates/pixelwar/guide.html:103
+#, fuzzy
+#| msgid ""
+#| "Any logged-in user can create <strong>one community</strong>. Enter a name "
+#| "and click <em>Create community</em>. A URL-friendly slug is generated "
+#| "automatically. You become the owner and are added as the first member."
 msgid ""
-"Any logged-in user can create <strong>one community</strong>. Enter a name "
-"and click <em>Create community</em>. A URL-friendly slug is generated "
-"automatically. You become the owner and are added as the first member."
+"Any logged-in user can create communities without a hard limit. Each new "
+"community costs <strong>60 Pixo</strong>. Enter a name and click <em>Create "
+"community</em>. A URL-friendly slug is generated automatically. You become "
+"the owner and are added as the first member."
 msgstr ""
-"ผู้ใช้ที่เข้าสู่ระบบสามารถสร้าง <strong>หนึ่งชุมชน</strong> ได้ ป้อนชื่อและคลิก <em>สร้างชุมชน</"
-"em> Slug ที่เป็นมิตรกับ URL จะถูกสร้างขึ้นโดยอัตโนมัติ คุณเป็นเจ้าของและถูกเพิ่มเป็นสมาชิกคนแรก"
+"ผู้ใช้ที่เข้าสู่ระบบสามารถสร้างชุมชนได้โดยไม่มีขีดจำกัด "
+"แต่ละชุมชนใหม่มีค่าใช้จ่าย <strong>60 Pixo</strong> ป้อนชื่อและคลิก "
+"<em>สร้างชุมชน</em> Slug ที่เป็นมิตรกับ URL จะถูกสร้างขึ้นโดยอัตโนมัติ "
+"คุณเป็นเจ้าของและถูกเพิ่มเป็นสมาชิกคนแรก"
 
 #: pixelwar/templates/pixelwar/guide.html:109
 msgid "Inviting members"
@@ -1648,7 +2390,8 @@ msgid ""
 "shareable URL. Anyone who opens that link and is logged in will be added to "
 "the community immediately."
 msgstr ""
-"คลิก <em>ลิงก์คำเชิญ</em> บนการ์ดชุมชนใดก็ได้เพื่อเปิดป๊อปอัปที่มี URL ที่สามารถแชร์ได้ "
+"คลิก <em>ลิงก์คำเชิญ</em> บนการ์ดชุมชนใดก็ได้เพื่อเปิดป๊อปอัปพร้อม URL "
+"ที่สามารถแชร์ได้ "
 "ใครก็ตามที่เปิดลิงก์นั้นและเข้าสู่ระบบจะถูกเพิ่มเข้าสู่ชุมชนทันที"
 
 #: pixelwar/templates/pixelwar/guide.html:116
@@ -1661,8 +2404,8 @@ msgid ""
 "community</em> and confirm. The owner cannot leave — they must delete the "
 "community instead."
 msgstr ""
-"สมาชิกสามารถออกจากชุมชนที่พวกเขาไม่ได้สร้างขึ้นได้ คลิก <em>ออกจากชุมชน</em> และยืนยัน "
-"เจ้าของไม่สามารถออกไปได้ — พวกเขาต้องลบชุมชนแทน"
+"สมาชิกสามารถออกจากชุมชนที่พวกเขาไม่ได้สร้างขึ้นได้ คลิก <em>ออกจากชุมชน</em>"
+" และยืนยัน เจ้าของไม่สามารถออกไปได้ — พวกเขาต้องลบชุมชนแทน"
 
 #: pixelwar/templates/pixelwar/guide.html:123
 msgid "Deleting a community"
@@ -1675,8 +2418,8 @@ msgid ""
 "messages, and membership records — it cannot be undone."
 msgstr ""
 "มีเพียงเจ้าของเท่านั้นที่สามารถลบชุมชนได้ คลิก <em>ลบชุมชน</em> และยืนยัน "
-"การดำเนินการนี้จะลบชุมชน พิกเซล ข้อความแชท และบันทึกการเป็นสมาชิกทั้งหมดอย่างถาวร "
-"ซึ่งไม่สามารถยกเลิกได้"
+"การดำเนินการนี้จะลบชุมชน พิกเซล ข้อความแชท "
+"และบันทึกการเป็นสมาชิกทั้งหมดอย่างถาวร ซึ่งไม่สามารถยกเลิกได้"
 
 #: pixelwar/templates/pixelwar/guide.html:130
 msgid "Community details page"
@@ -1688,36 +2431,32 @@ msgid ""
 "showing: community info, a live canvas preview (click to enlarge), and a "
 "sortable member table with each member's join date and pixel count."
 msgstr ""
-"คลิก <em>รายละเอียดชุมชน</em> บนการ์ดใดก็ได้เพื่อเปิดหน้าเว็บเฉพาะที่แสดงข้อมูลชุมชน "
-"การแสดงตัวอย่าง Canvas แบบสด (คลิกเพื่อขยาย) "
+"คลิก <em>รายละเอียดชุมชน</em> บนการ์ดใดๆ เพื่อเปิดหน้าเว็บเฉพาะที่แสดง: "
+"ข้อมูลชุมชน การแสดงตัวอย่างผ้าใบสด (คลิกเพื่อขยาย) "
 "และตารางสมาชิกที่จัดเรียงได้พร้อมวันที่เข้าร่วมและจำนวนพิกเซลของสมาชิกแต่ละคน"
 
 #: pixelwar/templates/pixelwar/guide.html:140
 msgid "Leaderboard & chat"
 msgstr "ลีดเดอร์บอร์ดและการแชท"
 
-#: pixelwar/templates/pixelwar/guide.html:146
-#: pixelwar/templates/pixelwar/leaders.html:4
-msgid "Ranking"
-msgstr ""
-
 #: pixelwar/templates/pixelwar/guide.html:147
 #, fuzzy, python-format
 #| msgid ""
 #| "The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by "
-#| "the number of accepted pixels currently on the canvas. The list is "
-#| "available for the global canvas and for each community you belong to."
+#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the"
+#| " number of accepted pixels currently on the canvas. The list is available "
+#| "for the global canvas and for each community you belong to."
 msgid ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Ranking</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-emerald-800\">Ranking</a> page ranks every contributor by the "
+"number of accepted pixels currently on the canvas. The list is available for"
+" the global canvas and for each community you belong to."
 msgstr ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"หน้า<a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-"
+"emerald-800\">การจัดอันดับ</a>จะจัดอันดับผู้ร่วมให้ข้อมูลทุกคนตามจำนวนพิกเซลที่ยอมรับในปัจจุบันบนผืนผ้าใบ"
+" "
+"รายการนี้พร้อมใช้งานสำหรับผืนผ้าใบระดับโลกและสำหรับแต่ละชุมชนที่คุณเป็นสมาชิก"
 
 #: pixelwar/templates/pixelwar/guide.html:153
 msgid "Live chat"
@@ -1731,8 +2470,8 @@ msgid ""
 "visible in another."
 msgstr ""
 "แคนวาสแต่ละอันมีแถบด้านข้างแชทสด สลับโดยใช้ปุ่มลอยที่มุมขวาล่าง "
-"ผู้ใช้ที่เข้าสู่ระบบสามารถส่งข้อความได้ ทุกคนสามารถอ่านได้ การแชทในชุมชนมีขอบเขต — "
-"ข้อความในชุมชนหนึ่งไม่สามารถมองเห็นได้ในชุมชนอื่น"
+"ผู้ใช้ที่เข้าสู่ระบบสามารถส่งข้อความได้ ทุกคนสามารถอ่านได้ "
+"การแชทในชุมชนมีขอบเขต — ข้อความในชุมชนหนึ่งไม่สามารถมองเห็นได้ในชุมชนอื่น"
 
 #: pixelwar/templates/pixelwar/guide.html:162
 msgid "Your account"
@@ -1742,15 +2481,17 @@ msgstr "บัญชีของคุณ"
 msgid ""
 "Click your <strong>avatar</strong> in the top navigation to open Profile "
 "Settings."
-msgstr "คลิก <strong>avatar</strong> ของคุณในการนำทางด้านบนเพื่อเปิดการตั้งค่าโปรไฟล์"
+msgstr ""
+"คลิก<strong>อวตาร</strong>ของคุณในการนำทางด้านบนเพื่อเปิดการตั้งค่าโปรไฟล์"
 
 #: pixelwar/templates/pixelwar/guide.html:165
 msgid ""
-"Change your <strong>username</strong>, upload a custom <strong>avatar</"
-"strong>, or update your <strong>password</strong> at any time."
+"Change your <strong>username</strong>, upload a custom "
+"<strong>avatar</strong>, or update your <strong>password</strong> at any "
+"time."
 msgstr ""
-"เปลี่ยน <strong>ชื่อผู้ใช้</strong> ของคุณ อัปโหลด <strong>avatar</strong> ที่กำหนดเอง "
-"หรืออัปเดต <strong>รหัสผ่าน</strong> ของคุณได้ตลอดเวลา"
+"เปลี่ยน <strong>ชื่อผู้ใช้</strong> ของคุณ อัปโหลด <strong>อวตาร</strong> "
+"ที่กำหนดเอง หรืออัปเดต <strong>รหัสผ่าน</strong> ของคุณได้ตลอดเวลา"
 
 #: pixelwar/templates/pixelwar/guide.html:166
 msgid ""
@@ -1759,17 +2500,18 @@ msgid ""
 msgstr "คุณต้องเข้าสู่ระบบเพื่อวางพิกเซล ส่งข้อความแชท สร้างหรือเข้าร่วมชุมชน"
 
 #: pixelwar/templates/pixelwar/guide.html:172
-#: users/templates/users/login.html:54 users/templates/users/register.html:14
+#: users/templates/users/login.html:58 users/templates/users/register.html:9
 msgid "Create account"
 msgstr "สร้างบัญชี"
 
 #: pixelwar/templates/pixelwar/guide.html:176
-#: users/templates/users/register.html:72
+#: users/templates/users/register.html:60
 msgid "Log in"
 msgstr "เข้าสู่ระบบ"
 
 #: pixelwar/templates/pixelwar/guide.html:185
-#: pixelwar/templates/pixelwar/leaders.html:77
+#: pixelwar/templates/pixelwar/leaders_partial.html:54
+#: users/templates/users/activation_success.html:27
 msgid "Go to Canvas"
 msgstr "ไปที่แคนวาส"
 
@@ -1803,18 +2545,22 @@ msgid "Maybe later"
 msgstr "อาจจะในภายหลัง"
 
 #: pixelwar/templates/pixelwar/invitation.html:49
-msgid "You need an account to join. Accepting will take you to register/login."
-msgstr "คุณต้องมีบัญชีเพื่อเข้าร่วม การยอมรับจะนำคุณไปสู่การลงทะเบียน/เข้าสู่ระบบ"
+msgid ""
+"You need an account to join. Accepting will take you to register/login."
+msgstr ""
+"คุณต้องมีบัญชีเพื่อเข้าร่วม การยอมรับจะนำคุณไปสู่การลงทะเบียน/เข้าสู่ระบบ"
 
 #: pixelwar/templates/pixelwar/invitation.html:59
 msgid "Login or register required"
-msgstr ""
+msgstr "ต้องเข้าสู่ระบบหรือลงทะเบียน"
 
 #: pixelwar/templates/pixelwar/invitation.html:61
 msgid ""
 "To join this community, please login or create an account. After that, open "
 "this invitation link again and accept."
 msgstr ""
+"หากต้องการเข้าร่วมชุมชนนี้ กรุณาเข้าสู่ระบบหรือสร้างบัญชี หลังจากนั้น "
+"ให้เปิดลิงก์คำเชิญนี้อีกครั้งและยอมรับ"
 
 #: pixelwar/templates/pixelwar/leaders.html:9
 msgid "Top Players"
@@ -1824,47 +2570,373 @@ msgstr "ผู้เล่นชั้นนำ"
 msgid "Ranked by accepted pixel placements on the shared canvas."
 msgstr "จัดอันดับตามตำแหน่งพิกเซลที่ยอมรับบนผืนผ้าใบที่ใช้ร่วมกัน"
 
-#: pixelwar/templates/pixelwar/leaders.html:17
+#: pixelwar/templates/pixelwar/leaders.html:22
 msgid "Global"
 msgstr "ทั่วโลก"
 
-#: pixelwar/templates/pixelwar/leaders.html:31
+#: pixelwar/templates/pixelwar/leaders_partial.html:5
 msgid "Player"
 msgstr "ผู้เล่น"
 
-#: pixelwar/templates/pixelwar/leaders.html:32
+#: pixelwar/templates/pixelwar/leaders_partial.html:6
 msgid "Pixels placed"
 msgstr "วางพิกเซลแล้ว"
 
-#: pixelwar/templates/pixelwar/leaders.html:74
+#: pixelwar/templates/pixelwar/leaders_partial.html:51
 msgid "No ranked players yet."
 msgstr "ยังไม่มีผู้เล่นติดอันดับ"
 
-#: pixelwar/templates/pixelwar/leaders.html:75
+#: pixelwar/templates/pixelwar/leaders_partial.html:52
 msgid "Start drawing to become the first legend."
 msgstr "เริ่มวาดเพื่อเป็นตำนานคนแรก"
 
-#: users/templates/users/login.html:14
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:43
+msgid "Latest 10 updates"
+msgstr "อัพเดตล่าสุด 10 รายการ"
+
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:65
+msgid "View all"
+msgstr "ดูทั้งหมด"
+
+#: users/email_service.py:76
+#: users/templates/users/emails/account_activation.html:7
+#, fuzzy
+#| msgid "Your account"
+msgid "Activate your account"
+msgstr "เปิดใช้งานบัญชีของคุณ"
+
+#: users/email_service.py:177
+#: users/templates/users/emails/password_reset.html:7
+#, fuzzy
+#| msgid "New password"
+msgid "Reset your password"
+msgstr "รีเซ็ตรหัสผ่านของคุณ"
+
+#: users/email_service.py:282
+#: users/templates/users/emails/email_verify_change.html:7
+msgid "Verify your new email address"
+msgstr "ยืนยันที่อยู่อีเมลใหม่ของคุณ"
+
+#: users/email_service.py:339
+#, python-format
+msgid "New Contact Us message: %(subject)s"
+msgstr "ใหม่ข้อความติดต่อเรา: %(subject)s"
+
+#: users/templates/users/activation_success.html:4
+msgid "Email Activated"
+msgstr "เปิดใช้งานอีเมลแล้ว"
+
+#: users/templates/users/activation_success.html:18
+msgid "Email Successfully Activated"
+msgstr "เปิดใช้งานอีเมลสำเร็จแล้ว"
+
+#: users/templates/users/activation_success.html:21
+msgid ""
+"Your account is now verified and ready to use. You can continue to the app "
+"and start placing pixels, joining communities, and competing on the ranking."
+msgstr ""
+"บัญชีของคุณได้รับการยืนยันแล้วและพร้อมใช้งาน "
+"คุณสามารถไปที่แอปต่อไปและเริ่มวางพิกเซล เข้าร่วมชุมชน "
+"และแข่งขันเพื่อจัดอันดับ"
+
+#: users/templates/users/contact_us.html:13
+msgid "Share your question, issue, or feedback. Everyone can contact us."
+msgstr "แบ่งปันคำถาม ปัญหา หรือข้อเสนอแนะของคุณ ทุกคนสามารถติดต่อเราได้"
+
+#: users/templates/users/contact_us.html:41
+msgid "Signed-in contact details"
+msgstr "รายละเอียดการติดต่อที่ลงชื่อเข้าใช้"
+
+#: users/templates/users/contact_us.html:43
+#, python-format
+msgid ""
+"\n"
+"                            Your message will be sent using your account details: %(name)s (%(email)s).\n"
+"                        "
+msgstr ""
+"ข้อความของคุณจะถูกส่งโดยใช้รายละเอียดบัญชีของคุณ: %(name)s (%(email)s)"
+
+#: users/templates/users/contact_us.html:53
+#: users/templates/users/emails/contact_us_notification.html:45
+#: users/templates/users/emails/contact_us_notification.txt:5
+msgid "Name"
+msgstr "ชื่อ"
+
+#: users/templates/users/contact_us.html:74
+#: users/templates/users/emails/contact_us_notification.html:53
+#: users/templates/users/emails/contact_us_notification.txt:7
+msgid "Subject"
+msgstr "เรื่อง"
+
+#: users/templates/users/contact_us.html:93
+msgid ""
+"For security reasons, code-like markup and scripts are blocked in this form."
+msgstr ""
+"เพื่อเหตุผลด้านความปลอดภัย "
+"มาร์กอัปและสคริปต์ที่มีลักษณะคล้ายโค้ดจะถูกบล็อกในแบบฟอร์มนี้"
+
+#: users/templates/users/contact_us.html:98
+msgid "Send message"
+msgstr "ส่งข้อความ"
+
+#: users/templates/users/contact_us.html:108
+msgid "Your Tickets"
+msgstr "ตั๋วของคุณ"
+
+#: users/templates/users/contact_us.html:111
+msgid "Open any ticket card to see the full message you sent."
+msgstr "เปิดบัตรตั๋วเพื่อดูข้อความทั้งหมดที่คุณส่ง"
+
+#: users/templates/users/contact_us.html:115
+msgid "tickets"
+msgstr "ตั๋ว"
+
+#: users/templates/users/contact_us.html:167
+#: users/templates/users/emails/contact_us_notification.html:57
+#: users/templates/users/emails/contact_us_notification.txt:8
+msgid "Status"
+msgstr "สถานะ"
+
+#: users/templates/users/contact_us.html:181
+msgid "Full message"
+msgstr "ข้อความเต็ม"
+
+#: users/templates/users/emails/account_activation.html:33
+#: users/templates/users/emails/account_activation.txt:2
+#: users/templates/users/emails/email_verify_change.html:33
+#: users/templates/users/emails/email_verify_change.txt:2
+#: users/templates/users/emails/password_reset.html:33
+#: users/templates/users/emails/password_reset.txt:2
+#, python-format
+msgid "Hello %(username)s,"
+msgstr "สวัสดี %(username)s"
+
+#: users/templates/users/emails/account_activation.html:36
+#: users/templates/users/emails/account_activation.txt:4
+msgid ""
+"Thanks for registering. Please confirm your email address to activate your "
+"account."
+msgstr ""
+"ขอบคุณสำหรับการลงทะเบียน "
+"โปรดยืนยันที่อยู่อีเมลของคุณเพื่อเปิดใช้งานบัญชีของคุณ"
+
+#: users/templates/users/emails/account_activation.html:40
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account"
+msgstr "เปิดใช้งานบัญชี"
+
+#: users/templates/users/emails/account_activation.html:44
+#: users/templates/users/emails/account_activation.txt:9
+#: users/templates/users/emails/email_verify_change.html:47
+#: users/templates/users/emails/email_verify_change.txt:11
+#, python-format
+msgid "This link expires in %(hours)s hours."
+msgstr "ลิงก์นี้จะหมดอายุใน %(hours)s ชั่วโมง"
+
+#: users/templates/users/emails/account_activation.html:53
+#: users/templates/users/emails/email_verify_change.html:56
+#: users/templates/users/emails/password_reset.html:53
+msgid ""
+"If the button does not work, copy and paste this link into your browser:"
+msgstr "หากปุ่มไม่ทำงาน ให้คัดลอกและวางลิงก์นี้ในเบราว์เซอร์ของคุณ:"
+
+#: users/templates/users/emails/account_activation.html:63
+msgid "Built with bright pixels and bold colors."
+msgstr "สร้างด้วยพิกเซลที่สว่างและสีสันที่โดดเด่น"
+
+#: users/templates/users/emails/account_activation.txt:6
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account:"
+msgstr "เปิดใช้งานบัญชี:"
+
+#: users/templates/users/emails/contact_us_notification.html:7
+msgid "New Contact Us message"
+msgstr "ข้อความติดต่อเราใหม่"
+
+#: users/templates/users/emails/contact_us_notification.html:33
+#: users/templates/users/emails/contact_us_notification.txt:2
+msgid "New Contact Us submission"
+msgstr "ใหม่ ติดต่อเรา ส่ง"
+
+#: users/templates/users/emails/contact_us_notification.html:36
+msgid "A new message was submitted from the Contact Us page."
+msgstr "มีการส่งข้อความใหม่จากหน้าติดต่อเรา"
+
+#: users/templates/users/emails/contact_us_notification.html:41
+#: users/templates/users/emails/contact_us_notification.txt:4
+msgid "Message ID"
+msgstr "รหัสข้อความ"
+
+#: users/templates/users/emails/contact_us_notification.html:61
+#: users/templates/users/emails/contact_us_notification.txt:9
+msgid "Submitted at"
+msgstr "ส่งได้ที่"
+
+#: users/templates/users/emails/email_verify_change.html:36
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the button below to complete the update."
+msgstr ""
+"คุณขอเปลี่ยนที่อยู่อีเมลของคุณ "
+"โปรดยืนยันอีเมลใหม่ของคุณโดยคลิกปุ่มด้านล่างเพื่อดำเนินการอัปเดตให้เสร็จสิ้น"
+
+#: users/templates/users/emails/email_verify_change.html:39
+#: users/templates/users/emails/email_verify_change.txt:6
+msgid "New email:"
+msgstr "อีเมลใหม่:"
+
+#: users/templates/users/emails/email_verify_change.html:43
+msgid "Verify email address"
+msgstr "ยืนยันที่อยู่อีเมล"
+
+#: users/templates/users/emails/email_verify_change.html:66
+#: users/templates/users/emails/email_verify_change.txt:13
+msgid "This is an automated email. Please do not reply to this message."
+msgstr "นี่คืออีเมลอัตโนมัติ กรุณาอย่าตอบกลับข้อความนี้"
+
+#: users/templates/users/emails/email_verify_change.txt:4
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the link below to complete the update."
+msgstr ""
+"คุณขอเปลี่ยนที่อยู่อีเมลของคุณ "
+"โปรดยืนยันอีเมลใหม่ของคุณโดยคลิกลิงก์ด้านล่างเพื่อดำเนินการอัปเดตให้เสร็จสิ้น"
+
+#: users/templates/users/emails/email_verify_change.txt:8
+msgid "Verify email address:"
+msgstr "ยืนยันที่อยู่อีเมล:"
+
+#: users/templates/users/emails/password_reset.html:36
+msgid ""
+"You requested to reset your password. Click the button below to set a new "
+"one."
+msgstr "คุณขอรีเซ็ตรหัสผ่านของคุณ คลิกปุ่มด้านล่างเพื่อตั้งค่าใหม่"
+
+#: users/templates/users/emails/password_reset.html:40
+#, fuzzy
+#| msgid "New password"
+msgid "Reset password"
+msgstr "รีเซ็ตรหัสผ่าน"
+
+#: users/templates/users/emails/password_reset.html:44
+#: users/templates/users/emails/password_reset.txt:7
+#, python-format
+msgid "This link expires in %(minutes)s minutes."
+msgstr "ลิงก์นี้จะหมดอายุใน %(minutes)s นาที"
+
+#: users/templates/users/emails/password_reset.txt:4
+msgid "You requested to reset your password. Use this link to set a new one:"
+msgstr "คุณขอรีเซ็ตรหัสผ่านของคุณ ใช้ลิงค์นี้เพื่อตั้งค่าใหม่:"
+
+#: users/templates/users/forgot_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Forgot Password"
+msgstr "ลืมรหัสผ่าน"
+
+#: users/templates/users/forgot_password.html:9
+msgid "Forgot your password?"
+msgstr "ลืมรหัสผ่าน?"
+
+#: users/templates/users/forgot_password.html:11
+msgid ""
+"Enter your username or email. We will send you a reset link valid for 30 "
+"minutes."
+msgstr ""
+"กรอกชื่อผู้ใช้หรืออีเมลของคุณ เราจะส่งลิงก์รีเซ็ตที่ถูกต้องให้คุณภายใน 30 "
+"นาที"
+
+#: users/templates/users/forgot_password.html:23
+#: users/templates/users/login.html:33
+#, fuzzy
+#| msgid "Username"
+msgid "Username or email"
+msgstr "ชื่อผู้ใช้หรืออีเมล"
+
+#: users/templates/users/forgot_password.html:29
+msgid "Send reset link"
+msgstr "ส่งลิงค์รีเซ็ต"
+
+#: users/templates/users/forgot_password.html:37
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Back to login"
+msgstr "กลับสู่การเข้าสู่ระบบ"
+
+#: users/templates/users/login.html:9
 msgid "Welcome back"
 msgstr "ยินดีต้อนรับกลับมา"
 
-#: users/templates/users/login.html:15
+#: users/templates/users/login.html:10
 msgid "Sign in to place pixels and join the battle."
 msgstr "ลงชื่อเข้าใช้เพื่อวางพิกเซลและเข้าร่วมการต่อสู้"
 
-#: users/templates/users/login.html:36
-#: users/templates/users/profile_settings.html:48
-#: users/templates/users/register.html:36
-msgid "Username"
-msgstr "ชื่อผู้ใช้"
-
-#: users/templates/users/login.html:42 users/templates/users/register.html:48
+#: users/templates/users/login.html:39 users/templates/users/register.html:36
+#: users/templates/users/reset_password.html:21
 msgid "Password"
 msgstr "รหัสผ่าน"
 
-#: users/templates/users/login.html:53
+#: users/templates/users/login.html:52
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Forgot password?"
+msgstr "ลืมรหัสผ่าน?"
+
+#: users/templates/users/login.html:57
 msgid "New here?"
 msgstr "ใหม่ที่นี่?"
+
+#: users/templates/users/partials/activation_email_panel.html:18
+msgid "Send activation email"
+msgstr "ส่งอีเมลเปิดใช้งาน"
+
+#: users/templates/users/partials/pending_email_panel.html:7
+msgid "Email verification pending"
+msgstr "การยืนยันอีเมลอยู่ระหว่างดำเนินการ"
+
+#: users/templates/users/partials/pending_email_panel.html:10
+#, python-format
+msgid ""
+"\n"
+"                        We sent a verification email to <strong>%(email)s</strong>.\n"
+"                        Please verify your new email address to complete the update.\n"
+"                    "
+msgstr ""
+"เราได้ส่งอีเมลยืนยันไปที่ <strong>%(email)s</strong>\n"
+"                        โปรดยืนยันที่อยู่อีเมลใหม่ของคุณเพื่อดำเนินการอัปเดตให้เสร็จสมบูรณ์"
+
+#: users/templates/users/partials/pending_email_panel.html:16
+msgid "Check your spam folder if you don't see the email."
+msgstr "ตรวจสอบโฟลเดอร์สแปมของคุณหากคุณไม่เห็นอีเมล"
+
+#: users/templates/users/partials/pending_email_panel.html:22
+msgid "Cancel the email change? Your current email will stay unchanged."
+msgstr "ยกเลิกการเปลี่ยนอีเมล์? อีเมลปัจจุบันของคุณจะไม่เปลี่ยนแปลง"
+
+#: users/templates/users/partials/profile_avatar_card.html:32
+msgid "Upload avatar"
+msgstr "อัพโหลดรูปประจำตัว"
+
+#: users/templates/users/partials/profile_avatar_card.html:41
+msgid "Signed in as"
+msgstr "ลงชื่อเข้าใช้เป็น"
+
+#: users/templates/users/partials/profile_avatar_card.html:43
+msgid "Click + icon to upload instantly"
+msgstr "คลิกไอคอน + เพื่ออัปโหลดทันที"
+
+#: users/templates/users/partials/profile_avatar_card.html:49
+#: users/templates/users/partials/profile_avatar_card.html:54
+msgid "Logout"
+msgstr "ออกจากระบบ"
+
+#: users/templates/users/partials/profile_avatar_card.html:59
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Avatar updated."
+msgstr "อัปเดตอวาตาร์แล้ว"
 
 #: users/templates/users/profile_settings.html:4
 #: users/templates/users/profile_settings.html:9
@@ -1875,50 +2947,120 @@ msgstr "การตั้งค่าโปรไฟล์"
 msgid "Update your account details, avatar, and password."
 msgstr "อัปเดตรายละเอียดบัญชี อวตาร และรหัสผ่านของคุณ"
 
-#: users/templates/users/profile_settings.html:54
-#: users/templates/users/register.html:42
-msgid "Email"
-msgstr "อีเมล"
+#: users/templates/users/profile_settings.html:18
+msgid "Referral Program"
+msgstr "โปรแกรมการอ้างอิง"
 
-#: users/templates/users/profile_settings.html:60
-msgid "Avatar image"
-msgstr "รูปภาพประจำตัว"
+#: users/templates/users/profile_settings.html:19
+msgid ""
+"Share your personal referral link. You earn 5 Pixo when a referred user "
+"reaches 10 accepted pixels."
+msgstr ""
+"แชร์ลิงก์การแนะนำส่วนตัวของคุณ คุณจะได้รับ 5 Pixo "
+"เมื่อผู้ใช้ที่ได้รับการแนะนำมีพิกเซลที่ยอมรับถึง 10 พิกเซล"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:25
+#, fuzzy
+#| msgid "Copy URL"
+msgid "Copy"
+msgstr "สำเนา"
+
+#: users/templates/users/profile_settings.html:56
+msgid "General details"
+msgstr "รายละเอียดทั่วไป"
+
+#: users/templates/users/profile_settings.html:58
+#: users/templates/users/register.html:25
+msgid "Username"
+msgstr "ชื่อผู้ใช้"
+
+#: users/templates/users/profile_settings.html:63
+#: users/templates/users/register.html:20
+msgid "Full Name"
+msgstr "ชื่อเต็ม"
+
+#: users/templates/users/profile_settings.html:75
+#: users/templates/users/reset_password.html:33
 msgid "Change password"
 msgstr "เปลี่ยนรหัสผ่าน"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:75
 msgid "optional"
 msgstr "ไม่จำเป็น"
 
-#: users/templates/users/profile_settings.html:69
+#: users/templates/users/profile_settings.html:77
 msgid "New password"
 msgstr "รหัสผ่านใหม่"
 
-#: users/templates/users/profile_settings.html:74
+#: users/templates/users/profile_settings.html:82
 msgid "Confirm new password"
 msgstr "ยืนยันรหัสผ่านใหม่"
 
-#: users/templates/users/profile_settings.html:83
+#: users/templates/users/profile_settings.html:91
 msgid "Save changes"
 msgstr "บันทึกการเปลี่ยนแปลง"
 
-#: users/templates/users/register.html:15
-msgid "Email is required. Avatar is optional."
-msgstr "จำเป็นต้องระบุอีเมล อวตารเป็นทางเลือก"
+#: users/templates/users/register.html:10
+#, fuzzy
+#| msgid "Email is required. Avatar is optional."
+msgid "Email and Full Name are optional. Avatar is optional."
+msgstr "อีเมลและชื่อเต็มเป็นทางเลือก อวตารเป็นทางเลือก"
 
-#: users/templates/users/register.html:54
+#: users/templates/users/register.html:42
+#: users/templates/users/reset_password.html:27
 msgid "Confirm password"
 msgstr "ยืนยันรหัสผ่าน"
 
-#: users/templates/users/register.html:60
+#: users/templates/users/register.html:48
 msgid "Avatar image (optional)"
 msgstr "รูปภาพประจำตัว (ไม่จำเป็น)"
 
-#: users/templates/users/register.html:71
+#: users/templates/users/register.html:59
 msgid "Already have an account?"
 msgstr "มีบัญชีอยู่แล้ว?"
+
+#: users/templates/users/reset_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Reset Password"
+msgstr "รีเซ็ตรหัสผ่าน"
+
+#: users/templates/users/reset_password.html:9
+#, fuzzy
+#| msgid "New password"
+msgid "Set a new password"
+msgstr "ตั้งรหัสผ่านใหม่"
+
+#: users/templates/users/reset_password.html:10
+msgid "Enter your new password and confirm it."
+msgstr "ป้อนรหัสผ่านใหม่ของคุณและยืนยัน"
+
+#: users/views.py:340
+msgid "Referral link is invalid."
+msgstr "ลิงก์ผู้อ้างอิงไม่ถูกต้อง"
+
+#: users/views.py:349
+msgid "Self-referral is not allowed."
+msgstr "ไม่อนุญาตให้อ้างอิงตัวเอง"
+
+#: users/views.py:362
+msgid "Referral was registered."
+msgstr "ลงทะเบียนผู้อ้างอิงแล้ว"
+
+#~ msgid "Top"
+#~ msgstr "อันดับสูงสุด"
+
+#~ msgid "Players"
+#~ msgstr "ผู้เล่น"
+
+#~ msgid "Guide"
+#~ msgstr "คู่มือ"
+
+#~ msgid "Language"
+#~ msgstr "ภาษา"
+
+#~ msgid "You already own a community, so you cannot create another one."
+#~ msgstr "คุณเป็นเจ้าของชุมชนอยู่แล้ว ดังนั้นคุณจึงไม่สามารถสร้างชุมชนใหม่ได้"
 
 #~ msgid "How It Works"
 #~ msgstr "วิธีการทำงาน"

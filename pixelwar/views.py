@@ -1,4 +1,4 @@
-import json
+﻿import json
 import math
 import re
 import uuid
@@ -11,11 +11,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.core import signing
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Count, Max, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse, translate_url
+from django.urls import reverse_lazy, translate_url
 from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
@@ -37,11 +37,29 @@ from channels.layers import get_channel_layer
 from .kafka_producer import enqueue_chat_message, enqueue_pixel_update
 from .models import ChatMessage, Community, CommunityJoinRequest
 from .models import CommunityMembership, Pixel, UserAction
+from .models import compact_legacy_invite_uuid, generate_community_invite_token
 
-HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
-COMMUNITY_CREATION_PIXO_COST = 60
-REFERRAL_TOKEN_SALT = "pixelwar.referral.v1"
-REFERRAL_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24 * 365
+HEX_COLOR_RE = re.compile(
+    getattr(settings, "PIXEL_HEX_COLOR_REGEX", r"^#[0-9a-fA-F]{6}$")
+)
+COMMUNITY_CREATION_PIXO_COST = int(
+    getattr(settings, "COMMUNITY_CREATION_PIXO_COST", 60)
+)
+REFERRAL_TOKEN_SALT = getattr(
+    settings,
+    "COMMUNITY_REFERRAL_TOKEN_SALT",
+    "pixelwar.referral.v1",
+)
+REFERRAL_TOKEN_MAX_AGE_SECONDS = int(
+    getattr(
+        settings,
+        "COMMUNITY_REFERRAL_TOKEN_MAX_AGE_SECONDS",
+        60 * 60 * 24 * 365,
+    )
+)
+INVITE_TOKEN_RE = re.compile(
+    getattr(settings, "COMMUNITY_INVITE_TOKEN_REGEX", r"^[A-Za-z0-9_-]{12,22}$")
+)
 
 
 def _channel_group_send(group: str, message: dict) -> None:
@@ -52,14 +70,14 @@ def _channel_group_send(group: str, message: dict) -> None:
 @require_GET
 def switch_language(request: HttpRequest) -> HttpResponse:
     lang = str(request.GET.get("lang", "")).strip().lower()
-    next_url = str(request.GET.get("next_url", "/")).strip()
+    next_url = str(request.GET.get("next_url", reverse_lazy("index"))).strip()
     supported = {
         str(code).lower() for code, _name in getattr(settings, "LANGUAGES", [])
     }
     if lang not in supported:
         lang = str(getattr(settings, "LANGUAGE_CODE", "en")).split("-")[0]
 
-    target = "/"
+    target = str(reverse_lazy("index"))
     if next_url and url_has_allowed_host_and_scheme(
         url=next_url,
         allowed_hosts={request.get_host()},
@@ -83,6 +101,22 @@ def switch_language(request: HttpRequest) -> HttpResponse:
     return response
 
 
+def custom_404(request: HttpRequest, exception) -> HttpResponse:
+    return render(request, "errors/404.html", status=404)
+
+
+def custom_500(request: HttpRequest) -> HttpResponse:
+    return render(request, "errors/500.html", status=500)
+
+
+def preview_404(request: HttpRequest) -> HttpResponse:
+    return render(request, "errors/404.html", status=404)
+
+
+def preview_500(request: HttpRequest) -> HttpResponse:
+    return render(request, "errors/500.html", status=500)
+
+
 def _avatar_url_for_request_user(request: HttpRequest) -> str:
     if not request.user.is_authenticated:
         return ""
@@ -102,10 +136,10 @@ def _avatar_url_from_profile(profile) -> str:
 
 def _community_urls(community: Community | None) -> dict:
     return {
-        "canvas_url": "/",
-        "leaders_url": "/leaders/",
-        "guide_url": "/guide/",
-        "communities_url": "/communities/",
+        "canvas_url": reverse_lazy("index"),
+        "leaders_url": reverse_lazy("leaders"),
+        "guide_url": reverse_lazy("guide"),
+        "communities_url": reverse_lazy("communities"),
     }
 
 
@@ -279,9 +313,56 @@ def _user_can_use_chat(user) -> bool:
     return bool(profile and profile.email_confirmed)
 
 
+def _repair_invalid_community_invite_tokens() -> None:
+    """Repair malformed community invite tokens without crashing requests."""
+    cache_key = "pixelwar:invite_token_repair:v1"
+    if cache.get(cache_key):
+        return
+
+    invalid_rows: list[int] = []
+    rows = Community.objects.values_list("id", "invite_token")
+    for community_id, invite_token in rows:
+        token = str(invite_token or "").strip()
+        if not token:
+            invalid_rows.append(int(community_id))
+            continue
+        if INVITE_TOKEN_RE.fullmatch(token):
+            continue
+        # Keep compatibility by allowing legacy UUID-shaped links.
+        if compact_legacy_invite_uuid(token) is not None:
+            continue
+        invalid_rows.append(int(community_id))
+
+    for community_id in invalid_rows:
+        for _attempt in range(5):
+            new_token = generate_community_invite_token()
+            try:
+                updated = Community.objects.filter(id=community_id).update(
+                    invite_token=new_token
+                )
+            except IntegrityError:
+                continue
+            if updated:
+                break
+
+    cache.set(cache_key, True, timeout=300)
+
+
+def _community_from_invite_token(token: str) -> Community:
+    raw_token = str(token).strip()
+    community = Community.objects.filter(invite_token=raw_token).first()
+    if community is not None:
+        return community
+    compact = compact_legacy_invite_uuid(raw_token)
+    if compact:
+        return get_object_or_404(Community, invite_token=compact)
+    return get_object_or_404(Community, invite_token=raw_token)
+
+
 def _non_global_memberships_for_user(user) -> list[CommunityMembership]:
     if not user.is_authenticated:
         return []
+    _repair_invalid_community_invite_tokens()
     return list(
         CommunityMembership.objects.filter(
             user=user,
@@ -307,6 +388,7 @@ def _community_active_member_count(community: Community) -> int:
 
 
 def _public_communities_for_lobby(user) -> list[dict]:
+    _repair_invalid_community_invite_tokens()
     communities = list(
         Community.objects.filter(is_public=True)
         .exclude(slug="global")
@@ -348,7 +430,6 @@ def _public_communities_for_lobby(user) -> list[dict]:
     rows: list[dict] = []
     for community in communities:
         active_count = int(member_counts.get(community.id, 0))
-        is_full = False
         is_member = community.id in member_community_ids
         is_pending = community.id in pending_request_ids
         can_request = (
@@ -360,7 +441,6 @@ def _public_communities_for_lobby(user) -> list[dict]:
         rows.append({
             "community": community,
             "active_count": active_count,
-            "is_full": is_full,
             "is_member": is_member,
             "is_pending": is_pending,
             "can_request": can_request,
@@ -503,18 +583,24 @@ def _chat_groups_for_memberships(
     groups = [{
         "slug": "global",
         "name": "Global",
-        "messages_url": "/api/chat/messages/",
-        "send_url": "/api/chat/send/",
-        "ws_url": "/ws/c/global/chat/",
+        "messages_url": reverse_lazy("chat_messages"),
+        "send_url": reverse_lazy("chat_send"),
+        "ws_url": "/ws/comunity/global/chat/",
     }]
     for membership in memberships:
         slug = membership.community.slug
         groups.append({
             "slug": slug,
             "name": membership.community.name,
-            "messages_url": f"/c/{slug}/api/chat/messages/",
-            "send_url": f"/c/{slug}/api/chat/send/",
-            "ws_url": f"/ws/c/{slug}/chat/",
+            "messages_url": reverse_lazy(
+                "community-chat-messages",
+                kwargs={"slug": slug},
+            ),
+            "send_url": reverse_lazy(
+                "community-chat-send",
+                kwargs={"slug": slug},
+            ),
+            "ws_url": f"/ws/comunity/{slug}/chat/",
         })
     return groups
 
@@ -607,14 +693,14 @@ def index(request: HttpRequest) -> HttpResponse:
         "filled_pixels": metrics["filled_pixels"],
         "fill_ratio": metrics["fill_ratio"],
         "current_user_key": current_user_key,
-        "pixel_snapshot_url": "/api/pixels/",
-        "my_pixels_url": "/api/pixels/mine/",
-        "pixel_update_url": "/api/pixels/update/",
-        "chat_messages_url": "/api/chat/messages/",
-        "chat_all_messages_url": "/api/chat/messages/grouped/",
-        "chat_send_url": "/api/chat/send/",
-        "pixels_ws_url": "/ws/c/global/pixels/",
-        "chat_ws_url": "/ws/c/global/chat/",
+        "pixel_snapshot_url": reverse_lazy("pixel_snapshot"),
+        "my_pixels_url": reverse_lazy("my_pixels"),
+        "pixel_update_url": reverse_lazy("update_pixel"),
+        "chat_messages_url": reverse_lazy("chat_messages"),
+        "chat_all_messages_url": reverse_lazy("grouped_chat_messages"),
+        "chat_send_url": reverse_lazy("chat_send"),
+        "pixels_ws_url": "/ws/comunity/global/pixels/",
+        "chat_ws_url": "/ws/comunity/global/chat/",
         "memberships": memberships,
         "chat_grouped": bool(memberships),
         "chat_groups": chat_groups,
@@ -686,7 +772,7 @@ def global_leaders(request: HttpRequest) -> HttpResponse:
         return redirect("communities")
     context = {
         "top_players": _top_users_by_pixels(community),
-        "canvas_url": reverse("index"),
+        "canvas_url": reverse_lazy("index"),
     }
     if is_htmx and htmx_target == "leaders-content":
         return render(request, "pixelwar/leaders_partial.html", context)
@@ -793,7 +879,6 @@ def create_community(request: HttpRequest) -> HttpResponse:
             slug=slug,
             image=image,
             is_public=is_public,
-            max_members=50,
         )
         _join_community(request.user, community)
 
@@ -1029,7 +1114,7 @@ def decline_join_request(
 
 @require_GET
 def invitation_view(request: HttpRequest, token: str) -> HttpResponse:
-    community = get_object_or_404(Community, invite_token=token)
+    community = _community_from_invite_token(token)
     if community.slug == "global":
         return redirect("index")
     referrer_user = _resolve_referrer_user(request.GET.get("ref"))
@@ -1058,7 +1143,7 @@ def invitation_view(request: HttpRequest, token: str) -> HttpResponse:
 
 @require_POST
 def invitation_accept(request: HttpRequest, token: str) -> HttpResponse:
-    community = get_object_or_404(Community, invite_token=token)
+    community = _community_from_invite_token(token)
     if community.slug == "global":
         return redirect("index")
     referrer_user = _resolve_referrer_user(request.GET.get("ref"))
@@ -1332,14 +1417,29 @@ def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
         "filled_pixels": metrics["filled_pixels"],
         "fill_ratio": metrics["fill_ratio"],
         "current_user_key": f"user:{request.user.pk}",
-        "pixel_snapshot_url": f"/c/{community.slug}/api/pixels/",
-        "my_pixels_url": f"/c/{community.slug}/api/pixels/mine/",
-        "pixel_update_url": f"/c/{community.slug}/api/pixels/update/",
-        "chat_messages_url": f"/c/{community.slug}/api/chat/messages/",
-        "chat_all_messages_url": "/api/chat/messages/grouped/",
-        "chat_send_url": f"/c/{community.slug}/api/chat/send/",
-        "pixels_ws_url": f"/ws/c/{community.slug}/pixels/",
-        "chat_ws_url": f"/ws/c/{community.slug}/chat/",
+        "pixel_snapshot_url": reverse_lazy(
+            "community-pixel-snapshot",
+            kwargs={"slug": community.slug},
+        ),
+        "my_pixels_url": reverse_lazy(
+            "community-my-pixels",
+            kwargs={"slug": community.slug},
+        ),
+        "pixel_update_url": reverse_lazy(
+            "community-update-pixel",
+            kwargs={"slug": community.slug},
+        ),
+        "chat_messages_url": reverse_lazy(
+            "community-chat-messages",
+            kwargs={"slug": community.slug},
+        ),
+        "chat_all_messages_url": reverse_lazy("grouped_chat_messages"),
+        "chat_send_url": reverse_lazy(
+            "community-chat-send",
+            kwargs={"slug": community.slug},
+        ),
+        "pixels_ws_url": f"/ws/comunity/{community.slug}/pixels/",
+        "chat_ws_url": f"/ws/comunity/{community.slug}/chat/",
         "memberships": memberships,
         "chat_grouped": bool(memberships),
         "chat_groups": chat_groups,
@@ -1359,7 +1459,7 @@ def community_leaders(request: HttpRequest, slug: str) -> HttpResponse:
         return redirect("communities")
     context = {
         "top_players": _top_users_by_pixels(community),
-        "canvas_url": reverse("community-canvas", kwargs={"slug": slug}),
+        "canvas_url": reverse_lazy("community-canvas", kwargs={"slug": slug}),
     }
     if is_htmx and htmx_target == "leaders-content":
         return render(request, "pixelwar/leaders_partial.html", context)
@@ -1734,7 +1834,7 @@ def _update_pixel_for_community(
     ip_address = _client_ip(request)
     cooldown_key = f"cooldown:{cooldown_scope}:{user_key}"
     cooldown_seconds = settings.COOLDOWN_SECONDS
-    
+
     # Check if user has acceleration active
     acceleration_active = False
     if request.user.is_authenticated:
@@ -1747,7 +1847,7 @@ def _update_pixel_for_community(
                 cooldown_seconds = ACCELERATION_COOLDOWN_SECONDS
         except UserProfile.DoesNotExist:
             pass
-    
+
     now = datetime.now(timezone.utc)
 
     if not cache.add(cooldown_key, now.isoformat(), timeout=cooldown_seconds):
@@ -1787,7 +1887,7 @@ def _update_pixel_for_community(
         projected_count, max_coord=max(x, y)
     )
     # Broadcast immediately so all clients see the pixel without waiting for
-    # the Kafka → DB round-trip.
+    # the Kafka â†’ DB round-trip.
     try:
         _channel_group_send(
             f"pixel_updates_{community.slug}",
@@ -1797,7 +1897,7 @@ def _update_pixel_for_community(
             },
         )
     except Exception:
-        pass  # Channel layer unavailable – clients will see update on next snapshot.
+        pass  # Channel layer unavailable â€“ clients will see update on next snapshot.
     try:
         enqueue_pixel_update({
             "community_slug": community.slug,
@@ -1807,13 +1907,13 @@ def _update_pixel_for_community(
             "user_key": user_key,
             "at": now.isoformat(),
         })
-        
+
         # Increment acceleration pixel count if active
         if acceleration_active and request.user.is_authenticated:
             increment_acceleration_pixel_count(request.user)
-            
+
     except (NoBrokersAvailable, KafkaError):
-        # Kafka is down – revert the optimistic WS update for all clients.
+        # Kafka is down â€“ revert the optimistic WS update for all clients.
         try:
             _channel_group_send(
                 f"pixel_updates_{community.slug}",

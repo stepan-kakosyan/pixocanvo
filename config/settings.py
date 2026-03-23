@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv(
-    "DJANGO_CSRF_TRUSTED_ORIGINS", "https://*.yatuk.am").split(",")
+    "DJANGO_CSRF_TRUSTED_ORIGINS", "https://pixocanvo.com").split(",")
 
 INSTALLED_APPS = [
     "daphne",
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     "storages",
     "channels",
     "Notifications",
@@ -315,7 +316,25 @@ CELERY_TASK_IGNORE_RESULT = True
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-COOLDOWN_SECONDS = int(os.getenv("PIXEL_COOLDOWN_SECONDS", "60"))
+COOLDOWN_SECONDS = int(os.getenv("PIXEL_COOLDOWN_SECONDS", "30"))
+PIXEL_HEX_COLOR_REGEX = os.getenv(
+    "PIXEL_HEX_COLOR_REGEX",
+    r"^#[0-9a-fA-F]{6}$",
+)
+COMMUNITY_CREATION_PIXO_COST = int(
+    os.getenv("COMMUNITY_CREATION_PIXO_COST", "60")
+)
+COMMUNITY_REFERRAL_TOKEN_SALT = os.getenv(
+    "COMMUNITY_REFERRAL_TOKEN_SALT",
+    "pixelwar.referral.v1",
+)
+COMMUNITY_REFERRAL_TOKEN_MAX_AGE_SECONDS = int(
+    os.getenv("COMMUNITY_REFERRAL_TOKEN_MAX_AGE_SECONDS", "31536000")
+)
+COMMUNITY_INVITE_TOKEN_REGEX = os.getenv(
+    "COMMUNITY_INVITE_TOKEN_REGEX",
+    r"^[A-Za-z0-9_-]{12,22}$",
+)
 INITIAL_GRID_SIZE = int(os.getenv("PIXEL_INITIAL_GRID_SIZE", "200"))
 GRID_EXPAND_STEP = int(os.getenv("PIXEL_GRID_EXPAND_STEP", "20"))
 GRID_FILL_EXPAND_THRESHOLD = float(

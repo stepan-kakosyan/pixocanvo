@@ -1,3 +1,8 @@
+import base64
+import hashlib
+import hmac
+
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.forms import SetPasswordForm
@@ -7,14 +12,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 
 from Notifications import signals as notification_signals
-from pixelwar.models import Community, CommunityMembership
+from pixelwar.models import (
+    Community,
+    CommunityMembership,
+    compact_legacy_invite_uuid,
+)
 
 from .email_service import get_user_from_password_reset_token
 from .email_service import send_account_activation_email
@@ -38,6 +47,9 @@ from .pixo_service import (
 )
 from django.db.models import Q
 
+PERSONAL_REFERRAL_TOKEN_SALT = "users.personal_referral.v1"
+PERSONAL_REFERRAL_SIG_HEX_LEN = 12
+
 
 def _base_nav_context(request: HttpRequest) -> dict:
     return {
@@ -48,6 +60,100 @@ def _base_nav_context(request: HttpRequest) -> dict:
             else "full"
         ),
     }
+
+
+def _b64url_encode(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _b64url_decode(raw: str) -> bytes | None:
+    value = str(raw or "").strip()
+    if not value:
+        return None
+    padding = "=" * ((4 - (len(value) % 4)) % 4)
+    try:
+        return base64.urlsafe_b64decode(value + padding)
+    except (ValueError, TypeError):
+        return None
+
+
+def _referral_signature(payload: str) -> str:
+    secret = (
+        f"{settings.SECRET_KEY}:{PERSONAL_REFERRAL_TOKEN_SALT}"
+    ).encode("utf-8")
+    digest = hmac.new(
+        secret,
+        str(payload).encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return digest[:PERSONAL_REFERRAL_SIG_HEX_LEN]
+
+
+def _encode_personal_referral_token(user: User | None) -> str:
+    if not user or not getattr(user, "id", None):
+        return ""
+    raw_payload = "|".join([
+        str(int(user.id)),
+        str(user.username or "").strip(),
+        str(user.email or "").strip().lower(),
+    ])
+    payload = _b64url_encode(raw_payload.encode("utf-8"))
+    return f"{payload}.{_referral_signature(payload)}"
+
+
+def _decode_personal_referral_token(token: str | None) -> dict | None:
+    raw = str(token or "").strip()
+    if not raw or "." not in raw:
+        return None
+
+    payload, signature = raw.rsplit(".", 1)
+    expected_signature = _referral_signature(payload)
+    if not hmac.compare_digest(signature, expected_signature):
+        return None
+
+    decoded = _b64url_decode(payload)
+    if decoded is None:
+        return None
+
+    try:
+        uid_raw, username, email = decoded.decode("utf-8").split("|", 2)
+        uid = int(uid_raw)
+    except (UnicodeDecodeError, ValueError, TypeError):
+        return None
+
+    if uid <= 0:
+        return None
+
+    return {
+        "uid": uid,
+        "username": str(username or "").strip(),
+        "email": str(email or "").strip().lower(),
+    }
+
+
+def _resolve_personal_referrer_user(ref_raw: str | None) -> User | None:
+    token_payload = _decode_personal_referral_token(ref_raw)
+    if token_payload is not None:
+        user = User.objects.filter(pk=token_payload["uid"]).first()
+        if user is None:
+            return None
+
+        expected_username = token_payload["username"]
+        expected_email = token_payload["email"]
+        if expected_username and user.username != expected_username:
+            return None
+        if expected_email and user.email.strip().lower() != expected_email:
+            return None
+        return user
+
+    # Backward compatibility: old plain integer referral links.
+    try:
+        referrer_id = int(str(ref_raw or "").strip())
+    except (TypeError, ValueError):
+        return None
+    if referrer_id <= 0:
+        return None
+    return User.objects.filter(pk=referrer_id).first()
 
 
 def contact_us_view(request: HttpRequest) -> HttpResponse:
@@ -127,6 +233,10 @@ def _consume_pending_invite(request: HttpRequest, user) -> Community | None:
         return None
 
     community = Community.objects.filter(invite_token=token).first()
+    if community is None:
+        compact = compact_legacy_invite_uuid(token)
+        if compact:
+            community = Community.objects.filter(invite_token=compact).first()
     if community is None:
         return None
 
@@ -218,16 +328,16 @@ def register_view(request: HttpRequest) -> HttpResponse:
                     extra_tags="auth",
                 )
 
-            target_url = reverse("index")
+            target_url = str(reverse_lazy("index"))
             if invited_community is not None:
                 messages.success(
                     request,
                     f"You joined '{invited_community.name}'.",
                 )
-                target_url = reverse(
+                target_url = str(reverse_lazy(
                     "community-canvas",
                     kwargs={"slug": invited_community.slug},
-                )
+                ))
 
             if request.headers.get("HX-Request") == "true":
                 response = HttpResponse(status=200)
@@ -237,12 +347,9 @@ def register_view(request: HttpRequest) -> HttpResponse:
             return redirect(target_url)
     else:
         ref_raw = request.GET.get("ref")
-        try:
-            referrer_id = int(str(ref_raw or "").strip())
-        except (TypeError, ValueError):
-            referrer_id = 0
-        if referrer_id > 0:
-            request.session["pending_referrer_user_id"] = referrer_id
+        referrer_user = _resolve_personal_referrer_user(ref_raw)
+        if referrer_user is not None:
+            request.session["pending_referrer_user_id"] = int(referrer_user.id)
             request.session[
                 "pending_referral_source"
             ] = ReferralAttribution.SOURCE_PERSONAL_LINK
@@ -283,16 +390,16 @@ def login_view(request: HttpRequest) -> HttpResponse:
                     "but chat messages and community creation are disabled until "
                     "you confirm it.",
                 )
-            target_url = reverse("index")
+            target_url = str(reverse_lazy("index"))
             if invited_community is not None:
                 messages.success(
                     request,
                     f"You joined '{invited_community.name}'.",
                 )
-                target_url = reverse(
+                target_url = str(reverse_lazy(
                     "community-canvas",
                     kwargs={"slug": invited_community.slug},
-                )
+                ))
 
             if request.headers.get("HX-Request") == "true":
                 response = HttpResponse(status=200)
@@ -313,12 +420,9 @@ def login_view(request: HttpRequest) -> HttpResponse:
                     )
     else:
         ref_raw = request.GET.get("ref")
-        try:
-            referrer_id = int(str(ref_raw or "").strip())
-        except (TypeError, ValueError):
-            referrer_id = 0
-        if referrer_id > 0:
-            request.session["pending_referrer_user_id"] = referrer_id
+        referrer_user = _resolve_personal_referrer_user(ref_raw)
+        if referrer_user is not None:
+            request.session["pending_referrer_user_id"] = int(referrer_user.id)
             request.session[
                 "pending_referral_source"
             ] = ReferralAttribution.SOURCE_PERSONAL_LINK
@@ -331,9 +435,9 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 def personal_referral_redirect_view(
     request: HttpRequest,
-    referrer_id: int,
+    token: str,
 ) -> HttpResponse:
-    referrer_user = User.objects.filter(pk=referrer_id).first()
+    referrer_user = _resolve_personal_referrer_user(token)
     if referrer_user is None:
         messages.error(
             request,
@@ -446,13 +550,18 @@ def profile_settings_view(request: HttpRequest) -> HttpResponse:
             "avatar_url": avatar_url,
             "rewarded_pixels_count": int(profile.rewarded_pixels_count) if profile else 0,
             "personal_referral_link": request.build_absolute_uri(
-                reverse("personal-referral", kwargs={"referrer_id": request.user.id})
+                reverse_lazy(
+                    "personal-referral",
+                    kwargs={
+                        "token": _encode_personal_referral_token(request.user),
+                    },
+                )
             ),
             "active_tab": None,
-            "canvas_url": "/",
-            "leaders_url": "/leaders/",
-            "guide_url": "/guide/",
-            "communities_url": "/communities/",
+            "canvas_url": reverse_lazy("index"),
+            "leaders_url": reverse_lazy("leaders"),
+            "guide_url": reverse_lazy("guide"),
+            "communities_url": reverse_lazy("communities"),
             "pending_email": profile.pending_email or "",
             **_activation_email_panel_context(profile),
         },

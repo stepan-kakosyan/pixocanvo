@@ -18,7 +18,7 @@
             <p class="text-sm leading-relaxed text-slate-700">
                 {% blocktrans trimmed %}
                 <strong class="text-slate-900">Pixo Canvo</strong> is a real-time collaborative canvas.
-                Each registered player can place <strong class="text-slate-900">one pixel every 60 seconds</strong>.
+                Each registered player can place <strong class="text-slate-900">one pixel every 30 seconds</strong>.
                 Every placement is queued, validated, and then broadcast live via WebSocket to every connected player.
                 Work together — or compete — to claim space on the shared canvas.
                 {% endblocktrans %}
@@ -56,7 +56,7 @@
                     <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 text-sm font-black text-white shadow">4</span>
                     <div>
                         <p class="font-bold text-slate-900">{% trans "Wait out the cooldown" %}</p>
-                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}After each accepted placement you must wait <strong>60 seconds</strong> before placing again. The status bar shows how long remains. Rejected attempts do not reset the cooldown.{% endblocktrans %}</p>
+                        <p class="mt-0.5 text-sm text-slate-500">{% blocktrans trimmed %}After each accepted placement you must wait <strong>30 seconds</strong> before placing again. The status bar shows how long remains. Rejected attempts do not reset the cooldown.{% endblocktrans %}</p>
                     </div>
                 </li>
                 <li class="flex items-start gap-4 px-5 py-4">

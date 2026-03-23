@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-17 14:29+0000\n"
+"POT-Creation-Date: 2026-03-21 14:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,380 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Notifications/signals.py:24
+msgid "Confirm your email"
+msgstr "अपने ईमेल की पुष्टि करें"
+
+#: Notifications/signals.py:26
+msgid ""
+"Validate your email to unlock chat and community creation. If you did not "
+"receive the email, open Profile Details and resend it."
+msgstr ""
+"चैट और समुदाय निर्माण को अनलॉक करने के लिए अपने ईमेल को सत्यापित करें। यदि "
+"आपको ईमेल नहीं मिला है, तो प्रोफ़ाइल विवरण खोलें और इसे पुनः भेजें।"
+
+#: Notifications/signals.py:42
+msgid "Verify your new email"
+msgstr "अपना नया ईमेल सत्यापित करें"
+
+#: Notifications/signals.py:44
+#, python-format
+msgid ""
+"You requested to change your email to %(email)s. We've sent a verification "
+"link there — click it to confirm the update."
+msgstr ""
+"आपने अपना ईमेल %(email)s में बदलने का अनुरोध किया है। हमने वहां एक सत्यापन "
+"लिंक भेजा है - अपडेट की पुष्टि करने के लिए इसे क्लिक करें।"
+
+#: Notifications/signals.py:60
+msgid "Email confirmed"
+msgstr "ईमेल की पुष्टि की गई"
+
+#: Notifications/signals.py:61
+msgid "Congratulations. Your email has been confirmed successfully."
+msgstr "बधाई हो। आपके ईमेल की सफलतापूर्वक पुष्टि कर दी गई है."
+
+#: Notifications/signals.py:75
+msgid "New join request"
+msgstr "नया शामिल होने का अनुरोध"
+
+#: Notifications/signals.py:76
+#, python-format
+msgid "%(username)s requested to join %(community)s."
+msgstr "%(username)s ने %(community)s में शामिल होने का अनुरोध किया।"
+
+#: Notifications/signals.py:104
+msgid "Join request approved"
+msgstr "शामिल होने का अनुरोध स्वीकृत"
+
+#: Notifications/signals.py:104
+msgid "Join request declined"
+msgstr "शामिल होने का अनुरोध अस्वीकार कर दिया गया"
+
+#: Notifications/signals.py:106
+#, python-format
+msgid "Your request to join %(community)s was approved."
+msgstr "%(community)s से जुड़ने का आपका अनुरोध स्वीकृत हो गया।"
+
+#: Notifications/signals.py:108
+#, python-format
+msgid "Your request to join %(community)s was declined."
+msgstr "%(community)s में शामिल होने का आपका अनुरोध अस्वीकार कर दिया गया था।"
+
+#: Notifications/templates/Notifications/notifications_list.html:4
+#: Notifications/templates/Notifications/notifications_list.html:11
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:42
+msgid "Notifications"
+msgstr "सूचनाएं"
+
+#: Notifications/templates/Notifications/notifications_list.html:12
+msgid "Track join requests, approvals, and other account updates."
+msgstr "शामिल होने के अनुरोधों, स्वीकृतियों और अन्य खाता अपडेट को ट्रैक करें।"
+
+#: Notifications/templates/Notifications/notifications_list.html:23
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:55
+msgid "Mark all as read"
+msgstr "सभी को पढ़ा हुआ मार्क करें"
+
+#: Notifications/templates/Notifications/notifications_list.html:41
+#, python-format
+msgid "%(counter)s unread"
+msgid_plural "%(counter)s unread"
+msgstr[0] "%(counter)s अपठित"
+msgstr[1] "%(counter)s अपठित"
+
+#: Notifications/templates/Notifications/notifications_list.html:106
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:128
+msgid "No notifications yet."
+msgstr "अभी तक कोई सूचना नहीं."
+
+#: env/Lib/site-packages/click/_termui_impl.py:613
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: env/Lib/site-packages/click/_termui_impl.py:617
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1114
+#: env/Lib/site-packages/click/core.py:1151
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1170
+#, fuzzy
+#| msgid "optional"
+msgid "Options"
+msgstr "वैकल्पिक"
+
+#: env/Lib/site-packages/click/core.py:1245
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/core.py:1264
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1448
+msgid "Aborted!"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1822
+#, fuzzy
+#| msgid "Communities"
+msgid "Commands"
+msgstr "समुदाय"
+
+#: env/Lib/site-packages/click/core.py:1853
+msgid "Missing command."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1931
+msgid "No such command {name!r}."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2355
+msgid "Value must be an iterable."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2378
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/core.py:2567
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3015
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3018
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3082
+msgid "(dynamic)"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:50
+#: env/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:289
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:199
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:381
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:444
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/shell_completion.py:332
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: env/Lib/site-packages/click/shell_completion.py:339
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:165
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:181
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:183
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:194
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:253
+msgid "Error: invalid input"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:872
+msgid "Press any key to continue..."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:369
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/types.py:460
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/types.py:482
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:719
+msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:747
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:937
+msgid "file"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:939
+msgid "directory"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:941
+msgid "path"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:988
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:997
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1005
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1014
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1023
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1032
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1099
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
 
 #: env/Lib/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -83,8 +457,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:297
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:309
@@ -303,8 +677,8 @@ msgstr ""
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1570
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1575
@@ -483,7 +857,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: env/Lib/site-packages/django/forms/boundfield.py:185
 msgid ":?.!"
 msgstr ""
@@ -533,7 +908,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/forms/fields.py:643
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -640,7 +1016,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1450
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1594
@@ -742,30 +1119,37 @@ msgid "noon"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:7
+#: env/Lib/site-packages/tornado/locale.py:295
 msgid "Monday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:8
+#: env/Lib/site-packages/tornado/locale.py:296
 msgid "Tuesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:9
+#: env/Lib/site-packages/tornado/locale.py:297
 msgid "Wednesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:10
+#: env/Lib/site-packages/tornado/locale.py:298
 msgid "Thursday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:11
+#: env/Lib/site-packages/tornado/locale.py:299
 msgid "Friday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:12
+#: env/Lib/site-packages/tornado/locale.py:300
 msgid "Saturday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:13
+#: env/Lib/site-packages/tornado/locale.py:301
 msgid "Sunday"
 msgstr ""
 
@@ -798,54 +1182,66 @@ msgid "Sun"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:25
+#: env/Lib/site-packages/tornado/locale.py:281
 msgid "January"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:26
+#: env/Lib/site-packages/tornado/locale.py:282
 msgid "February"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:27
+#: env/Lib/site-packages/tornado/locale.py:283
 msgid "March"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:28
+#: env/Lib/site-packages/tornado/locale.py:284
 msgid "April"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:29
+#: env/Lib/site-packages/tornado/locale.py:285
 msgid "May"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:30
+#: env/Lib/site-packages/tornado/locale.py:286
 msgid "June"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:31
+#: env/Lib/site-packages/tornado/locale.py:287
 msgid "July"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:32
+#: env/Lib/site-packages/tornado/locale.py:288
 msgid "August"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:33
+#: env/Lib/site-packages/tornado/locale.py:289
 #, fuzzy
 #| msgid "Member"
 msgid "September"
 msgstr "सदस्य"
 
 #: env/Lib/site-packages/django/utils/dates.py:34
+#: env/Lib/site-packages/tornado/locale.py:290
 msgid "October"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:35
+#: env/Lib/site-packages/tornado/locale.py:291
 #, fuzzy
 #| msgid "Member"
 msgid "November"
 msgstr "सदस्य"
 
 #: env/Lib/site-packages/django/utils/dates.py:36
+#: env/Lib/site-packages/tornado/locale.py:292
 #, fuzzy
 #| msgid "Member"
 msgid "December"
@@ -1114,10 +1510,10 @@ msgstr ""
 
 #: env/Lib/site-packages/django/views/csrf.py:45
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -1228,10 +1624,10 @@ msgstr ""
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:208
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:217
@@ -1260,69 +1656,155 @@ msgstr "समुदाय छोड़ें"
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:37
+#: env/Lib/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:377
+msgid "1 second ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:383
+msgid "1 minute ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:388
+msgid "1 hour ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:391
+#, python-format
+msgid "%(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+msgid "yesterday"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+#, python-format
+msgid "yesterday at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:398
+#: env/Lib/site-packages/tornado/locale.py:451
+#, python-format
+msgid "%(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:400
+#, python-format
+msgid "%(month_name)s %(day)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:405
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:407
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:445
+#, python-format
+msgid "%(weekday)s, %(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:468
+#, python-format
+msgid "%(commas)s and %(last)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:68
+msgctxt "law"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:69
+msgctxt "good"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:70
+#: env/Lib/site-packages/tornado/test/locale_test.py:72
+msgctxt "organization"
+msgid "club"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:74
+#: env/Lib/site-packages/tornado/test/locale_test.py:75
+msgctxt "stick"
+msgid "club"
+msgstr ""
+
+#: pixelwar/templates/pixelwar/base.html:54
+#: pixelwar/templates/pixelwar/base.html:378
 msgid "Canvas"
 msgstr "कैनवास"
 
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Top"
-msgstr "शीर्ष"
-
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Players"
-msgstr "खिलाड़ी"
-
-#: pixelwar/templates/pixelwar/base.html:49
-#: pixelwar/templates/pixelwar/base.html:134
-#: pixelwar/templates/pixelwar/guide.html:4
-#: pixelwar/templates/pixelwar/guide.html:10
-msgid "Rules"
-msgstr ""
-
-#: pixelwar/templates/pixelwar/base.html:49
-msgid "Guide"
-msgstr "मार्गदर्शिका"
-
-#: pixelwar/templates/pixelwar/base.html:55
-#: pixelwar/templates/pixelwar/base.html:135
+#: pixelwar/templates/pixelwar/base.html:61
+#: pixelwar/templates/pixelwar/base.html:362
+#: pixelwar/templates/pixelwar/base.html:385
+#: pixelwar/templates/pixelwar/community_detail.html:163
 #: pixelwar/templates/pixelwar/community_lobby.html:4
 #: pixelwar/templates/pixelwar/community_lobby.html:10
 #: pixelwar/templates/pixelwar/guide.html:89
 msgid "Communities"
 msgstr "समुदाय"
 
-#: pixelwar/templates/pixelwar/base.html:73
-#: users/templates/users/profile_settings.html:34
-msgid "Signed in as"
-msgstr "इस रूप में लॉग इन"
+#: pixelwar/templates/pixelwar/base.html:68
+#: pixelwar/templates/pixelwar/base.html:392
+#: pixelwar/templates/pixelwar/guide.html:146
+#: pixelwar/templates/pixelwar/leaders.html:4
+msgid "Ranking"
+msgstr "श्रेणी"
 
-#: pixelwar/templates/pixelwar/base.html:79
-msgid "Logout"
-msgstr "लॉगआउट"
-
-#: pixelwar/templates/pixelwar/base.html:86
-#: pixelwar/templates/pixelwar/community_lobby.html:104
-#: pixelwar/templates/pixelwar/invitation.html:66
-#: users/templates/users/login.html:7 users/templates/users/login.html:48
-msgid "Login"
-msgstr "लॉगिन"
-
-#: pixelwar/templates/pixelwar/base.html:90
-#: pixelwar/templates/pixelwar/community_lobby.html:100
-#: pixelwar/templates/pixelwar/invitation.html:70
-#: users/templates/users/register.html:7 users/templates/users/register.html:66
-msgid "Register"
-msgstr "पंजीकरण"
+#: pixelwar/templates/pixelwar/base.html:75
+#: pixelwar/templates/pixelwar/base.html:361
+#: pixelwar/templates/pixelwar/base.html:399
+#: pixelwar/templates/pixelwar/guide.html:4
+#: pixelwar/templates/pixelwar/guide.html:10
+msgid "Rules"
+msgstr "नियम"
 
 #: pixelwar/templates/pixelwar/base.html:103
-msgid "Language"
-msgstr "भाषा"
+msgid "Congratulations!"
+msgstr "बधाई हो!"
 
-#: pixelwar/templates/pixelwar/base.html:136
+#: pixelwar/templates/pixelwar/base.html:363
+#: users/templates/users/contact_us.html:4
+#: users/templates/users/contact_us.html:10
+msgid "Contact Us"
+msgstr "हमसे संपर्क करें"
+
+#: pixelwar/templates/pixelwar/base.html:364
 msgid "Privacy Policy"
 msgstr "गोपनीयता नीति"
 
-#: pixelwar/templates/pixelwar/base.html:137
+#: pixelwar/templates/pixelwar/base.html:365
 msgid "Terms of Service"
 msgstr "सेवा की शर्तें"
 
@@ -1334,202 +1816,453 @@ msgstr "समुदाय विवरण"
 msgid "Community details, members, and quick actions."
 msgstr "समुदाय विवरण, सदस्य और त्वरित कार्रवाइयां।"
 
-#: pixelwar/templates/pixelwar/community_detail.html:16
-#: pixelwar/templates/pixelwar/community_lobby.html:54
-msgid "Slug"
-msgstr "काउंटर"
+#: pixelwar/templates/pixelwar/community_detail.html:19
+msgid "No cover image yet"
+msgstr "अभी तक कोई कवर छवि नहीं"
 
-#: pixelwar/templates/pixelwar/community_detail.html:20
-msgid "Members"
-msgstr "सदस्यों"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+#: pixelwar/templates/pixelwar/community_lobby.html:128
+#: pixelwar/templates/pixelwar/community_lobby.html:204
+msgid "Public"
+msgstr "जनता"
 
-#: pixelwar/templates/pixelwar/community_detail.html:24
-msgid "Created"
-msgstr "बनाया था"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+msgid "Private"
+msgstr "निजी"
 
-#: pixelwar/templates/pixelwar/community_detail.html:28
-#: pixelwar/templates/pixelwar/community_detail.html:130
+#: pixelwar/templates/pixelwar/community_detail.html:29
+#: pixelwar/templates/pixelwar/community_detail.html:292
+#: pixelwar/templates/pixelwar/community_lobby.html:125
+#: pixelwar/templates/pixelwar/community_lobby.html:201
 msgid "Owner"
 msgstr "मालिक"
 
-#: pixelwar/templates/pixelwar/community_detail.html:35
-#: pixelwar/templates/pixelwar/community_lobby.html:58
-msgid "Open canvas"
-msgstr "कैनवास खोलें"
+#: pixelwar/templates/pixelwar/community_detail.html:30
+#: pixelwar/templates/pixelwar/community_detail.html:164
+#: users/templates/users/contact_us.html:175
+msgid "Created"
+msgstr "बनाया था"
 
-#: pixelwar/templates/pixelwar/community_detail.html:40
-#: pixelwar/templates/pixelwar/community_lobby.html:67
-msgid "Invitation link"
-msgstr "आमंत्रण लिंक"
+#: pixelwar/templates/pixelwar/community_detail.html:38
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Update image"
+msgstr "छवि अद्यतन करें"
 
-#: pixelwar/templates/pixelwar/community_detail.html:48
-#: pixelwar/templates/pixelwar/community_lobby.html:75
-msgid "Delete community"
-msgstr "समुदाय हटाएँ"
+#: pixelwar/templates/pixelwar/community_detail.html:47
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit details"
+msgstr "विवरण संपादित करें"
 
-#: pixelwar/templates/pixelwar/community_detail.html:56
-#: pixelwar/templates/pixelwar/community_lobby.html:83
-msgid "Leave community"
-msgstr "समुदाय छोड़ें"
+#: pixelwar/templates/pixelwar/community_detail.html:54
+msgid "Members"
+msgstr "सदस्यों"
 
-#: pixelwar/templates/pixelwar/community_detail.html:60
-msgid "Back to communities"
-msgstr "समुदायों पर वापस जाएँ"
+#: pixelwar/templates/pixelwar/community_detail.html:58
+#, fuzzy
+#| msgid "Pixels placed"
+msgid "Pixels"
+msgstr "पिक्सेल"
 
-#: pixelwar/templates/pixelwar/community_detail.html:66
-msgid "Canvas preview"
-msgstr "कैनवास पूर्वावलोकन"
+#: pixelwar/templates/pixelwar/community_detail.html:62
+#: pixelwar/templates/pixelwar/community_detail.html:83
+#: pixelwar/templates/pixelwar/create_community.html:43
+#: users/templates/users/contact_us.html:84
+#: users/templates/users/emails/contact_us_notification.html:67
+#: users/templates/users/emails/contact_us_notification.txt:11
+msgid "Description"
+msgstr "विवरण"
 
-#: pixelwar/templates/pixelwar/community_detail.html:69
-msgid "Click to enlarge"
-msgstr "बड़ा करने के लिए क्लिक करें"
+#: pixelwar/templates/pixelwar/community_detail.html:67
+msgid "No description provided."
+msgstr "कोई विवरण नहीं दिया गया."
 
-#: pixelwar/templates/pixelwar/community_detail.html:73
-msgid "click to enlarge"
-msgstr "बड़ा करने के लिए क्लिक करें"
+#: pixelwar/templates/pixelwar/community_detail.html:75
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit community details"
+msgstr "समुदाय विवरण संपादित करें"
 
-#: pixelwar/templates/pixelwar/community_detail.html:92
-msgid "Community members"
-msgstr "समुदाय के सदस्यों"
+#: pixelwar/templates/pixelwar/community_detail.html:79
+#, fuzzy
+#| msgid "New community name"
+msgid "Community name"
+msgstr "समुदाय का नाम"
 
-#: pixelwar/templates/pixelwar/community_detail.html:94
-msgid "Sort"
-msgstr "क्रम से लगाना"
+#: pixelwar/templates/pixelwar/community_detail.html:87
+#: pixelwar/templates/pixelwar/create_community.html:56
+msgid "Visibility"
+msgstr "दृश्यता"
 
-#: pixelwar/templates/pixelwar/community_detail.html:97
-msgid "Join date"
-msgstr "सम्मिलित होने की तिथि"
+#: pixelwar/templates/pixelwar/community_detail.html:89
+#: pixelwar/templates/pixelwar/create_community.html:59
+#, fuzzy
+#| msgid "Delete community"
+msgid "Public community"
+msgstr "सार्वजनिक समुदाय"
 
-#: pixelwar/templates/pixelwar/community_detail.html:101
-#: pixelwar/templates/pixelwar/community_detail.html:113
-msgid "Pixel count"
-msgstr "पिक्सेल गिनती"
+#: pixelwar/templates/pixelwar/community_detail.html:90
+#: pixelwar/templates/pixelwar/create_community.html:58
+#, fuzzy
+#| msgid "Create community"
+msgid "Private community"
+msgstr "निजी समुदाय"
 
-#: pixelwar/templates/pixelwar/community_detail.html:111
-msgid "Member"
-msgstr "सदस्य"
+#: pixelwar/templates/pixelwar/community_detail.html:95
+msgid "Save details"
+msgstr "विवरण सहेजें"
 
-#: pixelwar/templates/pixelwar/community_detail.html:112
-msgid "Joined"
-msgstr "सम्मिलित हुए"
-
-#: pixelwar/templates/pixelwar/community_detail.html:142
-msgid "No active members found."
-msgstr "कोई सक्रिय सदस्य नहीं मिला."
-
-#: pixelwar/templates/pixelwar/community_detail.html:150
-#: pixelwar/templates/pixelwar/community_lobby.html:114
-msgid "Community Invitation Link"
-msgstr "सामुदायिक आमंत्रण लिंक"
-
-#: pixelwar/templates/pixelwar/community_detail.html:152
-#: pixelwar/templates/pixelwar/community_lobby.html:116
-msgid ""
-"Share this link to invite others to your community. Anyone with the link can "
-"join."
-msgstr ""
-"अपने समुदाय में अन्य लोगों को आमंत्रित करने के लिए इस लिंक को साझा करें। लिंक वाला कोई भी "
-"व्यक्ति शामिल हो सकता है."
-
-#: pixelwar/templates/pixelwar/community_detail.html:158
-#: pixelwar/templates/pixelwar/community_lobby.html:122
-msgid "Copy URL"
-msgstr "यूआरएल कॉपी करें"
-
-#: pixelwar/templates/pixelwar/community_detail.html:159
-#: pixelwar/templates/pixelwar/community_lobby.html:123
-#: pixelwar/templates/pixelwar/invitation.html:74
-msgid "Close"
-msgstr "बंद करना"
-
-#: pixelwar/templates/pixelwar/community_detail.html:163
-#: pixelwar/templates/pixelwar/community_lobby.html:127
-msgid "Leave Community"
-msgstr "समुदाय छोड़ें"
-
-#: pixelwar/templates/pixelwar/community_detail.html:165
-#: pixelwar/templates/pixelwar/community_lobby.html:129
-msgid "Are you sure you want to leave this community?"
-msgstr "क्या आप वाकई इस समुदाय को छोड़ना चाहते हैं?"
-
-#: pixelwar/templates/pixelwar/community_detail.html:169
-#: pixelwar/templates/pixelwar/community_lobby.html:133
-msgid "Yes, leave"
-msgstr "हाँ, छोड़ो"
-
-#: pixelwar/templates/pixelwar/community_detail.html:170
-#: pixelwar/templates/pixelwar/community_detail.html:182
-#: pixelwar/templates/pixelwar/community_lobby.html:134
-#: pixelwar/templates/pixelwar/community_lobby.html:146
+#: pixelwar/templates/pixelwar/community_detail.html:98
+#: pixelwar/templates/pixelwar/community_detail.html:348
+#: pixelwar/templates/pixelwar/community_detail.html:360
+#: pixelwar/templates/pixelwar/community_detail.html:372
+#: pixelwar/templates/pixelwar/community_lobby.html:255
+#: pixelwar/templates/pixelwar/community_lobby.html:267
+#: users/templates/users/partials/pending_email_panel.html:27
 msgid "Cancel"
 msgstr "रद्द करना"
 
-#: pixelwar/templates/pixelwar/community_detail.html:175
-#: pixelwar/templates/pixelwar/community_lobby.html:139
+#: pixelwar/templates/pixelwar/community_detail.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:68
+#: pixelwar/templates/pixelwar/community_lobby.html:142
+msgid "Open canvas"
+msgstr "कैनवास खोलें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:113
+#: pixelwar/templates/pixelwar/community_lobby.html:77
+msgid "Invitation link"
+msgstr "आमंत्रण लिंक"
+
+#: pixelwar/templates/pixelwar/community_detail.html:121
+#: pixelwar/templates/pixelwar/community_lobby.html:85
+msgid "Delete community"
+msgstr "समुदाय हटाएँ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:129
+#: pixelwar/templates/pixelwar/community_lobby.html:93
+msgid "Leave community"
+msgstr "समुदाय छोड़ें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:139
+#: pixelwar/templates/pixelwar/community_lobby.html:154
+msgid "Ask Join"
+msgstr "शामिल होने के लिए कहें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:143
+msgid "Login to request join"
+msgstr "शामिल होने का अनुरोध करने के लिए लॉगिन करें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:147
+#: pixelwar/templates/pixelwar/create_community.html:90
+msgid "Back to communities"
+msgstr "समुदायों पर वापस जाएँ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:154
+msgid "Join requests"
+msgstr "अनुरोधों में शामिल हों"
+
+#: pixelwar/templates/pixelwar/community_detail.html:160
+#: pixelwar/templates/pixelwar/community_detail.html:267
+msgid "Member"
+msgstr "सदस्य"
+
+#: pixelwar/templates/pixelwar/community_detail.html:161
+#: users/templates/users/contact_us.html:62
+#: users/templates/users/contact_us.html:171
+#: users/templates/users/emails/contact_us_notification.html:49
+#: users/templates/users/emails/contact_us_notification.txt:6
+#: users/templates/users/profile_settings.html:68
+#: users/templates/users/register.html:31
+msgid "Email"
+msgstr "ईमेल"
+
+#: pixelwar/templates/pixelwar/community_detail.html:162
+#, fuzzy
+#| msgid "Placing pixels"
+msgid "Global pixels"
+msgstr "वैश्विक पिक्सेल"
+
+#: pixelwar/templates/pixelwar/community_detail.html:165
+#: pixelwar/templates/pixelwar/community_detail.html:271
+msgid "Actions"
+msgstr "कार्रवाई"
+
+#: pixelwar/templates/pixelwar/community_detail.html:197
+msgid "Approve"
+msgstr "मंज़ूरी देना"
+
+#: pixelwar/templates/pixelwar/community_detail.html:204
+msgid "Decline"
+msgstr "गिरावट"
+
+#: pixelwar/templates/pixelwar/community_detail.html:214
+msgid "No pending join requests."
+msgstr "शामिल होने का कोई अनुरोध लंबित नहीं है."
+
+#: pixelwar/templates/pixelwar/community_detail.html:220
+msgid "Canvas preview"
+msgstr "कैनवास पूर्वावलोकन"
+
+#: pixelwar/templates/pixelwar/community_detail.html:223
+msgid "Click to enlarge"
+msgstr "बड़ा करने के लिए क्लिक करें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:227
+msgid "click to enlarge"
+msgstr "बड़ा करने के लिए क्लिक करें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:246
+msgid "Community members"
+msgstr "समुदाय के सदस्यों"
+
+#: pixelwar/templates/pixelwar/community_detail.html:249
+msgid "Sort"
+msgstr "क्रम से लगाना"
+
+#: pixelwar/templates/pixelwar/community_detail.html:252
+msgid "Join date"
+msgstr "सम्मिलित होने की तिथि"
+
+#: pixelwar/templates/pixelwar/community_detail.html:256
+#: pixelwar/templates/pixelwar/community_detail.html:269
+msgid "Pixel count"
+msgstr "पिक्सेल गिनती"
+
+#: pixelwar/templates/pixelwar/community_detail.html:268
+msgid "Joined"
+msgstr "सम्मिलित हुए"
+
+#: pixelwar/templates/pixelwar/community_detail.html:305
+msgid "Remove"
+msgstr "निकालना"
+
+#: pixelwar/templates/pixelwar/community_detail.html:316
+msgid "No active members found."
+msgstr "कोई सक्रिय सदस्य नहीं मिला."
+
+#: pixelwar/templates/pixelwar/community_detail.html:319
+msgid "Members list is visible only to community members."
+msgstr "सदस्यों की सूची केवल समुदाय के सदस्यों को दिखाई देती है।"
+
+#: pixelwar/templates/pixelwar/community_detail.html:328
+#: pixelwar/templates/pixelwar/community_lobby.html:235
+msgid "Community Invitation Link"
+msgstr "सामुदायिक आमंत्रण लिंक"
+
+#: pixelwar/templates/pixelwar/community_detail.html:330
+#: pixelwar/templates/pixelwar/community_lobby.html:237
+msgid ""
+"Share this link to invite others to your community. Anyone with the link can"
+" join."
+msgstr ""
+"अपने समुदाय में अन्य लोगों को आमंत्रित करने के लिए इस लिंक को साझा करें। "
+"लिंक वाला कोई भी व्यक्ति शामिल हो सकता है."
+
+#: pixelwar/templates/pixelwar/community_detail.html:336
+#: pixelwar/templates/pixelwar/community_lobby.html:243
+msgid "Copy URL"
+msgstr "यूआरएल कॉपी करें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:337
+#: pixelwar/templates/pixelwar/community_lobby.html:244
+#: pixelwar/templates/pixelwar/invitation.html:74
+#: users/templates/users/contact_us.html:161
+msgid "Close"
+msgstr "बंद करना"
+
+#: pixelwar/templates/pixelwar/community_detail.html:341
+#: pixelwar/templates/pixelwar/community_lobby.html:248
+msgid "Leave Community"
+msgstr "समुदाय छोड़ें"
+
+#: pixelwar/templates/pixelwar/community_detail.html:343
+#: pixelwar/templates/pixelwar/community_lobby.html:250
+msgid "Are you sure you want to leave this community?"
+msgstr "क्या आप वाकई इस समुदाय को छोड़ना चाहते हैं?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:347
+#: pixelwar/templates/pixelwar/community_lobby.html:254
+msgid "Yes, leave"
+msgstr "हाँ, छोड़ो"
+
+#: pixelwar/templates/pixelwar/community_detail.html:353
+#: pixelwar/templates/pixelwar/community_lobby.html:260
 msgid "Delete Community"
 msgstr "समुदाय हटाएँ"
 
-#: pixelwar/templates/pixelwar/community_detail.html:177
-#: pixelwar/templates/pixelwar/community_lobby.html:141
+#: pixelwar/templates/pixelwar/community_detail.html:355
+#: pixelwar/templates/pixelwar/community_lobby.html:262
 msgid ""
 "This action cannot be undone. All information will be deleted and cannot be "
 "restored."
 msgstr ""
-"इस एक्शन को वापस नहीं किया जा सकता। सारी जानकारी हटा दी जाएगी और उसे पुनर्स्थापित "
-"नहीं किया जा सकेगा."
+"इस एक्शन को वापस नहीं किया जा सकता। सारी जानकारी हटा दी जाएगी और उसे "
+"पुनर्स्थापित नहीं किया जा सकेगा."
 
-#: pixelwar/templates/pixelwar/community_detail.html:181
-#: pixelwar/templates/pixelwar/community_lobby.html:145
+#: pixelwar/templates/pixelwar/community_detail.html:359
+#: pixelwar/templates/pixelwar/community_lobby.html:266
 msgid "Yes, delete permanently"
 msgstr "हां, स्थायी रूप से हटाएं"
+
+#: pixelwar/templates/pixelwar/community_detail.html:365
+#, fuzzy
+#| msgid "Member"
+msgid "Remove Member"
+msgstr "सदस्य हटाएँ"
+
+#: pixelwar/templates/pixelwar/community_detail.html:367
+#, fuzzy
+#| msgid "Are you sure you want to leave this community?"
+msgid "Are you sure you want to remove this member from the community?"
+msgstr "क्या आप वाकई इस सदस्य को समुदाय से हटाना चाहते हैं?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:371
+msgid "Yes, remove member"
+msgstr "हां, सदस्य को हटा दें"
 
 #: pixelwar/templates/pixelwar/community_lobby.html:13
 msgid ""
 "Create your own community or join one using an invitation link. Each "
 "community has its own canvas, leaderboard, and chat."
 msgstr ""
-"अपना स्वयं का समुदाय बनाएं या आमंत्रण लिंक का उपयोग करके किसी समुदाय में शामिल हों। "
-"प्रत्येक समुदाय का अपना कैनवास, लीडरबोर्ड और चैट होता है।"
+"अपना स्वयं का समुदाय बनाएं या आमंत्रण लिंक का उपयोग करके किसी समुदाय में "
+"शामिल हों। प्रत्येक समुदाय का अपना कैनवास, लीडरबोर्ड और चैट होता है।"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:35
-msgid "New community name"
-msgstr "नये समुदाय का नाम"
+#: pixelwar/templates/pixelwar/community_lobby.html:34
+#: pixelwar/templates/pixelwar/create_community.html:30
+msgid "Confirm your email before creating your own community."
+msgstr "अपना स्वयं का समुदाय बनाने से पहले अपने ईमेल की पुष्टि करें।"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:38
+#: pixelwar/templates/pixelwar/community_lobby.html:39
+#, python-format
+msgid ""
+"\n"
+"                        You own %(current)s communities. Creating a new one costs %(cost)s Pixo.\n"
+"                        "
+msgstr ""
+"आप %(current)s समुदायों के स्वामी हैं। नया बनाने में %(cost)s Pixo का खर्च "
+"आता है।"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:45
+#: pixelwar/templates/pixelwar/create_community.html:65
 msgid "Create community"
 msgstr "समुदाय बनाएँ"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:43
-msgid "You already own a community, so you cannot create another one."
-msgstr "आप पहले से ही एक समुदाय के मालिक हैं, इसलिए आप दूसरा समुदाय नहीं बना सकते।"
-
-#: pixelwar/templates/pixelwar/community_lobby.html:48
+#: pixelwar/templates/pixelwar/community_lobby.html:51
 msgid "Your active communities"
 msgstr "आपके सक्रिय समुदाय"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:62
+#: pixelwar/templates/pixelwar/community_lobby.html:60
+msgid "Requests"
+msgstr "अनुरोध"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:64
+msgid "Slug"
+msgstr "काउंटर"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:72
+#: pixelwar/templates/pixelwar/community_lobby.html:137
+#: pixelwar/templates/pixelwar/community_lobby.html:213
 msgid "Community details"
 msgstr "समुदाय विवरण"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:92
+#: pixelwar/templates/pixelwar/community_lobby.html:102
 msgid "You have not joined any communities yet."
 msgstr "आप अभी तक किसी समुदाय में शामिल नहीं हुए हैं."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:184
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Public communities"
+msgstr "सार्वजनिक समुदाय"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:110
+#: pixelwar/templates/pixelwar/community_lobby.html:186
+msgid "Discover open communities and request to join."
+msgstr "खुले समुदायों की खोज करें और शामिल होने का अनुरोध करें।"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:132
+#: pixelwar/templates/pixelwar/community_lobby.html:208
+#, fuzzy
+#| msgid "Members"
+msgid "members"
+msgstr "सदस्यों"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:146
+msgid "Request sent"
+msgstr "निमंत्रण भेजा गया"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:159
+#: pixelwar/templates/pixelwar/community_lobby.html:179
+#: pixelwar/templates/pixelwar/community_lobby.html:217
+#: pixelwar/templates/pixelwar/invitation.html:66
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:202
+#: users/templates/users/login.html:4 users/templates/users/login.html:45
+msgid "Login"
+msgstr "लॉग इन करें"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:168
+#: pixelwar/templates/pixelwar/community_lobby.html:225
+#, fuzzy
+#| msgid "Your active communities"
+msgid "No public communities yet."
+msgstr "अभी तक कोई सार्वजनिक समुदाय नहीं है."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:175
+#: pixelwar/templates/pixelwar/invitation.html:70
+#: users/templates/users/register.html:4
+#: users/templates/users/register.html:54
+msgid "Register"
+msgstr "पंजीकरण करवाना"
+
+#: pixelwar/templates/pixelwar/create_community.html:4
+#: pixelwar/templates/pixelwar/create_community.html:9
+#, fuzzy
+#| msgid "Create community"
+msgid "Create Community"
+msgstr "समुदाय बनाएं"
+
+#: pixelwar/templates/pixelwar/create_community.html:11
+#, python-format
+msgid ""
+"\n"
+"            Choose a name, upload a cover image, and decide whether your community is private or public. Each creation costs %(cost)s Pixo.\n"
+"            "
+msgstr ""
+"एक नाम चुनें, एक कवर छवि अपलोड करें और तय करें कि आपका समुदाय निजी है या "
+"सार्वजनिक। प्रत्येक रचना की लागत %(cost)s Pixo है।"
+
+#: pixelwar/templates/pixelwar/create_community.html:36
+#: pixelwar/templates/pixelwar/create_community.html:39
+msgid "New community name"
+msgstr "नये समुदाय का नाम"
+
+#: pixelwar/templates/pixelwar/create_community.html:46
+msgid "Tell others what this community is about."
+msgstr "दूसरों को बताएं कि यह समुदाय किस बारे में है."
+
+#: pixelwar/templates/pixelwar/create_community.html:50
+#, fuzzy
+#| msgid "Community details page"
+msgid "Community cover image"
+msgstr "समुदाय कवर छवि"
 
 #: pixelwar/templates/pixelwar/guide.html:11
 #, fuzzy
 #| msgid "Everything you need to know to play Global Pixel War."
 msgid "Everything you need to know to play Pixo Canvo."
-msgstr "ग्लोबल पिक्सेल वॉर खेलने के लिए आपको जो कुछ जानना आवश्यक है।"
+msgstr "पिक्सो कैनवो खेलने के लिए आपको जो कुछ जानना आवश्यक है।"
 
 #: pixelwar/templates/pixelwar/guide.html:19
 #, fuzzy
 #| msgid ""
 #| "<strong class=\"text-slate-900\">Global Pixel War</strong> is a real-time "
-#| "collaborative canvas. Each registered player can place <strong "
-#| "class=\"text-slate-900\">one pixel every 60 seconds</strong>. Every "
-#| "placement is queued, validated, and then broadcast live via WebSocket to "
-#| "every connected player. Work together — or compete — to claim space on "
-#| "the shared canvas."
+#| "collaborative canvas. Each registered player can place <strong class=\"text-"
+#| "slate-900\">one pixel every 60 seconds</strong>. Every placement is queued, "
+#| "validated, and then broadcast live via WebSocket to every connected player. "
+#| "Work together — or compete — to claim space on the shared canvas."
 msgid ""
 "<strong class=\"text-slate-900\">Pixo Canvo</strong> is a real-time "
 "collaborative canvas. Each registered player can place <strong class=\"text-"
@@ -1537,12 +2270,12 @@ msgid ""
 "validated, and then broadcast live via WebSocket to every connected player. "
 "Work together — or compete — to claim space on the shared canvas."
 msgstr ""
-"<strong class=\"text-slate-900\">ग्लोबल पिक्सेल वॉर</strong> एक वास्तविक समय का "
-"सहयोगी कैनवास है। प्रत्येक पंजीकृत खिलाड़ी प्रत्येक 60 सेकंड में <strong class=\"text-"
-"slate-900\">एक पिक्सेल रख सकता है</strong>। प्रत्येक प्लेसमेंट को कतारबद्ध किया जाता है, "
-"सत्यापित किया जाता है, और फिर वेबसॉकेट के माध्यम से प्रत्येक कनेक्टेड प्लेयर पर लाइव "
-"प्रसारित किया जाता है। साझा कैनवास पर स्थान का दावा करने के लिए एक साथ काम करें - या "
-"प्रतिस्पर्धा करें।"
+"<strong class=\"text-slate-900\">पिक्सो कैनवो</strong> एक वास्तविक समय का "
+"सहयोगी कैनवास है। प्रत्येक पंजीकृत खिलाड़ी <strong class=\"text-"
+"slate-900\">हर 60 सेकंड में एक पिक्सेल</strong> डाल सकता है। प्रत्येक "
+"प्लेसमेंट को कतारबद्ध किया जाता है, सत्यापित किया जाता है, और फिर वेबसॉकेट "
+"के माध्यम से प्रत्येक कनेक्टेड प्लेयर पर लाइव प्रसारित किया जाता है। साझा "
+"कैनवास पर स्थान का दावा करने के लिए एक साथ काम करें - या प्रतिस्पर्धा करें।"
 
 #: pixelwar/templates/pixelwar/guide.html:31
 msgid "Placing pixels"
@@ -1558,9 +2291,9 @@ msgid ""
 "<strong>Custom Color</strong> picker next to the palette for any hex color "
 "you like. Your active selection is highlighted with a ring."
 msgstr ""
-"कैनवास पृष्ठ के शीर्ष पर 21-रंग पैलेट में से चुनें। अपनी पसंद के किसी भी हेक्स रंग के लिए पैलेट के "
-"बगल में <strong>कस्टम रंग</strong> पिकर का उपयोग करें। आपका सक्रिय चयन एक रिंग के साथ "
-"हाइलाइट किया गया है।"
+"कैनवास पृष्ठ के शीर्ष पर 21-रंग पैलेट में से चुनें। अपनी पसंद के किसी भी "
+"हेक्स रंग के लिए पैलेट के बगल में <strong>कस्टम रंग</strong> पिकर का उपयोग "
+"करें। आपका सक्रिय चयन एक रिंग के साथ हाइलाइट किया गया है।"
 
 #: pixelwar/templates/pixelwar/guide.html:44
 msgid "Zoom and navigate"
@@ -1573,9 +2306,10 @@ msgid ""
 "distraction-free experience. Zoom in before placing to avoid missing your "
 "target cell."
 msgstr ""
-"ज़ूम करने के लिए <strong>+</strong> और <strong>−</strong> बटन का उपयोग करें। स्क्रॉल "
-"करके या खींचकर पैन करें. ⛶ बटन विकर्षण-मुक्त अनुभव के लिए फ़ुल-स्क्रीन मोड में प्रवेश करता है। "
-"अपने लक्ष्य सेल से चूकने से बचने के लिए रखने से पहले ज़ूम इन करें।"
+"ज़ूम करने के लिए <strong>+</strong> और <strong>-</strong> बटन का उपयोग करें।"
+" स्क्रॉल करके या खींचकर पैन करें. ⛶ बटन विकर्षण-मुक्त अनुभव के लिए "
+"फ़ुल-स्क्रीन मोड में प्रवेश करता है। अपने लक्ष्य सेल से चूकने से बचने के लिए"
+" रखने से पहले ज़ूम इन करें।"
 
 #: pixelwar/templates/pixelwar/guide.html:51
 msgid "Click to place"
@@ -1587,9 +2321,10 @@ msgid ""
 "sent to the server, validated (cooldown, bounds, auth), and if accepted it "
 "appears on every connected player's screen within milliseconds."
 msgstr ""
-"रंग चयनित होने पर कैनवास पर किसी भी सेल पर क्लिक करें। आपका प्लेसमेंट सर्वर पर भेजा जाता "
-"है, मान्य किया जाता है (कूलडाउन, बाउंड्स, ऑथ), और यदि स्वीकार किया जाता है तो यह "
-"मिलीसेकंड के भीतर प्रत्येक कनेक्टेड प्लेयर की स्क्रीन पर दिखाई देता है।"
+"रंग चयनित होने पर कैनवास पर किसी भी सेल पर क्लिक करें। आपका प्लेसमेंट सर्वर "
+"पर भेजा जाता है, मान्य किया जाता है (कूलडाउन, बाउंड्स, ऑथ), और यदि स्वीकार "
+"किया जाता है तो यह मिलीसेकंड के भीतर प्रत्येक कनेक्टेड प्लेयर की स्क्रीन पर "
+"दिखाई देता है।"
 
 #: pixelwar/templates/pixelwar/guide.html:58
 msgid "Wait out the cooldown"
@@ -1601,9 +2336,9 @@ msgid ""
 "before placing again. The status bar shows how long remains. Rejected "
 "attempts do not reset the cooldown."
 msgstr ""
-"प्रत्येक स्वीकृत प्लेसमेंट के बाद दोबारा प्लेसमेंट करने से पहले आपको <strong>60 सेकंड</strong> "
-"प्रतीक्षा करनी होगी। स्टेटस बार दिखाता है कि कितना समय शेष है। अस्वीकृत प्रयास कूलडाउन "
-"को रीसेट नहीं करते हैं।"
+"प्रत्येक स्वीकृत प्लेसमेंट के बाद आपको दोबारा प्लेसमेंट करने से पहले "
+"<strong>60 सेकंड</strong> इंतजार करना होगा। स्टेटस बार दिखाता है कि कितना "
+"समय शेष है। अस्वीकृत प्रयास कूलडाउन को रीसेट नहीं करते हैं।"
 
 #: pixelwar/templates/pixelwar/guide.html:65
 msgid "Highlight your pixels"
@@ -1614,8 +2349,8 @@ msgid ""
 "Press <strong>Highlight My Pixels</strong> to dim everything else and see "
 "exactly which pixels you own on the current canvas."
 msgstr ""
-"बाकी सब कुछ मंद करने के लिए <strong>Highlight My Pixels</strong> दबाएँ और देखें कि "
-"वर्तमान कैनवास पर आपके पास वास्तव में कौन से पिक्सेल हैं।"
+"बाकी सब कुछ मंद करने के लिए <strong>मेरे पिक्सेल हाइलाइट करें</strong> दबाएं"
+" और देखें कि वर्तमान कैनवास पर वास्तव में आपके पास कौन से पिक्सेल हैं।"
 
 #: pixelwar/templates/pixelwar/guide.html:75
 msgid "Dynamic canvas size"
@@ -1629,37 +2364,47 @@ msgid ""
 "by a set number of rows and columns, up to a configured maximum. This keeps "
 "the canvas competitive — there is always new space to claim."
 msgstr ""
-"The canvas starts at a fixed size and <strong>automatically grows</strong> "
-"as more pixels are placed. Once 80 %% of cells are filled the grid expands "
-"by a set number of rows and columns, up to a configured maximum. This keeps "
-"the canvas competitive — there is always new space to claim."
+"कैनवास एक निश्चित आकार से शुरू होता है और अधिक पिक्सेल रखे जाने पर "
+"<strong>स्वचालित रूप से बढ़ता है</strong>। एक बार जब 80 %% सेल भर जाते हैं "
+"तो ग्रिड एक निर्धारित अधिकतम संख्या तक पंक्तियों और स्तंभों की एक निर्धारित "
+"संख्या तक विस्तारित हो जाती है। यह कैनवास को प्रतिस्पर्धी बनाए रखता है - "
+"दावा करने के लिए हमेशा नई जगह होती है।"
 
 #: pixelwar/templates/pixelwar/guide.html:93
 #, python-format
 msgid ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"Beyond the global canvas you can play inside <strong>private "
+"communities</strong>. Each community has its own independent canvas, "
+"leaderboard, and chat room. Go to the <a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-amber-800\">Communities</a> "
+"page to manage yours."
 msgstr ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"वैश्विक कैनवास से परे आप<strong>निजी समुदायों</strong>के अंदर खेल सकते हैं। "
+"प्रत्येक समुदाय का अपना स्वतंत्र कैनवास, लीडरबोर्ड और चैट रूम होता है। अपना "
+"प्रबंधन करने के लिए <a href='%(communities_url)s' class='font-semibold text-"
+"amber-600 hover:text-amber-800'>समुदाय</a> पृष्ठ पर जाएं।"
 
 #: pixelwar/templates/pixelwar/guide.html:102
 msgid "Creating a community"
 msgstr "एक समुदाय बनाना"
 
 #: pixelwar/templates/pixelwar/guide.html:103
+#, fuzzy
+#| msgid ""
+#| "Any logged-in user can create <strong>one community</strong>. Enter a name "
+#| "and click <em>Create community</em>. A URL-friendly slug is generated "
+#| "automatically. You become the owner and are added as the first member."
 msgid ""
-"Any logged-in user can create <strong>one community</strong>. Enter a name "
-"and click <em>Create community</em>. A URL-friendly slug is generated "
-"automatically. You become the owner and are added as the first member."
+"Any logged-in user can create communities without a hard limit. Each new "
+"community costs <strong>60 Pixo</strong>. Enter a name and click <em>Create "
+"community</em>. A URL-friendly slug is generated automatically. You become "
+"the owner and are added as the first member."
 msgstr ""
-"कोई भी लॉग-इन उपयोगकर्ता <strong>one समुदाय</strong> बना सकता है। एक नाम दर्ज करें "
-"और <em>समुदाय बनाएं</em> पर क्लिक करें। एक यूआरएल-अनुकूल स्लग स्वचालित रूप से उत्पन्न होता "
-"है। आप स्वामी बन जाते हैं और पहले सदस्य के रूप में जुड़ जाते हैं।"
+"कोई भी लॉग-इन उपयोगकर्ता बिना किसी कठोर सीमा के समुदाय बना सकता है। प्रत्येक"
+" नए समुदाय की लागत <strong>60 पिक्सो</strong> है। एक नाम दर्ज करें और "
+"<em>समुदाय बनाएं</em> पर क्लिक करें। एक यूआरएल-अनुकूल स्लग स्वचालित रूप से "
+"उत्पन्न होता है। आप स्वामी बन जाते हैं और पहले सदस्य के रूप में जुड़ जाते "
+"हैं।"
 
 #: pixelwar/templates/pixelwar/guide.html:109
 msgid "Inviting members"
@@ -1671,9 +2416,9 @@ msgid ""
 "shareable URL. Anyone who opens that link and is logged in will be added to "
 "the community immediately."
 msgstr ""
-"साझा करने योग्य URL वाला पॉपअप खोलने के लिए किसी भी सामुदायिक कार्ड पर <em>आमंत्रण "
-"लिंक</em> पर क्लिक करें। जो कोई भी उस लिंक को खोलता है और लॉग इन करता है उसे तुरंत "
-"समुदाय में जोड़ दिया जाएगा।"
+"साझा करने योग्य URL वाला पॉपअप खोलने के लिए किसी भी सामुदायिक कार्ड पर "
+"<em>आमंत्रण लिंक</em> पर क्लिक करें। जो कोई भी उस लिंक को खोलता है और लॉग इन"
+" करता है उसे तुरंत समुदाय में जोड़ दिया जाएगा।"
 
 #: pixelwar/templates/pixelwar/guide.html:116
 msgid "Leaving a community"
@@ -1685,8 +2430,9 @@ msgid ""
 "community</em> and confirm. The owner cannot leave — they must delete the "
 "community instead."
 msgstr ""
-"सदस्य किसी भी समुदाय को छोड़ सकते हैं जिसे उन्होंने नहीं बनाया है। <em>समुदाय छोड़ें</em> पर "
-"क्लिक करें और पुष्टि करें। स्वामी छोड़ नहीं सकता - इसके बजाय उन्हें समुदाय को हटाना होगा।"
+"सदस्य किसी भी समुदाय को छोड़ सकते हैं जिसे उन्होंने नहीं बनाया है। "
+"<em>समुदाय छोड़ें</em> पर क्लिक करें और पुष्टि करें। स्वामी छोड़ नहीं सकता -"
+" इसके बजाय उन्हें समुदाय को हटाना होगा।"
 
 #: pixelwar/templates/pixelwar/guide.html:123
 msgid "Deleting a community"
@@ -1698,9 +2444,9 @@ msgid ""
 "confirm. This permanently removes the community, all its pixels, chat "
 "messages, and membership records — it cannot be undone."
 msgstr ""
-"केवल स्वामी ही किसी समुदाय को हटा सकता है. <em>समुदाय हटाएं</em> पर क्लिक करें और "
-"पुष्टि करें। यह समुदाय, उसके सभी पिक्सेल, चैट संदेश और सदस्यता रिकॉर्ड को स्थायी रूप से हटा "
-"देता है - इसे पूर्ववत नहीं किया जा सकता है।"
+"केवल स्वामी ही किसी समुदाय को हटा सकता है. <em>समुदाय हटाएं</em> पर क्लिक "
+"करें और पुष्टि करें। यह समुदाय, उसके सभी पिक्सेल, चैट संदेश और सदस्यता "
+"रिकॉर्ड को स्थायी रूप से हटा देता है - इसे पूर्ववत नहीं किया जा सकता है।"
 
 #: pixelwar/templates/pixelwar/guide.html:130
 msgid "Community details page"
@@ -1712,36 +2458,32 @@ msgid ""
 "showing: community info, a live canvas preview (click to enlarge), and a "
 "sortable member table with each member's join date and pixel count."
 msgstr ""
-"एक समर्पित पेज खोलने के लिए किसी भी कार्ड पर <em>समुदाय विवरण</em> पर क्लिक करें: "
-"सामुदायिक जानकारी, एक लाइव कैनवास पूर्वावलोकन (बड़ा करने के लिए क्लिक करें), और प्रत्येक "
-"सदस्य की शामिल होने की तारीख और पिक्सेल गिनती के साथ एक क्रमबद्ध सदस्य तालिका।"
+"एक समर्पित पृष्ठ खोलने के लिए किसी भी कार्ड पर <em>समुदाय विवरण</em> पर "
+"क्लिक करें: समुदाय जानकारी, एक लाइव कैनवास पूर्वावलोकन (बड़ा करने के लिए "
+"क्लिक करें), और प्रत्येक सदस्य की शामिल होने की तारीख और पिक्सेल गिनती के "
+"साथ एक क्रमबद्ध सदस्य तालिका।"
 
 #: pixelwar/templates/pixelwar/guide.html:140
 msgid "Leaderboard & chat"
 msgstr "लीडरबोर्ड और चैट"
 
-#: pixelwar/templates/pixelwar/guide.html:146
-#: pixelwar/templates/pixelwar/leaders.html:4
-msgid "Ranking"
-msgstr ""
-
 #: pixelwar/templates/pixelwar/guide.html:147
 #, fuzzy, python-format
 #| msgid ""
 #| "The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by "
-#| "the number of accepted pixels currently on the canvas. The list is "
-#| "available for the global canvas and for each community you belong to."
+#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the"
+#| " number of accepted pixels currently on the canvas. The list is available "
+#| "for the global canvas and for each community you belong to."
 msgid ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Ranking</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-emerald-800\">Ranking</a> page ranks every contributor by the "
+"number of accepted pixels currently on the canvas. The list is available for"
+" the global canvas and for each community you belong to."
 msgstr ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"<a href='%(leaders_url)s' class='font-semibold text-emerald-600 hover:text-"
+"emerald-800'>रैंकिंग</a> पृष्ठ वर्तमान में कैनवास पर स्वीकृत पिक्सेल की "
+"संख्या के आधार पर प्रत्येक योगदानकर्ता को रैंक करता है। सूची वैश्विक कैनवास "
+"और आपके प्रत्येक समुदाय के लिए उपलब्ध है।"
 
 #: pixelwar/templates/pixelwar/guide.html:153
 msgid "Live chat"
@@ -1754,9 +2496,10 @@ msgid ""
 "read them. Community chat is scoped — messages in one community are not "
 "visible in another."
 msgstr ""
-"प्रत्येक कैनवास में एक लाइव चैट साइडबार है। इसे निचले दाएं कोने में फ्लोटिंग बटन से टॉगल करें। "
-"लॉग-इन उपयोगकर्ता संदेश भेज सकते हैं; हर कोई उन्हें पढ़ सकता है. सामुदायिक चैट का दायरा है "
-"- एक समुदाय के संदेश दूसरे समुदाय में दिखाई नहीं देते हैं।"
+"प्रत्येक कैनवास में एक लाइव चैट साइडबार है। इसे निचले दाएं कोने में फ्लोटिंग"
+" बटन से टॉगल करें। लॉग-इन उपयोगकर्ता संदेश भेज सकते हैं; हर कोई उन्हें पढ़ "
+"सकता है. सामुदायिक चैट का दायरा है - एक समुदाय के संदेश दूसरे समुदाय में "
+"दिखाई नहीं देते हैं।"
 
 #: pixelwar/templates/pixelwar/guide.html:162
 msgid "Your account"
@@ -1767,36 +2510,40 @@ msgid ""
 "Click your <strong>avatar</strong> in the top navigation to open Profile "
 "Settings."
 msgstr ""
-"प्रोफ़ाइल सेटिंग खोलने के लिए शीर्ष नेविगेशन में अपने <strong>अवतार</strong> पर क्लिक करें।"
+"प्रोफ़ाइल सेटिंग खोलने के लिए शीर्ष नेविगेशन में अपने <strong>अवतार</strong>"
+" पर क्लिक करें।"
 
 #: pixelwar/templates/pixelwar/guide.html:165
 msgid ""
-"Change your <strong>username</strong>, upload a custom <strong>avatar</"
-"strong>, or update your <strong>password</strong> at any time."
+"Change your <strong>username</strong>, upload a custom "
+"<strong>avatar</strong>, or update your <strong>password</strong> at any "
+"time."
 msgstr ""
-"अपना <strong>उपयोगकर्ता नाम</strong> बदलें, एक कस्टम <strong>अवतार</strong> "
-"अपलोड करें, या किसी भी समय अपना <strong>password</strong> अपडेट करें।"
+"किसी भी समय अपना <strong>उपयोगकर्ता नाम</strong> बदलें, एक कस्टम "
+"<strong>अवतार</strong> अपलोड करें, या अपना <strong>पासवर्ड</strong> अपडेट "
+"करें।"
 
 #: pixelwar/templates/pixelwar/guide.html:166
 msgid ""
 "You must be logged in to place pixels, send chat messages, create or join "
 "communities."
 msgstr ""
-"आपको पिक्सेल लगाने, चैट संदेश भेजने, समुदाय बनाने या उनमें शामिल होने के लिए लॉग इन होना "
-"होगा।"
+"आपको पिक्सेल लगाने, चैट संदेश भेजने, समुदाय बनाने या उनमें शामिल होने के लिए"
+" लॉग इन होना होगा।"
 
 #: pixelwar/templates/pixelwar/guide.html:172
-#: users/templates/users/login.html:54 users/templates/users/register.html:14
+#: users/templates/users/login.html:58 users/templates/users/register.html:9
 msgid "Create account"
 msgstr "खाता बनाएं"
 
 #: pixelwar/templates/pixelwar/guide.html:176
-#: users/templates/users/register.html:72
+#: users/templates/users/register.html:60
 msgid "Log in"
 msgstr "लॉग इन करें"
 
 #: pixelwar/templates/pixelwar/guide.html:185
-#: pixelwar/templates/pixelwar/leaders.html:77
+#: pixelwar/templates/pixelwar/leaders_partial.html:54
+#: users/templates/users/activation_success.html:27
 msgid "Go to Canvas"
 msgstr "कैनवास पर जाएँ"
 
@@ -1830,20 +2577,23 @@ msgid "Maybe later"
 msgstr "शायद बाद में"
 
 #: pixelwar/templates/pixelwar/invitation.html:49
-msgid "You need an account to join. Accepting will take you to register/login."
+msgid ""
+"You need an account to join. Accepting will take you to register/login."
 msgstr ""
-"शामिल होने के लिए आपको एक खाते की आवश्यकता है. स्वीकार करने पर आपको पंजीकरण/लॉगिन "
-"करना होगा।"
+"शामिल होने के लिए आपको एक खाते की आवश्यकता है. स्वीकार करने पर आपको "
+"पंजीकरण/लॉगिन करना होगा।"
 
 #: pixelwar/templates/pixelwar/invitation.html:59
 msgid "Login or register required"
-msgstr ""
+msgstr "लॉगिन या रजिस्टर करना आवश्यक है"
 
 #: pixelwar/templates/pixelwar/invitation.html:61
 msgid ""
 "To join this community, please login or create an account. After that, open "
 "this invitation link again and accept."
 msgstr ""
+"इस समुदाय में शामिल होने के लिए, कृपया लॉगिन करें या एक खाता बनाएं। इसके बाद"
+" इस इनविटेशन लिंक को दोबारा खोलें और एक्सेप्ट करें।"
 
 #: pixelwar/templates/pixelwar/leaders.html:9
 msgid "Top Players"
@@ -1853,47 +2603,380 @@ msgstr "शीर्ष खिलाड़ी"
 msgid "Ranked by accepted pixel placements on the shared canvas."
 msgstr "साझा कैनवास पर स्वीकृत पिक्सेल प्लेसमेंट के आधार पर रैंक किया गया।"
 
-#: pixelwar/templates/pixelwar/leaders.html:17
+#: pixelwar/templates/pixelwar/leaders.html:22
 msgid "Global"
 msgstr "वैश्विक"
 
-#: pixelwar/templates/pixelwar/leaders.html:31
+#: pixelwar/templates/pixelwar/leaders_partial.html:5
 msgid "Player"
 msgstr "खिलाड़ी"
 
-#: pixelwar/templates/pixelwar/leaders.html:32
+#: pixelwar/templates/pixelwar/leaders_partial.html:6
 msgid "Pixels placed"
 msgstr "पिक्सेल रखे गए"
 
-#: pixelwar/templates/pixelwar/leaders.html:74
+#: pixelwar/templates/pixelwar/leaders_partial.html:51
 msgid "No ranked players yet."
 msgstr "अभी तक कोई रैंक वाला खिलाड़ी नहीं."
 
-#: pixelwar/templates/pixelwar/leaders.html:75
+#: pixelwar/templates/pixelwar/leaders_partial.html:52
 msgid "Start drawing to become the first legend."
 msgstr "पहली किंवदंती बनने के लिए चित्र बनाना प्रारंभ करें।"
 
-#: users/templates/users/login.html:14
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:43
+msgid "Latest 10 updates"
+msgstr "नवीनतम 10 अपडेट"
+
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:65
+msgid "View all"
+msgstr "सभी को देखें"
+
+#: users/email_service.py:76
+#: users/templates/users/emails/account_activation.html:7
+#, fuzzy
+#| msgid "Your account"
+msgid "Activate your account"
+msgstr "अपना खाता सक्रिय करें"
+
+#: users/email_service.py:177
+#: users/templates/users/emails/password_reset.html:7
+#, fuzzy
+#| msgid "New password"
+msgid "Reset your password"
+msgstr "अपना पासवर्ड रीसेट करें"
+
+#: users/email_service.py:282
+#: users/templates/users/emails/email_verify_change.html:7
+msgid "Verify your new email address"
+msgstr "अपना नया ईमेल पता सत्यापित करें"
+
+#: users/email_service.py:339
+#, python-format
+msgid "New Contact Us message: %(subject)s"
+msgstr "नया हमसे संपर्क करें संदेश: %(subject)s"
+
+#: users/templates/users/activation_success.html:4
+msgid "Email Activated"
+msgstr "ईमेल सक्रिय"
+
+#: users/templates/users/activation_success.html:18
+msgid "Email Successfully Activated"
+msgstr "ईमेल सफलतापूर्वक सक्रिय हो गया"
+
+#: users/templates/users/activation_success.html:21
+msgid ""
+"Your account is now verified and ready to use. You can continue to the app "
+"and start placing pixels, joining communities, and competing on the ranking."
+msgstr ""
+"आपका खाता अब सत्यापित है और उपयोग के लिए तैयार है। आप ऐप को जारी रख सकते हैं"
+" और पिक्सेल लगाना शुरू कर सकते हैं, समुदायों में शामिल हो सकते हैं और "
+"रैंकिंग पर प्रतिस्पर्धा कर सकते हैं।"
+
+#: users/templates/users/contact_us.html:13
+msgid "Share your question, issue, or feedback. Everyone can contact us."
+msgstr ""
+"अपना प्रश्न, समस्या या प्रतिक्रिया साझा करें। हर कोई हमसे संपर्क कर सकता है."
+
+#: users/templates/users/contact_us.html:41
+msgid "Signed-in contact details"
+msgstr "साइन-इन संपर्क विवरण"
+
+#: users/templates/users/contact_us.html:43
+#, python-format
+msgid ""
+"\n"
+"                            Your message will be sent using your account details: %(name)s (%(email)s).\n"
+"                        "
+msgstr ""
+"आपका संदेश आपके खाते के विवरण का उपयोग करके भेजा जाएगा: %(name)s "
+"(%(email)s)।"
+
+#: users/templates/users/contact_us.html:53
+#: users/templates/users/emails/contact_us_notification.html:45
+#: users/templates/users/emails/contact_us_notification.txt:5
+msgid "Name"
+msgstr "नाम"
+
+#: users/templates/users/contact_us.html:74
+#: users/templates/users/emails/contact_us_notification.html:53
+#: users/templates/users/emails/contact_us_notification.txt:7
+msgid "Subject"
+msgstr "विषय"
+
+#: users/templates/users/contact_us.html:93
+msgid ""
+"For security reasons, code-like markup and scripts are blocked in this form."
+msgstr ""
+"सुरक्षा कारणों से, कोड-जैसे मार्कअप और स्क्रिप्ट इस फ़ॉर्म में अवरुद्ध हैं।"
+
+#: users/templates/users/contact_us.html:98
+msgid "Send message"
+msgstr "मेसेज भेजें"
+
+#: users/templates/users/contact_us.html:108
+msgid "Your Tickets"
+msgstr "आपके टिकट"
+
+#: users/templates/users/contact_us.html:111
+msgid "Open any ticket card to see the full message you sent."
+msgstr "आपके द्वारा भेजा गया पूरा संदेश देखने के लिए कोई भी टिकट कार्ड खोलें।"
+
+#: users/templates/users/contact_us.html:115
+msgid "tickets"
+msgstr "टिकट"
+
+#: users/templates/users/contact_us.html:167
+#: users/templates/users/emails/contact_us_notification.html:57
+#: users/templates/users/emails/contact_us_notification.txt:8
+msgid "Status"
+msgstr "स्थिति"
+
+#: users/templates/users/contact_us.html:181
+msgid "Full message"
+msgstr "पूरा संदेश"
+
+#: users/templates/users/emails/account_activation.html:33
+#: users/templates/users/emails/account_activation.txt:2
+#: users/templates/users/emails/email_verify_change.html:33
+#: users/templates/users/emails/email_verify_change.txt:2
+#: users/templates/users/emails/password_reset.html:33
+#: users/templates/users/emails/password_reset.txt:2
+#, python-format
+msgid "Hello %(username)s,"
+msgstr "नमस्ते %(username)s,"
+
+#: users/templates/users/emails/account_activation.html:36
+#: users/templates/users/emails/account_activation.txt:4
+msgid ""
+"Thanks for registering. Please confirm your email address to activate your "
+"account."
+msgstr ""
+"पंजीकरण के लिए धन्यवाद. कृपया अपना खाता सक्रिय करने के लिए अपने ईमेल पते की "
+"पुष्टि करें।"
+
+#: users/templates/users/emails/account_activation.html:40
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account"
+msgstr "खाता सक्रिय करें"
+
+#: users/templates/users/emails/account_activation.html:44
+#: users/templates/users/emails/account_activation.txt:9
+#: users/templates/users/emails/email_verify_change.html:47
+#: users/templates/users/emails/email_verify_change.txt:11
+#, python-format
+msgid "This link expires in %(hours)s hours."
+msgstr "यह लिंक %(hours)s घंटे में समाप्त हो जाएगा।"
+
+#: users/templates/users/emails/account_activation.html:53
+#: users/templates/users/emails/email_verify_change.html:56
+#: users/templates/users/emails/password_reset.html:53
+msgid ""
+"If the button does not work, copy and paste this link into your browser:"
+msgstr ""
+"यदि बटन काम नहीं करता है, तो इस लिंक को कॉपी करें और अपने ब्राउज़र में पेस्ट"
+" करें:"
+
+#: users/templates/users/emails/account_activation.html:63
+msgid "Built with bright pixels and bold colors."
+msgstr "चमकीले पिक्सेल और बोल्ड रंगों के साथ निर्मित।"
+
+#: users/templates/users/emails/account_activation.txt:6
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account:"
+msgstr "खाता सक्रिय करें:"
+
+#: users/templates/users/emails/contact_us_notification.html:7
+msgid "New Contact Us message"
+msgstr "नया हमसे संपर्क करें संदेश"
+
+#: users/templates/users/emails/contact_us_notification.html:33
+#: users/templates/users/emails/contact_us_notification.txt:2
+msgid "New Contact Us submission"
+msgstr "नया हमसे संपर्क करें सबमिशन"
+
+#: users/templates/users/emails/contact_us_notification.html:36
+msgid "A new message was submitted from the Contact Us page."
+msgstr "हमसे संपर्क करें पृष्ठ से एक नया संदेश सबमिट किया गया था।"
+
+#: users/templates/users/emails/contact_us_notification.html:41
+#: users/templates/users/emails/contact_us_notification.txt:4
+msgid "Message ID"
+msgstr "संदेश आईडी"
+
+#: users/templates/users/emails/contact_us_notification.html:61
+#: users/templates/users/emails/contact_us_notification.txt:9
+msgid "Submitted at"
+msgstr "पर प्रस्तुत किया गया"
+
+#: users/templates/users/emails/email_verify_change.html:36
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the button below to complete the update."
+msgstr ""
+"आपने अपना ईमेल पता बदलने का अनुरोध किया है. अपडेट पूरा करने के लिए कृपया "
+"नीचे दिए गए बटन पर क्लिक करके अपना नया ईमेल सत्यापित करें।"
+
+#: users/templates/users/emails/email_verify_change.html:39
+#: users/templates/users/emails/email_verify_change.txt:6
+msgid "New email:"
+msgstr "नया ईमेल:"
+
+#: users/templates/users/emails/email_verify_change.html:43
+msgid "Verify email address"
+msgstr "ईमेल पते की पुष्टि करें"
+
+#: users/templates/users/emails/email_verify_change.html:66
+#: users/templates/users/emails/email_verify_change.txt:13
+msgid "This is an automated email. Please do not reply to this message."
+msgstr "यह एक स्वचालित ईमेल है. कृपया इस संदेश का उत्तर मत दें।"
+
+#: users/templates/users/emails/email_verify_change.txt:4
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the link below to complete the update."
+msgstr ""
+"आपने अपना ईमेल पता बदलने का अनुरोध किया है. अपडेट पूरा करने के लिए कृपया "
+"नीचे दिए गए लिंक पर क्लिक करके अपना नया ईमेल सत्यापित करें।"
+
+#: users/templates/users/emails/email_verify_change.txt:8
+msgid "Verify email address:"
+msgstr "ईमेल पते की पुष्टि करें:"
+
+#: users/templates/users/emails/password_reset.html:36
+msgid ""
+"You requested to reset your password. Click the button below to set a new "
+"one."
+msgstr ""
+"आपने अपना पासवर्ड रीसेट करने का अनुरोध किया है. नया सेट करने के लिए नीचे दिए"
+" गए बटन पर क्लिक करें।"
+
+#: users/templates/users/emails/password_reset.html:40
+#, fuzzy
+#| msgid "New password"
+msgid "Reset password"
+msgstr "पासवर्ड रीसेट"
+
+#: users/templates/users/emails/password_reset.html:44
+#: users/templates/users/emails/password_reset.txt:7
+#, python-format
+msgid "This link expires in %(minutes)s minutes."
+msgstr "यह लिंक %(minutes)s मिनट में समाप्त हो जाएगा।"
+
+#: users/templates/users/emails/password_reset.txt:4
+msgid "You requested to reset your password. Use this link to set a new one:"
+msgstr ""
+"आपने अपना पासवर्ड रीसेट करने का अनुरोध किया है. नया सेट करने के लिए इस लिंक "
+"का उपयोग करें:"
+
+#: users/templates/users/forgot_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Forgot Password"
+msgstr "पासवर्ड भूल गए"
+
+#: users/templates/users/forgot_password.html:9
+msgid "Forgot your password?"
+msgstr "अपना कूट शब्द भूल गए?"
+
+#: users/templates/users/forgot_password.html:11
+msgid ""
+"Enter your username or email. We will send you a reset link valid for 30 "
+"minutes."
+msgstr ""
+"अपना उपयोगकर्ता नाम या ईमेल दर्ज करें. हम आपको 30 मिनट के लिए वैध रीसेट लिंक"
+" भेजेंगे।"
+
+#: users/templates/users/forgot_password.html:23
+#: users/templates/users/login.html:33
+#, fuzzy
+#| msgid "Username"
+msgid "Username or email"
+msgstr "उपयोगकर्ता का नाम या ईमेल"
+
+#: users/templates/users/forgot_password.html:29
+msgid "Send reset link"
+msgstr "रीसेट लिंक भेजें"
+
+#: users/templates/users/forgot_password.html:37
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Back to login"
+msgstr "लॉगिन पर वापस जाएं"
+
+#: users/templates/users/login.html:9
 msgid "Welcome back"
 msgstr "वापसी पर स्वागत है"
 
-#: users/templates/users/login.html:15
+#: users/templates/users/login.html:10
 msgid "Sign in to place pixels and join the battle."
 msgstr "पिक्सेल लगाने के लिए साइन इन करें और लड़ाई में शामिल हों।"
 
-#: users/templates/users/login.html:36
-#: users/templates/users/profile_settings.html:48
-#: users/templates/users/register.html:36
-msgid "Username"
-msgstr "उपयोगकर्ता नाम"
-
-#: users/templates/users/login.html:42 users/templates/users/register.html:48
+#: users/templates/users/login.html:39 users/templates/users/register.html:36
+#: users/templates/users/reset_password.html:21
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: users/templates/users/login.html:53
+#: users/templates/users/login.html:52
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Forgot password?"
+msgstr "पासवर्ड भूल गए?"
+
+#: users/templates/users/login.html:57
 msgid "New here?"
 msgstr "अब यहां?"
+
+#: users/templates/users/partials/activation_email_panel.html:18
+msgid "Send activation email"
+msgstr "सक्रियण ईमेल भेजें"
+
+#: users/templates/users/partials/pending_email_panel.html:7
+msgid "Email verification pending"
+msgstr "ईमेल सत्यापन लंबित है"
+
+#: users/templates/users/partials/pending_email_panel.html:10
+#, python-format
+msgid ""
+"\n"
+"                        We sent a verification email to <strong>%(email)s</strong>.\n"
+"                        Please verify your new email address to complete the update.\n"
+"                    "
+msgstr ""
+"हमने <strong>%(email)s</strong> पर एक सत्यापन ईमेल भेजा।\n"
+"                        अपडेट पूरा करने के लिए कृपया अपना नया ईमेल पता सत्यापित करें।"
+
+#: users/templates/users/partials/pending_email_panel.html:16
+msgid "Check your spam folder if you don't see the email."
+msgstr "यदि आपको ईमेल नहीं दिखता है तो अपना स्पैम फ़ोल्डर जांचें।"
+
+#: users/templates/users/partials/pending_email_panel.html:22
+msgid "Cancel the email change? Your current email will stay unchanged."
+msgstr "ईमेल परिवर्तन रद्द करें? आपका वर्तमान ईमेल अपरिवर्तित रहेगा."
+
+#: users/templates/users/partials/profile_avatar_card.html:32
+msgid "Upload avatar"
+msgstr "अवतार अपलोड करें"
+
+#: users/templates/users/partials/profile_avatar_card.html:41
+msgid "Signed in as"
+msgstr "इस रूप में साइन इन किया"
+
+#: users/templates/users/partials/profile_avatar_card.html:43
+msgid "Click + icon to upload instantly"
+msgstr "तुरंत अपलोड करने के लिए + आइकन पर क्लिक करें"
+
+#: users/templates/users/partials/profile_avatar_card.html:49
+#: users/templates/users/partials/profile_avatar_card.html:54
+msgid "Logout"
+msgstr "लॉग आउट"
+
+#: users/templates/users/partials/profile_avatar_card.html:59
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Avatar updated."
+msgstr "अवतार अपडेट किया गया."
 
 #: users/templates/users/profile_settings.html:4
 #: users/templates/users/profile_settings.html:9
@@ -1904,50 +2987,121 @@ msgstr "प्रोफ़ाइल सेटिंग्स"
 msgid "Update your account details, avatar, and password."
 msgstr "अपना खाता विवरण, अवतार और पासवर्ड अपडेट करें।"
 
-#: users/templates/users/profile_settings.html:54
-#: users/templates/users/register.html:42
-msgid "Email"
-msgstr "ईमेल"
+#: users/templates/users/profile_settings.html:18
+msgid "Referral Program"
+msgstr "नाम लेने का कार्यक्रम"
 
-#: users/templates/users/profile_settings.html:60
-msgid "Avatar image"
-msgstr "अवतार छवि"
+#: users/templates/users/profile_settings.html:19
+msgid ""
+"Share your personal referral link. You earn 5 Pixo when a referred user "
+"reaches 10 accepted pixels."
+msgstr ""
+"अपना व्यक्तिगत रेफरल लिंक साझा करें। जब कोई संदर्भित उपयोगकर्ता 10 स्वीकृत "
+"पिक्सेल तक पहुँच जाता है तो आप 5 पिक्सो अर्जित करते हैं।"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:25
+#, fuzzy
+#| msgid "Copy URL"
+msgid "Copy"
+msgstr "प्रतिलिपि"
+
+#: users/templates/users/profile_settings.html:56
+msgid "General details"
+msgstr "सामान्य विवरण"
+
+#: users/templates/users/profile_settings.html:58
+#: users/templates/users/register.html:25
+msgid "Username"
+msgstr "उपयोगकर्ता नाम"
+
+#: users/templates/users/profile_settings.html:63
+#: users/templates/users/register.html:20
+msgid "Full Name"
+msgstr "पूरा नाम"
+
+#: users/templates/users/profile_settings.html:75
+#: users/templates/users/reset_password.html:33
 msgid "Change password"
 msgstr "पासवर्ड बदलें"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:75
 msgid "optional"
 msgstr "वैकल्पिक"
 
-#: users/templates/users/profile_settings.html:69
+#: users/templates/users/profile_settings.html:77
 msgid "New password"
 msgstr "नया पासवर्ड"
 
-#: users/templates/users/profile_settings.html:74
+#: users/templates/users/profile_settings.html:82
 msgid "Confirm new password"
 msgstr "नए पासवर्ड की पुष्टि करें"
 
-#: users/templates/users/profile_settings.html:83
+#: users/templates/users/profile_settings.html:91
 msgid "Save changes"
 msgstr "परिवर्तनों को सुरक्षित करें"
 
-#: users/templates/users/register.html:15
-msgid "Email is required. Avatar is optional."
-msgstr "ईमेल की जरूरत है। अवतार वैकल्पिक है."
+#: users/templates/users/register.html:10
+#, fuzzy
+#| msgid "Email is required. Avatar is optional."
+msgid "Email and Full Name are optional. Avatar is optional."
+msgstr "ईमेल और पूरा नाम वैकल्पिक हैं. अवतार वैकल्पिक है."
 
-#: users/templates/users/register.html:54
+#: users/templates/users/register.html:42
+#: users/templates/users/reset_password.html:27
 msgid "Confirm password"
 msgstr "पासवर्ड की पुष्टि कीजिये"
 
-#: users/templates/users/register.html:60
+#: users/templates/users/register.html:48
 msgid "Avatar image (optional)"
 msgstr "अवतार छवि (वैकल्पिक)"
 
-#: users/templates/users/register.html:71
+#: users/templates/users/register.html:59
 msgid "Already have an account?"
 msgstr "क्या आपके पास पहले से एक खाता मौजूद है?"
+
+#: users/templates/users/reset_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Reset Password"
+msgstr "पासवर्ड रीसेट"
+
+#: users/templates/users/reset_password.html:9
+#, fuzzy
+#| msgid "New password"
+msgid "Set a new password"
+msgstr "नया पासवर्ड सेट करें"
+
+#: users/templates/users/reset_password.html:10
+msgid "Enter your new password and confirm it."
+msgstr "अपना नया पासवर्ड दर्ज करें और इसकी पुष्टि करें।"
+
+#: users/views.py:340
+msgid "Referral link is invalid."
+msgstr "रेफ़रल लिंक अमान्य है."
+
+#: users/views.py:349
+msgid "Self-referral is not allowed."
+msgstr "स्व-रेफ़रल की अनुमति नहीं है."
+
+#: users/views.py:362
+msgid "Referral was registered."
+msgstr "रेफरल पंजीकृत किया गया था."
+
+#~ msgid "Top"
+#~ msgstr "शीर्ष"
+
+#~ msgid "Players"
+#~ msgstr "खिलाड़ी"
+
+#~ msgid "Guide"
+#~ msgstr "मार्गदर्शिका"
+
+#~ msgid "Language"
+#~ msgstr "भाषा"
+
+#~ msgid "You already own a community, so you cannot create another one."
+#~ msgstr ""
+#~ "आप पहले से ही एक समुदाय के मालिक हैं, इसलिए आप दूसरा समुदाय नहीं बना सकते।"
 
 #~ msgid "How It Works"
 #~ msgstr "यह कैसे काम करता है"

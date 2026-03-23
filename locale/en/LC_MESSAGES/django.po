@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-17 14:29+0000\n"
+"POT-Creation-Date: 2026-03-21 14:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,380 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Notifications/signals.py:24
+msgid "Confirm your email"
+msgstr "Confirm your email"
+
+#: Notifications/signals.py:26
+msgid ""
+"Validate your email to unlock chat and community creation. If you did not "
+"receive the email, open Profile Details and resend it."
+msgstr ""
+"Validate your email to unlock chat and community creation. If you did not "
+"receive the email, open Profile Details and resend it."
+
+#: Notifications/signals.py:42
+msgid "Verify your new email"
+msgstr "Verify your new email"
+
+#: Notifications/signals.py:44
+#, python-format
+msgid ""
+"You requested to change your email to %(email)s. We've sent a verification "
+"link there — click it to confirm the update."
+msgstr ""
+"You requested to change your email to %(email)s. We've sent a verification "
+"link there — click it to confirm the update."
+
+#: Notifications/signals.py:60
+msgid "Email confirmed"
+msgstr "Email confirmed"
+
+#: Notifications/signals.py:61
+msgid "Congratulations. Your email has been confirmed successfully."
+msgstr "Congratulations. Your email has been confirmed successfully."
+
+#: Notifications/signals.py:75
+msgid "New join request"
+msgstr "New join request"
+
+#: Notifications/signals.py:76
+#, python-format
+msgid "%(username)s requested to join %(community)s."
+msgstr "%(username)s requested to join %(community)s."
+
+#: Notifications/signals.py:104
+msgid "Join request approved"
+msgstr "Join request approved"
+
+#: Notifications/signals.py:104
+msgid "Join request declined"
+msgstr "Join request declined"
+
+#: Notifications/signals.py:106
+#, python-format
+msgid "Your request to join %(community)s was approved."
+msgstr "Your request to join %(community)s was approved."
+
+#: Notifications/signals.py:108
+#, python-format
+msgid "Your request to join %(community)s was declined."
+msgstr "Your request to join %(community)s was declined."
+
+#: Notifications/templates/Notifications/notifications_list.html:4
+#: Notifications/templates/Notifications/notifications_list.html:11
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:42
+msgid "Notifications"
+msgstr "Notifications"
+
+#: Notifications/templates/Notifications/notifications_list.html:12
+msgid "Track join requests, approvals, and other account updates."
+msgstr "Track join requests, approvals, and other account updates."
+
+#: Notifications/templates/Notifications/notifications_list.html:23
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:55
+msgid "Mark all as read"
+msgstr "Mark all as read"
+
+#: Notifications/templates/Notifications/notifications_list.html:41
+#, python-format
+msgid "%(counter)s unread"
+msgid_plural "%(counter)s unread"
+msgstr[0] "%(counter)s unread"
+msgstr[1] "%(counter)s unread"
+
+#: Notifications/templates/Notifications/notifications_list.html:106
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:128
+msgid "No notifications yet."
+msgstr "No notifications yet."
+
+#: env/Lib/site-packages/click/_termui_impl.py:613
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: env/Lib/site-packages/click/_termui_impl.py:617
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1114
+#: env/Lib/site-packages/click/core.py:1151
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1170
+#, fuzzy
+#| msgid "optional"
+msgid "Options"
+msgstr "optional"
+
+#: env/Lib/site-packages/click/core.py:1245
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/core.py:1264
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1448
+msgid "Aborted!"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1822
+#, fuzzy
+#| msgid "Communities"
+msgid "Commands"
+msgstr "Communities"
+
+#: env/Lib/site-packages/click/core.py:1853
+msgid "Missing command."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:1931
+msgid "No such command {name!r}."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2355
+msgid "Value must be an iterable."
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:2378
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/core.py:2567
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3015
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3018
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: env/Lib/site-packages/click/core.py:3082
+msgid "(dynamic)"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:50
+#: env/Lib/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: env/Lib/site-packages/click/exceptions.py:289
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/formatting.py:156
+msgid "Usage:"
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:199
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:381
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: env/Lib/site-packages/click/parser.py:444
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/shell_completion.py:332
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: env/Lib/site-packages/click/shell_completion.py:339
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:165
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:181
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:183
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:194
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:253
+msgid "Error: invalid input"
+msgstr ""
+
+#: env/Lib/site-packages/click/termui.py:872
+msgid "Press any key to continue..."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:369
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/types.py:460
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/Lib/site-packages/click/types.py:482
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:719
+msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:747
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:937
+msgid "file"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:939
+msgid "directory"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:941
+msgid "path"
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:988
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:997
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1005
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1014
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1023
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1032
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: env/Lib/site-packages/click/types.py:1099
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
 
 #: env/Lib/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -83,8 +457,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:297
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: env/Lib/site-packages/django/core/validators.py:309
@@ -303,8 +677,8 @@ msgstr ""
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1570
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: env/Lib/site-packages/django/db/models/fields/__init__.py:1575
@@ -483,7 +857,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: env/Lib/site-packages/django/forms/boundfield.py:185
 msgid ":?.!"
 msgstr ""
@@ -533,7 +908,8 @@ msgstr ""
 
 #: env/Lib/site-packages/django/forms/fields.py:643
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -640,7 +1016,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1450
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: env/Lib/site-packages/django/forms/models.py:1594
@@ -742,30 +1119,37 @@ msgid "noon"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:7
+#: env/Lib/site-packages/tornado/locale.py:295
 msgid "Monday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:8
+#: env/Lib/site-packages/tornado/locale.py:296
 msgid "Tuesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:9
+#: env/Lib/site-packages/tornado/locale.py:297
 msgid "Wednesday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:10
+#: env/Lib/site-packages/tornado/locale.py:298
 msgid "Thursday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:11
+#: env/Lib/site-packages/tornado/locale.py:299
 msgid "Friday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:12
+#: env/Lib/site-packages/tornado/locale.py:300
 msgid "Saturday"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:13
+#: env/Lib/site-packages/tornado/locale.py:301
 msgid "Sunday"
 msgstr ""
 
@@ -798,54 +1182,66 @@ msgid "Sun"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:25
+#: env/Lib/site-packages/tornado/locale.py:281
 msgid "January"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:26
+#: env/Lib/site-packages/tornado/locale.py:282
 msgid "February"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:27
+#: env/Lib/site-packages/tornado/locale.py:283
 msgid "March"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:28
+#: env/Lib/site-packages/tornado/locale.py:284
 msgid "April"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:29
+#: env/Lib/site-packages/tornado/locale.py:285
 msgid "May"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:30
+#: env/Lib/site-packages/tornado/locale.py:286
 msgid "June"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:31
+#: env/Lib/site-packages/tornado/locale.py:287
 msgid "July"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:32
+#: env/Lib/site-packages/tornado/locale.py:288
 msgid "August"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:33
+#: env/Lib/site-packages/tornado/locale.py:289
 #, fuzzy
 #| msgid "Member"
 msgid "September"
 msgstr "Member"
 
 #: env/Lib/site-packages/django/utils/dates.py:34
+#: env/Lib/site-packages/tornado/locale.py:290
 msgid "October"
 msgstr ""
 
 #: env/Lib/site-packages/django/utils/dates.py:35
+#: env/Lib/site-packages/tornado/locale.py:291
 #, fuzzy
 #| msgid "Member"
 msgid "November"
 msgstr "Member"
 
 #: env/Lib/site-packages/django/utils/dates.py:36
+#: env/Lib/site-packages/tornado/locale.py:292
 #, fuzzy
 #| msgid "Member"
 msgid "December"
@@ -1114,10 +1510,10 @@ msgstr ""
 
 #: env/Lib/site-packages/django/views/csrf.py:45
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -1228,10 +1624,10 @@ msgstr ""
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:208
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: env/Lib/site-packages/django/views/templates/default_urlconf.html:217
@@ -1260,69 +1656,155 @@ msgstr "Leave Community"
 msgid "Connect, get help, or contribute"
 msgstr ""
 
-#: pixelwar/templates/pixelwar/base.html:37
+#: env/Lib/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:377
+msgid "1 second ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:383
+msgid "1 minute ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:388
+msgid "1 hour ago"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:391
+#, python-format
+msgid "%(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+msgid "yesterday"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:393
+#, python-format
+msgid "yesterday at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:395
+#, python-format
+msgid "%(weekday)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:398
+#: env/Lib/site-packages/tornado/locale.py:451
+#, python-format
+msgid "%(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:400
+#, python-format
+msgid "%(month_name)s %(day)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:405
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:407
+#, python-format
+msgid "%(month_name)s %(day)s, %(year)s at %(time)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:445
+#, python-format
+msgid "%(weekday)s, %(month_name)s %(day)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/locale.py:468
+#, python-format
+msgid "%(commas)s and %(last)s"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:68
+msgctxt "law"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:69
+msgctxt "good"
+msgid "right"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:70
+#: env/Lib/site-packages/tornado/test/locale_test.py:72
+msgctxt "organization"
+msgid "club"
+msgstr ""
+
+#: env/Lib/site-packages/tornado/test/locale_test.py:74
+#: env/Lib/site-packages/tornado/test/locale_test.py:75
+msgctxt "stick"
+msgid "club"
+msgstr ""
+
+#: pixelwar/templates/pixelwar/base.html:54
+#: pixelwar/templates/pixelwar/base.html:378
 msgid "Canvas"
 msgstr "Canvas"
 
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Top"
-msgstr "Top"
-
-#: pixelwar/templates/pixelwar/base.html:43
-msgid "Players"
-msgstr "Players"
-
-#: pixelwar/templates/pixelwar/base.html:49
-#: pixelwar/templates/pixelwar/base.html:134
-#: pixelwar/templates/pixelwar/guide.html:4
-#: pixelwar/templates/pixelwar/guide.html:10
-msgid "Rules"
-msgstr ""
-
-#: pixelwar/templates/pixelwar/base.html:49
-msgid "Guide"
-msgstr "Guide"
-
-#: pixelwar/templates/pixelwar/base.html:55
-#: pixelwar/templates/pixelwar/base.html:135
+#: pixelwar/templates/pixelwar/base.html:61
+#: pixelwar/templates/pixelwar/base.html:362
+#: pixelwar/templates/pixelwar/base.html:385
+#: pixelwar/templates/pixelwar/community_detail.html:163
 #: pixelwar/templates/pixelwar/community_lobby.html:4
 #: pixelwar/templates/pixelwar/community_lobby.html:10
 #: pixelwar/templates/pixelwar/guide.html:89
 msgid "Communities"
 msgstr "Communities"
 
-#: pixelwar/templates/pixelwar/base.html:73
-#: users/templates/users/profile_settings.html:34
-msgid "Signed in as"
-msgstr "Signed in as"
+#: pixelwar/templates/pixelwar/base.html:68
+#: pixelwar/templates/pixelwar/base.html:392
+#: pixelwar/templates/pixelwar/guide.html:146
+#: pixelwar/templates/pixelwar/leaders.html:4
+msgid "Ranking"
+msgstr "Ranking"
 
-#: pixelwar/templates/pixelwar/base.html:79
-msgid "Logout"
-msgstr "Logout"
-
-#: pixelwar/templates/pixelwar/base.html:86
-#: pixelwar/templates/pixelwar/community_lobby.html:104
-#: pixelwar/templates/pixelwar/invitation.html:66
-#: users/templates/users/login.html:7 users/templates/users/login.html:48
-msgid "Login"
-msgstr "Login"
-
-#: pixelwar/templates/pixelwar/base.html:90
-#: pixelwar/templates/pixelwar/community_lobby.html:100
-#: pixelwar/templates/pixelwar/invitation.html:70
-#: users/templates/users/register.html:7 users/templates/users/register.html:66
-msgid "Register"
-msgstr "Register"
+#: pixelwar/templates/pixelwar/base.html:75
+#: pixelwar/templates/pixelwar/base.html:361
+#: pixelwar/templates/pixelwar/base.html:399
+#: pixelwar/templates/pixelwar/guide.html:4
+#: pixelwar/templates/pixelwar/guide.html:10
+msgid "Rules"
+msgstr "Rules"
 
 #: pixelwar/templates/pixelwar/base.html:103
-msgid "Language"
-msgstr "Language"
+msgid "Congratulations!"
+msgstr "Congratulations!"
 
-#: pixelwar/templates/pixelwar/base.html:136
+#: pixelwar/templates/pixelwar/base.html:363
+#: users/templates/users/contact_us.html:4
+#: users/templates/users/contact_us.html:10
+msgid "Contact Us"
+msgstr "Contact Us"
+
+#: pixelwar/templates/pixelwar/base.html:364
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
 
-#: pixelwar/templates/pixelwar/base.html:137
+#: pixelwar/templates/pixelwar/base.html:365
 msgid "Terms of Service"
 msgstr "Terms of Service"
 
@@ -1334,143 +1816,283 @@ msgstr "Community Details"
 msgid "Community details, members, and quick actions."
 msgstr "Community details, members, and quick actions."
 
-#: pixelwar/templates/pixelwar/community_detail.html:16
-#: pixelwar/templates/pixelwar/community_lobby.html:54
-msgid "Slug"
-msgstr "Slug"
+#: pixelwar/templates/pixelwar/community_detail.html:19
+msgid "No cover image yet"
+msgstr "No cover image yet"
 
-#: pixelwar/templates/pixelwar/community_detail.html:20
-msgid "Members"
-msgstr "Members"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+#: pixelwar/templates/pixelwar/community_lobby.html:128
+#: pixelwar/templates/pixelwar/community_lobby.html:204
+msgid "Public"
+msgstr "Public"
 
-#: pixelwar/templates/pixelwar/community_detail.html:24
-msgid "Created"
-msgstr "Created"
+#: pixelwar/templates/pixelwar/community_detail.html:25
+msgid "Private"
+msgstr "Private"
 
-#: pixelwar/templates/pixelwar/community_detail.html:28
-#: pixelwar/templates/pixelwar/community_detail.html:130
+#: pixelwar/templates/pixelwar/community_detail.html:29
+#: pixelwar/templates/pixelwar/community_detail.html:292
+#: pixelwar/templates/pixelwar/community_lobby.html:125
+#: pixelwar/templates/pixelwar/community_lobby.html:201
 msgid "Owner"
 msgstr "Owner"
 
-#: pixelwar/templates/pixelwar/community_detail.html:35
-#: pixelwar/templates/pixelwar/community_lobby.html:58
-msgid "Open canvas"
-msgstr "Open canvas"
+#: pixelwar/templates/pixelwar/community_detail.html:30
+#: pixelwar/templates/pixelwar/community_detail.html:164
+#: users/templates/users/contact_us.html:175
+msgid "Created"
+msgstr "Created"
 
-#: pixelwar/templates/pixelwar/community_detail.html:40
-#: pixelwar/templates/pixelwar/community_lobby.html:67
-msgid "Invitation link"
-msgstr "Invitation link"
+#: pixelwar/templates/pixelwar/community_detail.html:38
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Update image"
+msgstr "Avatar image"
 
-#: pixelwar/templates/pixelwar/community_detail.html:48
-#: pixelwar/templates/pixelwar/community_lobby.html:75
-msgid "Delete community"
+#: pixelwar/templates/pixelwar/community_detail.html:47
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit details"
+msgstr "Community details"
+
+#: pixelwar/templates/pixelwar/community_detail.html:54
+msgid "Members"
+msgstr "Members"
+
+#: pixelwar/templates/pixelwar/community_detail.html:58
+#, fuzzy
+#| msgid "Pixels placed"
+msgid "Pixels"
+msgstr "Pixels placed"
+
+#: pixelwar/templates/pixelwar/community_detail.html:62
+#: pixelwar/templates/pixelwar/community_detail.html:83
+#: pixelwar/templates/pixelwar/create_community.html:43
+#: users/templates/users/contact_us.html:84
+#: users/templates/users/emails/contact_us_notification.html:67
+#: users/templates/users/emails/contact_us_notification.txt:11
+msgid "Description"
+msgstr "Description"
+
+#: pixelwar/templates/pixelwar/community_detail.html:67
+msgid "No description provided."
+msgstr "No description provided."
+
+#: pixelwar/templates/pixelwar/community_detail.html:75
+#, fuzzy
+#| msgid "Community details"
+msgid "Edit community details"
+msgstr "Community details"
+
+#: pixelwar/templates/pixelwar/community_detail.html:79
+#, fuzzy
+#| msgid "New community name"
+msgid "Community name"
+msgstr "New community name"
+
+#: pixelwar/templates/pixelwar/community_detail.html:87
+#: pixelwar/templates/pixelwar/create_community.html:56
+msgid "Visibility"
+msgstr "Visibility"
+
+#: pixelwar/templates/pixelwar/community_detail.html:89
+#: pixelwar/templates/pixelwar/create_community.html:59
+#, fuzzy
+#| msgid "Delete community"
+msgid "Public community"
 msgstr "Delete community"
 
-#: pixelwar/templates/pixelwar/community_detail.html:56
-#: pixelwar/templates/pixelwar/community_lobby.html:83
-msgid "Leave community"
-msgstr "Leave community"
+#: pixelwar/templates/pixelwar/community_detail.html:90
+#: pixelwar/templates/pixelwar/create_community.html:58
+#, fuzzy
+#| msgid "Create community"
+msgid "Private community"
+msgstr "Create community"
 
-#: pixelwar/templates/pixelwar/community_detail.html:60
-msgid "Back to communities"
-msgstr "Back to communities"
+#: pixelwar/templates/pixelwar/community_detail.html:95
+msgid "Save details"
+msgstr "Save details"
 
-#: pixelwar/templates/pixelwar/community_detail.html:66
-msgid "Canvas preview"
-msgstr "Canvas preview"
-
-#: pixelwar/templates/pixelwar/community_detail.html:69
-msgid "Click to enlarge"
-msgstr "Click to enlarge"
-
-#: pixelwar/templates/pixelwar/community_detail.html:73
-msgid "click to enlarge"
-msgstr "click to enlarge"
-
-#: pixelwar/templates/pixelwar/community_detail.html:92
-msgid "Community members"
-msgstr "Community members"
-
-#: pixelwar/templates/pixelwar/community_detail.html:94
-msgid "Sort"
-msgstr "Sort"
-
-#: pixelwar/templates/pixelwar/community_detail.html:97
-msgid "Join date"
-msgstr "Join date"
-
-#: pixelwar/templates/pixelwar/community_detail.html:101
-#: pixelwar/templates/pixelwar/community_detail.html:113
-msgid "Pixel count"
-msgstr "Pixel count"
-
-#: pixelwar/templates/pixelwar/community_detail.html:111
-msgid "Member"
-msgstr "Member"
-
-#: pixelwar/templates/pixelwar/community_detail.html:112
-msgid "Joined"
-msgstr "Joined"
-
-#: pixelwar/templates/pixelwar/community_detail.html:142
-msgid "No active members found."
-msgstr "No active members found."
-
-#: pixelwar/templates/pixelwar/community_detail.html:150
-#: pixelwar/templates/pixelwar/community_lobby.html:114
-msgid "Community Invitation Link"
-msgstr "Community Invitation Link"
-
-#: pixelwar/templates/pixelwar/community_detail.html:152
-#: pixelwar/templates/pixelwar/community_lobby.html:116
-msgid ""
-"Share this link to invite others to your community. Anyone with the link can "
-"join."
-msgstr ""
-"Share this link to invite others to your community. Anyone with the link can "
-"join."
-
-#: pixelwar/templates/pixelwar/community_detail.html:158
-#: pixelwar/templates/pixelwar/community_lobby.html:122
-msgid "Copy URL"
-msgstr "Copy URL"
-
-#: pixelwar/templates/pixelwar/community_detail.html:159
-#: pixelwar/templates/pixelwar/community_lobby.html:123
-#: pixelwar/templates/pixelwar/invitation.html:74
-msgid "Close"
-msgstr "Close"
-
-#: pixelwar/templates/pixelwar/community_detail.html:163
-#: pixelwar/templates/pixelwar/community_lobby.html:127
-msgid "Leave Community"
-msgstr "Leave Community"
-
-#: pixelwar/templates/pixelwar/community_detail.html:165
-#: pixelwar/templates/pixelwar/community_lobby.html:129
-msgid "Are you sure you want to leave this community?"
-msgstr "Are you sure you want to leave this community?"
-
-#: pixelwar/templates/pixelwar/community_detail.html:169
-#: pixelwar/templates/pixelwar/community_lobby.html:133
-msgid "Yes, leave"
-msgstr "Yes, leave"
-
-#: pixelwar/templates/pixelwar/community_detail.html:170
-#: pixelwar/templates/pixelwar/community_detail.html:182
-#: pixelwar/templates/pixelwar/community_lobby.html:134
-#: pixelwar/templates/pixelwar/community_lobby.html:146
+#: pixelwar/templates/pixelwar/community_detail.html:98
+#: pixelwar/templates/pixelwar/community_detail.html:348
+#: pixelwar/templates/pixelwar/community_detail.html:360
+#: pixelwar/templates/pixelwar/community_detail.html:372
+#: pixelwar/templates/pixelwar/community_lobby.html:255
+#: pixelwar/templates/pixelwar/community_lobby.html:267
+#: users/templates/users/partials/pending_email_panel.html:27
 msgid "Cancel"
 msgstr "Cancel"
 
-#: pixelwar/templates/pixelwar/community_detail.html:175
-#: pixelwar/templates/pixelwar/community_lobby.html:139
+#: pixelwar/templates/pixelwar/community_detail.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:68
+#: pixelwar/templates/pixelwar/community_lobby.html:142
+msgid "Open canvas"
+msgstr "Open canvas"
+
+#: pixelwar/templates/pixelwar/community_detail.html:113
+#: pixelwar/templates/pixelwar/community_lobby.html:77
+msgid "Invitation link"
+msgstr "Invitation link"
+
+#: pixelwar/templates/pixelwar/community_detail.html:121
+#: pixelwar/templates/pixelwar/community_lobby.html:85
+msgid "Delete community"
+msgstr "Delete community"
+
+#: pixelwar/templates/pixelwar/community_detail.html:129
+#: pixelwar/templates/pixelwar/community_lobby.html:93
+msgid "Leave community"
+msgstr "Leave community"
+
+#: pixelwar/templates/pixelwar/community_detail.html:139
+#: pixelwar/templates/pixelwar/community_lobby.html:154
+msgid "Ask Join"
+msgstr "Ask Join"
+
+#: pixelwar/templates/pixelwar/community_detail.html:143
+msgid "Login to request join"
+msgstr "Login to request join"
+
+#: pixelwar/templates/pixelwar/community_detail.html:147
+#: pixelwar/templates/pixelwar/create_community.html:90
+msgid "Back to communities"
+msgstr "Back to communities"
+
+#: pixelwar/templates/pixelwar/community_detail.html:154
+msgid "Join requests"
+msgstr "Join requests"
+
+#: pixelwar/templates/pixelwar/community_detail.html:160
+#: pixelwar/templates/pixelwar/community_detail.html:267
+msgid "Member"
+msgstr "Member"
+
+#: pixelwar/templates/pixelwar/community_detail.html:161
+#: users/templates/users/contact_us.html:62
+#: users/templates/users/contact_us.html:171
+#: users/templates/users/emails/contact_us_notification.html:49
+#: users/templates/users/emails/contact_us_notification.txt:6
+#: users/templates/users/profile_settings.html:68
+#: users/templates/users/register.html:31
+msgid "Email"
+msgstr "Email"
+
+#: pixelwar/templates/pixelwar/community_detail.html:162
+#, fuzzy
+#| msgid "Placing pixels"
+msgid "Global pixels"
+msgstr "Placing pixels"
+
+#: pixelwar/templates/pixelwar/community_detail.html:165
+#: pixelwar/templates/pixelwar/community_detail.html:271
+msgid "Actions"
+msgstr "Actions"
+
+#: pixelwar/templates/pixelwar/community_detail.html:197
+msgid "Approve"
+msgstr "Approve"
+
+#: pixelwar/templates/pixelwar/community_detail.html:204
+msgid "Decline"
+msgstr "Decline"
+
+#: pixelwar/templates/pixelwar/community_detail.html:214
+msgid "No pending join requests."
+msgstr "No pending join requests."
+
+#: pixelwar/templates/pixelwar/community_detail.html:220
+msgid "Canvas preview"
+msgstr "Canvas preview"
+
+#: pixelwar/templates/pixelwar/community_detail.html:223
+msgid "Click to enlarge"
+msgstr "Click to enlarge"
+
+#: pixelwar/templates/pixelwar/community_detail.html:227
+msgid "click to enlarge"
+msgstr "click to enlarge"
+
+#: pixelwar/templates/pixelwar/community_detail.html:246
+msgid "Community members"
+msgstr "Community members"
+
+#: pixelwar/templates/pixelwar/community_detail.html:249
+msgid "Sort"
+msgstr "Sort"
+
+#: pixelwar/templates/pixelwar/community_detail.html:252
+msgid "Join date"
+msgstr "Join date"
+
+#: pixelwar/templates/pixelwar/community_detail.html:256
+#: pixelwar/templates/pixelwar/community_detail.html:269
+msgid "Pixel count"
+msgstr "Pixel count"
+
+#: pixelwar/templates/pixelwar/community_detail.html:268
+msgid "Joined"
+msgstr "Joined"
+
+#: pixelwar/templates/pixelwar/community_detail.html:305
+msgid "Remove"
+msgstr "Remove"
+
+#: pixelwar/templates/pixelwar/community_detail.html:316
+msgid "No active members found."
+msgstr "No active members found."
+
+#: pixelwar/templates/pixelwar/community_detail.html:319
+msgid "Members list is visible only to community members."
+msgstr "Members list is visible only to community members."
+
+#: pixelwar/templates/pixelwar/community_detail.html:328
+#: pixelwar/templates/pixelwar/community_lobby.html:235
+msgid "Community Invitation Link"
+msgstr "Community Invitation Link"
+
+#: pixelwar/templates/pixelwar/community_detail.html:330
+#: pixelwar/templates/pixelwar/community_lobby.html:237
+msgid ""
+"Share this link to invite others to your community. Anyone with the link can"
+" join."
+msgstr ""
+"Share this link to invite others to your community. Anyone with the link can"
+" join."
+
+#: pixelwar/templates/pixelwar/community_detail.html:336
+#: pixelwar/templates/pixelwar/community_lobby.html:243
+msgid "Copy URL"
+msgstr "Copy URL"
+
+#: pixelwar/templates/pixelwar/community_detail.html:337
+#: pixelwar/templates/pixelwar/community_lobby.html:244
+#: pixelwar/templates/pixelwar/invitation.html:74
+#: users/templates/users/contact_us.html:161
+msgid "Close"
+msgstr "Close"
+
+#: pixelwar/templates/pixelwar/community_detail.html:341
+#: pixelwar/templates/pixelwar/community_lobby.html:248
+msgid "Leave Community"
+msgstr "Leave Community"
+
+#: pixelwar/templates/pixelwar/community_detail.html:343
+#: pixelwar/templates/pixelwar/community_lobby.html:250
+msgid "Are you sure you want to leave this community?"
+msgstr "Are you sure you want to leave this community?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:347
+#: pixelwar/templates/pixelwar/community_lobby.html:254
+msgid "Yes, leave"
+msgstr "Yes, leave"
+
+#: pixelwar/templates/pixelwar/community_detail.html:353
+#: pixelwar/templates/pixelwar/community_lobby.html:260
 msgid "Delete Community"
 msgstr "Delete Community"
 
-#: pixelwar/templates/pixelwar/community_detail.html:177
-#: pixelwar/templates/pixelwar/community_lobby.html:141
+#: pixelwar/templates/pixelwar/community_detail.html:355
+#: pixelwar/templates/pixelwar/community_lobby.html:262
 msgid ""
 "This action cannot be undone. All information will be deleted and cannot be "
 "restored."
@@ -1478,10 +2100,26 @@ msgstr ""
 "This action cannot be undone. All information will be deleted and cannot be "
 "restored."
 
-#: pixelwar/templates/pixelwar/community_detail.html:181
-#: pixelwar/templates/pixelwar/community_lobby.html:145
+#: pixelwar/templates/pixelwar/community_detail.html:359
+#: pixelwar/templates/pixelwar/community_lobby.html:266
 msgid "Yes, delete permanently"
 msgstr "Yes, delete permanently"
+
+#: pixelwar/templates/pixelwar/community_detail.html:365
+#, fuzzy
+#| msgid "Member"
+msgid "Remove Member"
+msgstr "Member"
+
+#: pixelwar/templates/pixelwar/community_detail.html:367
+#, fuzzy
+#| msgid "Are you sure you want to leave this community?"
+msgid "Are you sure you want to remove this member from the community?"
+msgstr "Are you sure you want to leave this community?"
+
+#: pixelwar/templates/pixelwar/community_detail.html:371
+msgid "Yes, remove member"
+msgstr "Yes, remove member"
 
 #: pixelwar/templates/pixelwar/community_lobby.html:13
 msgid ""
@@ -1491,29 +2129,127 @@ msgstr ""
 "Create your own community or join one using an invitation link. Each "
 "community has its own canvas, leaderboard, and chat."
 
-#: pixelwar/templates/pixelwar/community_lobby.html:35
-msgid "New community name"
-msgstr "New community name"
+#: pixelwar/templates/pixelwar/community_lobby.html:34
+#: pixelwar/templates/pixelwar/create_community.html:30
+msgid "Confirm your email before creating your own community."
+msgstr "Confirm your email before creating your own community."
 
-#: pixelwar/templates/pixelwar/community_lobby.html:38
+#: pixelwar/templates/pixelwar/community_lobby.html:39
+#, python-format
+msgid ""
+"\n"
+"                        You own %(current)s communities. Creating a new one costs %(cost)s Pixo.\n"
+"                        "
+msgstr ""
+"\n"
+"                        You own %(current)s communities. Creating a new one costs %(cost)s Pixo.\n"
+"                        "
+
+#: pixelwar/templates/pixelwar/community_lobby.html:45
+#: pixelwar/templates/pixelwar/create_community.html:65
 msgid "Create community"
 msgstr "Create community"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:43
-msgid "You already own a community, so you cannot create another one."
-msgstr "You already own a community, so you cannot create another one."
-
-#: pixelwar/templates/pixelwar/community_lobby.html:48
+#: pixelwar/templates/pixelwar/community_lobby.html:51
 msgid "Your active communities"
 msgstr "Your active communities"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:62
+#: pixelwar/templates/pixelwar/community_lobby.html:60
+msgid "Requests"
+msgstr "Requests"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:64
+msgid "Slug"
+msgstr "Slug"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:72
+#: pixelwar/templates/pixelwar/community_lobby.html:137
+#: pixelwar/templates/pixelwar/community_lobby.html:213
 msgid "Community details"
 msgstr "Community details"
 
-#: pixelwar/templates/pixelwar/community_lobby.html:92
+#: pixelwar/templates/pixelwar/community_lobby.html:102
 msgid "You have not joined any communities yet."
 msgstr "You have not joined any communities yet."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:108
+#: pixelwar/templates/pixelwar/community_lobby.html:184
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Public communities"
+msgstr "Back to communities"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:110
+#: pixelwar/templates/pixelwar/community_lobby.html:186
+msgid "Discover open communities and request to join."
+msgstr "Discover open communities and request to join."
+
+#: pixelwar/templates/pixelwar/community_lobby.html:132
+#: pixelwar/templates/pixelwar/community_lobby.html:208
+#, fuzzy
+#| msgid "Members"
+msgid "members"
+msgstr "Members"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:146
+msgid "Request sent"
+msgstr "Request sent"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:159
+#: pixelwar/templates/pixelwar/community_lobby.html:179
+#: pixelwar/templates/pixelwar/community_lobby.html:217
+#: pixelwar/templates/pixelwar/invitation.html:66
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:202
+#: users/templates/users/login.html:4 users/templates/users/login.html:45
+msgid "Login"
+msgstr "Login"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:168
+#: pixelwar/templates/pixelwar/community_lobby.html:225
+#, fuzzy
+#| msgid "Your active communities"
+msgid "No public communities yet."
+msgstr "Your active communities"
+
+#: pixelwar/templates/pixelwar/community_lobby.html:175
+#: pixelwar/templates/pixelwar/invitation.html:70
+#: users/templates/users/register.html:4
+#: users/templates/users/register.html:54
+msgid "Register"
+msgstr "Register"
+
+#: pixelwar/templates/pixelwar/create_community.html:4
+#: pixelwar/templates/pixelwar/create_community.html:9
+#, fuzzy
+#| msgid "Create community"
+msgid "Create Community"
+msgstr "Create community"
+
+#: pixelwar/templates/pixelwar/create_community.html:11
+#, python-format
+msgid ""
+"\n"
+"            Choose a name, upload a cover image, and decide whether your community is private or public. Each creation costs %(cost)s Pixo.\n"
+"            "
+msgstr ""
+"\n"
+"            Choose a name, upload a cover image, and decide whether your community is private or public. Each creation costs %(cost)s Pixo.\n"
+"            "
+
+#: pixelwar/templates/pixelwar/create_community.html:36
+#: pixelwar/templates/pixelwar/create_community.html:39
+msgid "New community name"
+msgstr "New community name"
+
+#: pixelwar/templates/pixelwar/create_community.html:46
+msgid "Tell others what this community is about."
+msgstr "Tell others what this community is about."
+
+#: pixelwar/templates/pixelwar/create_community.html:50
+#, fuzzy
+#| msgid "Community details page"
+msgid "Community cover image"
+msgstr "Community details page"
 
 #: pixelwar/templates/pixelwar/guide.html:11
 #, fuzzy
@@ -1525,11 +2261,10 @@ msgstr "Everything you need to know to play Global Pixel War."
 #, fuzzy
 #| msgid ""
 #| "<strong class=\"text-slate-900\">Global Pixel War</strong> is a real-time "
-#| "collaborative canvas. Each registered player can place <strong "
-#| "class=\"text-slate-900\">one pixel every 60 seconds</strong>. Every "
-#| "placement is queued, validated, and then broadcast live via WebSocket to "
-#| "every connected player. Work together — or compete — to claim space on "
-#| "the shared canvas."
+#| "collaborative canvas. Each registered player can place <strong class=\"text-"
+#| "slate-900\">one pixel every 60 seconds</strong>. Every placement is queued, "
+#| "validated, and then broadcast live via WebSocket to every connected player. "
+#| "Work together — or compete — to claim space on the shared canvas."
 msgid ""
 "<strong class=\"text-slate-900\">Pixo Canvo</strong> is a real-time "
 "collaborative canvas. Each registered player can place <strong class=\"text-"
@@ -1637,25 +2372,33 @@ msgstr ""
 #: pixelwar/templates/pixelwar/guide.html:93
 #, python-format
 msgid ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"Beyond the global canvas you can play inside <strong>private "
+"communities</strong>. Each community has its own independent canvas, "
+"leaderboard, and chat room. Go to the <a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-amber-800\">Communities</a> "
+"page to manage yours."
 msgstr ""
-"Beyond the global canvas you can play inside <strong>private communities</"
-"strong>. Each community has its own independent canvas, leaderboard, and "
-"chat room. Go to the <a href=\"%(communities_url)s\" class=\"font-semibold "
-"text-amber-600 hover:text-amber-800\">Communities</a> page to manage yours."
+"Beyond the global canvas you can play inside <strong>private "
+"communities</strong>. Each community has its own independent canvas, "
+"leaderboard, and chat room. Go to the <a href=\"%(communities_url)s\" "
+"class=\"font-semibold text-amber-600 hover:text-amber-800\">Communities</a> "
+"page to manage yours."
 
 #: pixelwar/templates/pixelwar/guide.html:102
 msgid "Creating a community"
 msgstr "Creating a community"
 
 #: pixelwar/templates/pixelwar/guide.html:103
+#, fuzzy
+#| msgid ""
+#| "Any logged-in user can create <strong>one community</strong>. Enter a name "
+#| "and click <em>Create community</em>. A URL-friendly slug is generated "
+#| "automatically. You become the owner and are added as the first member."
 msgid ""
-"Any logged-in user can create <strong>one community</strong>. Enter a name "
-"and click <em>Create community</em>. A URL-friendly slug is generated "
-"automatically. You become the owner and are added as the first member."
+"Any logged-in user can create communities without a hard limit. Each new "
+"community costs <strong>60 Pixo</strong>. Enter a name and click <em>Create "
+"community</em>. A URL-friendly slug is generated automatically. You become "
+"the owner and are added as the first member."
 msgstr ""
 "Any logged-in user can create <strong>one community</strong>. Enter a name "
 "and click <em>Create community</em>. A URL-friendly slug is generated "
@@ -1721,28 +2464,23 @@ msgstr ""
 msgid "Leaderboard & chat"
 msgstr "Leaderboard & chat"
 
-#: pixelwar/templates/pixelwar/guide.html:146
-#: pixelwar/templates/pixelwar/leaders.html:4
-msgid "Ranking"
-msgstr ""
-
 #: pixelwar/templates/pixelwar/guide.html:147
 #, fuzzy, python-format
 #| msgid ""
 #| "The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by "
-#| "the number of accepted pixels currently on the canvas. The list is "
-#| "available for the global canvas and for each community you belong to."
+#| "hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the"
+#| " number of accepted pixels currently on the canvas. The list is available "
+#| "for the global canvas and for each community you belong to."
 msgid ""
-"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Ranking</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"The <a href=\"%(leaders_url)s\" class=\"font-semibold text-emerald-600 "
+"hover:text-emerald-800\">Ranking</a> page ranks every contributor by the "
+"number of accepted pixels currently on the canvas. The list is available for"
+" the global canvas and for each community you belong to."
 msgstr ""
 "The <a href=\"%(leaders_url)s\" class=\"font-semibold text-fuchsia-600 "
-"hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the "
-"number of accepted pixels currently on the canvas. The list is available for "
-"the global canvas and for each community you belong to."
+"hover:text-fuchsia-800\">Top Players</a> page ranks every contributor by the"
+" number of accepted pixels currently on the canvas. The list is available "
+"for the global canvas and for each community you belong to."
 
 #: pixelwar/templates/pixelwar/guide.html:153
 msgid "Live chat"
@@ -1774,11 +2512,13 @@ msgstr ""
 
 #: pixelwar/templates/pixelwar/guide.html:165
 msgid ""
-"Change your <strong>username</strong>, upload a custom <strong>avatar</"
-"strong>, or update your <strong>password</strong> at any time."
+"Change your <strong>username</strong>, upload a custom "
+"<strong>avatar</strong>, or update your <strong>password</strong> at any "
+"time."
 msgstr ""
-"Change your <strong>username</strong>, upload a custom <strong>avatar</"
-"strong>, or update your <strong>password</strong> at any time."
+"Change your <strong>username</strong>, upload a custom "
+"<strong>avatar</strong>, or update your <strong>password</strong> at any "
+"time."
 
 #: pixelwar/templates/pixelwar/guide.html:166
 msgid ""
@@ -1789,17 +2529,18 @@ msgstr ""
 "communities."
 
 #: pixelwar/templates/pixelwar/guide.html:172
-#: users/templates/users/login.html:54 users/templates/users/register.html:14
+#: users/templates/users/login.html:58 users/templates/users/register.html:9
 msgid "Create account"
 msgstr "Create account"
 
 #: pixelwar/templates/pixelwar/guide.html:176
-#: users/templates/users/register.html:72
+#: users/templates/users/register.html:60
 msgid "Log in"
 msgstr "Log in"
 
 #: pixelwar/templates/pixelwar/guide.html:185
-#: pixelwar/templates/pixelwar/leaders.html:77
+#: pixelwar/templates/pixelwar/leaders_partial.html:54
+#: users/templates/users/activation_success.html:27
 msgid "Go to Canvas"
 msgstr "Go to Canvas"
 
@@ -1833,19 +2574,22 @@ msgid "Maybe later"
 msgstr "Maybe later"
 
 #: pixelwar/templates/pixelwar/invitation.html:49
-msgid "You need an account to join. Accepting will take you to register/login."
+msgid ""
+"You need an account to join. Accepting will take you to register/login."
 msgstr ""
 "You need an account to join. Accepting will take you to register/login."
 
 #: pixelwar/templates/pixelwar/invitation.html:59
 msgid "Login or register required"
-msgstr ""
+msgstr "Login or register required"
 
 #: pixelwar/templates/pixelwar/invitation.html:61
 msgid ""
 "To join this community, please login or create an account. After that, open "
 "this invitation link again and accept."
 msgstr ""
+"To join this community, please login or create an account. After that, open "
+"this invitation link again and accept."
 
 #: pixelwar/templates/pixelwar/leaders.html:9
 msgid "Top Players"
@@ -1855,47 +2599,378 @@ msgstr "Top Players"
 msgid "Ranked by accepted pixel placements on the shared canvas."
 msgstr "Ranked by accepted pixel placements on the shared canvas."
 
-#: pixelwar/templates/pixelwar/leaders.html:17
+#: pixelwar/templates/pixelwar/leaders.html:22
 msgid "Global"
 msgstr "Global"
 
-#: pixelwar/templates/pixelwar/leaders.html:31
+#: pixelwar/templates/pixelwar/leaders_partial.html:5
 msgid "Player"
 msgstr "Player"
 
-#: pixelwar/templates/pixelwar/leaders.html:32
+#: pixelwar/templates/pixelwar/leaders_partial.html:6
 msgid "Pixels placed"
 msgstr "Pixels placed"
 
-#: pixelwar/templates/pixelwar/leaders.html:74
+#: pixelwar/templates/pixelwar/leaders_partial.html:51
 msgid "No ranked players yet."
 msgstr "No ranked players yet."
 
-#: pixelwar/templates/pixelwar/leaders.html:75
+#: pixelwar/templates/pixelwar/leaders_partial.html:52
 msgid "Start drawing to become the first legend."
 msgstr "Start drawing to become the first legend."
 
-#: users/templates/users/login.html:14
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:43
+msgid "Latest 10 updates"
+msgstr "Latest 10 updates"
+
+#: pixelwar/templates/pixelwar/partials/header_user_controls.html:65
+msgid "View all"
+msgstr "View all"
+
+#: users/email_service.py:76
+#: users/templates/users/emails/account_activation.html:7
+#, fuzzy
+#| msgid "Your account"
+msgid "Activate your account"
+msgstr "Your account"
+
+#: users/email_service.py:177
+#: users/templates/users/emails/password_reset.html:7
+#, fuzzy
+#| msgid "New password"
+msgid "Reset your password"
+msgstr "New password"
+
+#: users/email_service.py:282
+#: users/templates/users/emails/email_verify_change.html:7
+msgid "Verify your new email address"
+msgstr "Verify your new email address"
+
+#: users/email_service.py:339
+#, python-format
+msgid "New Contact Us message: %(subject)s"
+msgstr "New Contact Us message: %(subject)s"
+
+#: users/templates/users/activation_success.html:4
+msgid "Email Activated"
+msgstr "Email Activated"
+
+#: users/templates/users/activation_success.html:18
+msgid "Email Successfully Activated"
+msgstr "Email Successfully Activated"
+
+#: users/templates/users/activation_success.html:21
+msgid ""
+"Your account is now verified and ready to use. You can continue to the app "
+"and start placing pixels, joining communities, and competing on the ranking."
+msgstr ""
+"Your account is now verified and ready to use. You can continue to the app "
+"and start placing pixels, joining communities, and competing on the ranking."
+
+#: users/templates/users/contact_us.html:13
+msgid "Share your question, issue, or feedback. Everyone can contact us."
+msgstr "Share your question, issue, or feedback. Everyone can contact us."
+
+#: users/templates/users/contact_us.html:41
+msgid "Signed-in contact details"
+msgstr "Signed-in contact details"
+
+#: users/templates/users/contact_us.html:43
+#, python-format
+msgid ""
+"\n"
+"                            Your message will be sent using your account details: %(name)s (%(email)s).\n"
+"                        "
+msgstr ""
+"\n"
+"                            Your message will be sent using your account details: %(name)s (%(email)s).\n"
+"                        "
+
+#: users/templates/users/contact_us.html:53
+#: users/templates/users/emails/contact_us_notification.html:45
+#: users/templates/users/emails/contact_us_notification.txt:5
+msgid "Name"
+msgstr "Name"
+
+#: users/templates/users/contact_us.html:74
+#: users/templates/users/emails/contact_us_notification.html:53
+#: users/templates/users/emails/contact_us_notification.txt:7
+msgid "Subject"
+msgstr "Subject"
+
+#: users/templates/users/contact_us.html:93
+msgid ""
+"For security reasons, code-like markup and scripts are blocked in this form."
+msgstr ""
+"For security reasons, code-like markup and scripts are blocked in this form."
+
+#: users/templates/users/contact_us.html:98
+msgid "Send message"
+msgstr "Send message"
+
+#: users/templates/users/contact_us.html:108
+msgid "Your Tickets"
+msgstr "Your Tickets"
+
+#: users/templates/users/contact_us.html:111
+msgid "Open any ticket card to see the full message you sent."
+msgstr "Open any ticket card to see the full message you sent."
+
+#: users/templates/users/contact_us.html:115
+msgid "tickets"
+msgstr "tickets"
+
+#: users/templates/users/contact_us.html:167
+#: users/templates/users/emails/contact_us_notification.html:57
+#: users/templates/users/emails/contact_us_notification.txt:8
+msgid "Status"
+msgstr "Status"
+
+#: users/templates/users/contact_us.html:181
+msgid "Full message"
+msgstr "Full message"
+
+#: users/templates/users/emails/account_activation.html:33
+#: users/templates/users/emails/account_activation.txt:2
+#: users/templates/users/emails/email_verify_change.html:33
+#: users/templates/users/emails/email_verify_change.txt:2
+#: users/templates/users/emails/password_reset.html:33
+#: users/templates/users/emails/password_reset.txt:2
+#, python-format
+msgid "Hello %(username)s,"
+msgstr "Hello %(username)s,"
+
+#: users/templates/users/emails/account_activation.html:36
+#: users/templates/users/emails/account_activation.txt:4
+msgid ""
+"Thanks for registering. Please confirm your email address to activate your "
+"account."
+msgstr ""
+"Thanks for registering. Please confirm your email address to activate your "
+"account."
+
+#: users/templates/users/emails/account_activation.html:40
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account"
+msgstr "Create account"
+
+#: users/templates/users/emails/account_activation.html:44
+#: users/templates/users/emails/account_activation.txt:9
+#: users/templates/users/emails/email_verify_change.html:47
+#: users/templates/users/emails/email_verify_change.txt:11
+#, python-format
+msgid "This link expires in %(hours)s hours."
+msgstr "This link expires in %(hours)s hours."
+
+#: users/templates/users/emails/account_activation.html:53
+#: users/templates/users/emails/email_verify_change.html:56
+#: users/templates/users/emails/password_reset.html:53
+msgid ""
+"If the button does not work, copy and paste this link into your browser:"
+msgstr ""
+"If the button does not work, copy and paste this link into your browser:"
+
+#: users/templates/users/emails/account_activation.html:63
+msgid "Built with bright pixels and bold colors."
+msgstr "Built with bright pixels and bold colors."
+
+#: users/templates/users/emails/account_activation.txt:6
+#, fuzzy
+#| msgid "Create account"
+msgid "Activate account:"
+msgstr "Create account"
+
+#: users/templates/users/emails/contact_us_notification.html:7
+msgid "New Contact Us message"
+msgstr "New Contact Us message"
+
+#: users/templates/users/emails/contact_us_notification.html:33
+#: users/templates/users/emails/contact_us_notification.txt:2
+msgid "New Contact Us submission"
+msgstr "New Contact Us submission"
+
+#: users/templates/users/emails/contact_us_notification.html:36
+msgid "A new message was submitted from the Contact Us page."
+msgstr "A new message was submitted from the Contact Us page."
+
+#: users/templates/users/emails/contact_us_notification.html:41
+#: users/templates/users/emails/contact_us_notification.txt:4
+msgid "Message ID"
+msgstr "Message ID"
+
+#: users/templates/users/emails/contact_us_notification.html:61
+#: users/templates/users/emails/contact_us_notification.txt:9
+msgid "Submitted at"
+msgstr "Submitted at"
+
+#: users/templates/users/emails/email_verify_change.html:36
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the button below to complete the update."
+msgstr ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the button below to complete the update."
+
+#: users/templates/users/emails/email_verify_change.html:39
+#: users/templates/users/emails/email_verify_change.txt:6
+msgid "New email:"
+msgstr "New email:"
+
+#: users/templates/users/emails/email_verify_change.html:43
+msgid "Verify email address"
+msgstr "Verify email address"
+
+#: users/templates/users/emails/email_verify_change.html:66
+#: users/templates/users/emails/email_verify_change.txt:13
+msgid "This is an automated email. Please do not reply to this message."
+msgstr "This is an automated email. Please do not reply to this message."
+
+#: users/templates/users/emails/email_verify_change.txt:4
+msgid ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the link below to complete the update."
+msgstr ""
+"You requested to change your email address. Please verify your new email by "
+"clicking the link below to complete the update."
+
+#: users/templates/users/emails/email_verify_change.txt:8
+msgid "Verify email address:"
+msgstr "Verify email address:"
+
+#: users/templates/users/emails/password_reset.html:36
+msgid ""
+"You requested to reset your password. Click the button below to set a new "
+"one."
+msgstr ""
+"You requested to reset your password. Click the button below to set a new "
+"one."
+
+#: users/templates/users/emails/password_reset.html:40
+#, fuzzy
+#| msgid "New password"
+msgid "Reset password"
+msgstr "New password"
+
+#: users/templates/users/emails/password_reset.html:44
+#: users/templates/users/emails/password_reset.txt:7
+#, python-format
+msgid "This link expires in %(minutes)s minutes."
+msgstr "This link expires in %(minutes)s minutes."
+
+#: users/templates/users/emails/password_reset.txt:4
+msgid "You requested to reset your password. Use this link to set a new one:"
+msgstr "You requested to reset your password. Use this link to set a new one:"
+
+#: users/templates/users/forgot_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Forgot Password"
+msgstr "Password"
+
+#: users/templates/users/forgot_password.html:9
+msgid "Forgot your password?"
+msgstr "Forgot your password?"
+
+#: users/templates/users/forgot_password.html:11
+msgid ""
+"Enter your username or email. We will send you a reset link valid for 30 "
+"minutes."
+msgstr ""
+"Enter your username or email. We will send you a reset link valid for 30 "
+"minutes."
+
+#: users/templates/users/forgot_password.html:23
+#: users/templates/users/login.html:33
+#, fuzzy
+#| msgid "Username"
+msgid "Username or email"
+msgstr "Username"
+
+#: users/templates/users/forgot_password.html:29
+msgid "Send reset link"
+msgstr "Send reset link"
+
+#: users/templates/users/forgot_password.html:37
+#, fuzzy
+#| msgid "Back to communities"
+msgid "Back to login"
+msgstr "Back to communities"
+
+#: users/templates/users/login.html:9
 msgid "Welcome back"
 msgstr "Welcome back"
 
-#: users/templates/users/login.html:15
+#: users/templates/users/login.html:10
 msgid "Sign in to place pixels and join the battle."
 msgstr "Sign in to place pixels and join the battle."
 
-#: users/templates/users/login.html:36
-#: users/templates/users/profile_settings.html:48
-#: users/templates/users/register.html:36
-msgid "Username"
-msgstr "Username"
-
-#: users/templates/users/login.html:42 users/templates/users/register.html:48
+#: users/templates/users/login.html:39 users/templates/users/register.html:36
+#: users/templates/users/reset_password.html:21
 msgid "Password"
 msgstr "Password"
 
-#: users/templates/users/login.html:53
+#: users/templates/users/login.html:52
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Forgot password?"
+msgstr "Confirm password"
+
+#: users/templates/users/login.html:57
 msgid "New here?"
 msgstr "New here?"
+
+#: users/templates/users/partials/activation_email_panel.html:18
+msgid "Send activation email"
+msgstr "Send activation email"
+
+#: users/templates/users/partials/pending_email_panel.html:7
+msgid "Email verification pending"
+msgstr "Email verification pending"
+
+#: users/templates/users/partials/pending_email_panel.html:10
+#, python-format
+msgid ""
+"\n"
+"                        We sent a verification email to <strong>%(email)s</strong>.\n"
+"                        Please verify your new email address to complete the update.\n"
+"                    "
+msgstr ""
+"\n"
+"                        We sent a verification email to <strong>%(email)s</strong>.\n"
+"                        Please verify your new email address to complete the update.\n"
+"                    "
+
+#: users/templates/users/partials/pending_email_panel.html:16
+msgid "Check your spam folder if you don't see the email."
+msgstr "Check your spam folder if you don't see the email."
+
+#: users/templates/users/partials/pending_email_panel.html:22
+msgid "Cancel the email change? Your current email will stay unchanged."
+msgstr "Cancel the email change? Your current email will stay unchanged."
+
+#: users/templates/users/partials/profile_avatar_card.html:32
+msgid "Upload avatar"
+msgstr "Upload avatar"
+
+#: users/templates/users/partials/profile_avatar_card.html:41
+msgid "Signed in as"
+msgstr "Signed in as"
+
+#: users/templates/users/partials/profile_avatar_card.html:43
+msgid "Click + icon to upload instantly"
+msgstr "Click + icon to upload instantly"
+
+#: users/templates/users/partials/profile_avatar_card.html:49
+#: users/templates/users/partials/profile_avatar_card.html:54
+msgid "Logout"
+msgstr "Logout"
+
+#: users/templates/users/partials/profile_avatar_card.html:59
+#, fuzzy
+#| msgid "Avatar image"
+msgid "Avatar updated."
+msgstr "Avatar image"
 
 #: users/templates/users/profile_settings.html:4
 #: users/templates/users/profile_settings.html:9
@@ -1906,50 +2981,120 @@ msgstr "Profile Settings"
 msgid "Update your account details, avatar, and password."
 msgstr "Update your account details, avatar, and password."
 
-#: users/templates/users/profile_settings.html:54
-#: users/templates/users/register.html:42
-msgid "Email"
-msgstr "Email"
+#: users/templates/users/profile_settings.html:18
+msgid "Referral Program"
+msgstr "Referral Program"
 
-#: users/templates/users/profile_settings.html:60
-msgid "Avatar image"
-msgstr "Avatar image"
+#: users/templates/users/profile_settings.html:19
+msgid ""
+"Share your personal referral link. You earn 5 Pixo when a referred user "
+"reaches 10 accepted pixels."
+msgstr ""
+"Share your personal referral link. You earn 5 Pixo when a referred user "
+"reaches 10 accepted pixels."
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:25
+#, fuzzy
+#| msgid "Copy URL"
+msgid "Copy"
+msgstr "Copy URL"
+
+#: users/templates/users/profile_settings.html:56
+msgid "General details"
+msgstr "General details"
+
+#: users/templates/users/profile_settings.html:58
+#: users/templates/users/register.html:25
+msgid "Username"
+msgstr "Username"
+
+#: users/templates/users/profile_settings.html:63
+#: users/templates/users/register.html:20
+msgid "Full Name"
+msgstr "Full Name"
+
+#: users/templates/users/profile_settings.html:75
+#: users/templates/users/reset_password.html:33
 msgid "Change password"
 msgstr "Change password"
 
-#: users/templates/users/profile_settings.html:66
+#: users/templates/users/profile_settings.html:75
 msgid "optional"
 msgstr "optional"
 
-#: users/templates/users/profile_settings.html:69
+#: users/templates/users/profile_settings.html:77
 msgid "New password"
 msgstr "New password"
 
-#: users/templates/users/profile_settings.html:74
+#: users/templates/users/profile_settings.html:82
 msgid "Confirm new password"
 msgstr "Confirm new password"
 
-#: users/templates/users/profile_settings.html:83
+#: users/templates/users/profile_settings.html:91
 msgid "Save changes"
 msgstr "Save changes"
 
-#: users/templates/users/register.html:15
-msgid "Email is required. Avatar is optional."
+#: users/templates/users/register.html:10
+#, fuzzy
+#| msgid "Email is required. Avatar is optional."
+msgid "Email and Full Name are optional. Avatar is optional."
 msgstr "Email is required. Avatar is optional."
 
-#: users/templates/users/register.html:54
+#: users/templates/users/register.html:42
+#: users/templates/users/reset_password.html:27
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: users/templates/users/register.html:60
+#: users/templates/users/register.html:48
 msgid "Avatar image (optional)"
 msgstr "Avatar image (optional)"
 
-#: users/templates/users/register.html:71
+#: users/templates/users/register.html:59
 msgid "Already have an account?"
 msgstr "Already have an account?"
+
+#: users/templates/users/reset_password.html:4
+#, fuzzy
+#| msgid "Password"
+msgid "Reset Password"
+msgstr "Password"
+
+#: users/templates/users/reset_password.html:9
+#, fuzzy
+#| msgid "New password"
+msgid "Set a new password"
+msgstr "New password"
+
+#: users/templates/users/reset_password.html:10
+msgid "Enter your new password and confirm it."
+msgstr "Enter your new password and confirm it."
+
+#: users/views.py:340
+msgid "Referral link is invalid."
+msgstr "Referral link is invalid."
+
+#: users/views.py:349
+msgid "Self-referral is not allowed."
+msgstr "Self-referral is not allowed."
+
+#: users/views.py:362
+msgid "Referral was registered."
+msgstr "Referral was registered."
+
+#~ msgid "Top"
+#~ msgstr "Top"
+
+#~ msgid "Players"
+#~ msgstr "Players"
+
+#~ msgid "Guide"
+#~ msgstr "Guide"
+
+#~ msgid "Language"
+#~ msgstr "Language"
+
+#~ msgid "You already own a community, so you cannot create another one."
+#~ msgstr "You already own a community, so you cannot create another one."
 
 #~ msgid "How It Works"
 #~ msgstr "How It Works"

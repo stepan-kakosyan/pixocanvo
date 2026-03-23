@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /auth/profile/
+Disallow: /auth/pixo/
+Disallow: /notifications/
+Disallow: /api/
+Disallow: /community/*/api/
+
+Sitemap: {{ request.scheme }}://{{ request.get_host }}{% url 'sitemap' %}
