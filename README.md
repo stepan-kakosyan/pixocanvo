@@ -113,3 +113,35 @@ docker compose down
 
 MySQL is not started by Docker Compose in this setup. Ensure your external
 MySQL host is reachable from containers and credentials in `.env` are valid.
+
+## CD (auto-deploy from GitHub Actions)
+
+This repository includes a CD workflow in `.github/workflows/cd.yml`.
+
+Flow:
+
+1. Push to `master`
+2. `Docker Build & Push` publishes `DOCKERHUB_USERNAME/pixel-war:latest`
+3. `CD Deploy` connects to your server over SSH
+4. It pulls latest image and runs `docker compose -f docker-compose.prod.yml up -d`
+
+Required GitHub repository secrets:
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN`
+- `DEPLOY_HOST`
+- `DEPLOY_USER`
+- `DEPLOY_SSH_KEY` (private key content)
+- `DEPLOY_PATH` (absolute path on server where project files exist)
+- `DEPLOY_PORT` (optional, default `22`)
+
+Server prerequisites:
+
+- Docker and Docker Compose installed
+- Project checked out at `DEPLOY_PATH`
+- Valid `.env` file at `DEPLOY_PATH/.env`
+- `docker-compose.prod.yml` available at `DEPLOY_PATH`
+
+Manual trigger:
+
+- Run the `CD Deploy` workflow from the Actions tab (`workflow_dispatch`).
