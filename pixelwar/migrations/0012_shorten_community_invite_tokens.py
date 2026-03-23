@@ -63,6 +63,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(
+            shorten_existing_invite_tokens,
+            migrations.RunPython.noop,
+        ),
         migrations.AlterField(
             model_name="community",
             name="invite_token",
@@ -72,9 +76,5 @@ class Migration(migrations.Migration):
                 max_length=22,
                 unique=True,
             ),
-        ),
-        migrations.RunPython(
-            shorten_existing_invite_tokens,
-            migrations.RunPython.noop,
         ),
     ]
