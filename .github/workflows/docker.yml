@@ -30,4 +30,4 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           push: ${{ steps.docker_secrets.outputs.ready == 'true' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pixel-war:latest
+          tags: ${{ steps.docker_secrets.outputs.ready == 'true' && format('{0}/pixel-war:latest', secrets.DOCKERHUB_USERNAME) || 'pixel-war:latest' }}
