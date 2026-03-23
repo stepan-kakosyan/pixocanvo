@@ -326,15 +326,14 @@ ACCELERATION_COOLDOWN_SECONDS = 10
 
 def purchase_acceleration(user: User) -> dict:
     """Purchase acceleration: 10-second cooldown for next 100 pixels instead of 60.
-    
     Raises ValueError if already active or insufficient pixo.
     """
     profile, _ = UserProfile.objects.get_or_create(user=user)
-    
+
     # Check if already active
     if profile.acceleration_active and profile.acceleration_pixels_placed < ACCELERATION_PIXEL_LIMIT:
         raise ValueError("acceleration_already_active")
-    
+
     # Attempt purchase
     try:
         spend_pixo(
@@ -348,14 +347,14 @@ def purchase_acceleration(user: User) -> dict:
         if str(exc) == "insufficient_pixo":
             raise
         raise
-    
+
     # Activate acceleration
     with transaction.atomic():
         profile = UserProfile.objects.select_for_update().get(pk=profile.pk)
         profile.acceleration_active = True
         profile.acceleration_pixels_placed = 0
         profile.save(update_fields=["acceleration_active", "acceleration_pixels_placed"])
-    
+
     return {
         "success": True,
         "acceleration_active": True,
@@ -366,7 +365,7 @@ def purchase_acceleration(user: User) -> dict:
 def get_acceleration_status(user: User) -> dict:
     """Get current acceleration status."""
     profile, _ = UserProfile.objects.get_or_create(user=user)
-    
+
     return {
         "acceleration_active": profile.acceleration_active,
         "acceleration_pixels_placed": profile.acceleration_pixels_placed,
@@ -381,19 +380,19 @@ def get_acceleration_status(user: User) -> dict:
 def increment_acceleration_pixel_count(user: User) -> None:
     """Increment acceleration pixel count, deactivate if limit reached."""
     profile, _ = UserProfile.objects.get_or_create(user=user)
-    
+
     if not profile.acceleration_active:
         return
-    
+
     with transaction.atomic():
         profile = UserProfile.objects.select_for_update().get(pk=profile.pk)
         if not profile.acceleration_active:
             return
-        
+
         profile.acceleration_pixels_placed += 1
         if profile.acceleration_pixels_placed >= ACCELERATION_PIXEL_LIMIT:
             profile.acceleration_active = False
-        
+
         profile.save(
             update_fields=["acceleration_pixels_placed", "acceleration_active"]
         )
