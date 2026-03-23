@@ -181,17 +181,25 @@ def build_s3_base_url(
 
 
 USE_S3 = env_bool("USE_S3")
+USE_MANIFEST_STATICFILES = env_bool(
+    "USE_MANIFEST_STATICFILES", default=not DEBUG
+)
+STATICFILES_BACKEND = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    if USE_MANIFEST_STATICFILES
+    else "whitenoise.storage.CompressedStaticFilesStorage"
+)
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = STATICFILES_BACKEND
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": STATICFILES_BACKEND,
     },
 }
 
@@ -245,7 +253,7 @@ if USE_S3:
             },
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": STATICFILES_BACKEND,
         },
     }
 
