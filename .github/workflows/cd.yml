@@ -49,11 +49,22 @@ jobs:
             set -e
             cd "${{ secrets.DEPLOY_PATH }}"
 
+            DOCKER_CMD=(docker)
+            if ! docker info >/dev/null 2>&1; then
+              if command -v sudo >/dev/null 2>&1 && sudo -n docker info >/dev/null 2>&1; then
+                DOCKER_CMD=(sudo docker)
+              else
+                echo "Docker daemon is not accessible for ${USER}."
+                echo "Grant docker access (usermod -aG docker ${USER}) or allow passwordless sudo for docker."
+                exit 1
+              fi
+            fi
+
             echo "Logging in to Docker Hub"
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | "${DOCKER_CMD[@]}" login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
             export DOCKER_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/pixel-war:latest"
             echo "Deploying image: ${DOCKER_IMAGE}"
-            docker pull "${DOCKER_IMAGE}"
-            docker compose -f docker-compose.prod.yml up -d
-            docker image prune -f
+            "${DOCKER_CMD[@]}" pull "${DOCKER_IMAGE}"
+            "${DOCKER_CMD[@]}" compose -f docker-compose.prod.yml up -d
+            "${DOCKER_CMD[@]}" image prune -f
