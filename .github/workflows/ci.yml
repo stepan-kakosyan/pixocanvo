@@ -102,8 +102,5 @@ jobs:
       - name: Run Django system checks
         run: python manage.py check
 
-      - name: Run migrations
-        run: python manage.py migrate --noinput
-
       - name: Run tests
         run: python manage.py test --verbosity=2
