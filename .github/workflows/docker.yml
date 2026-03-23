@@ -16,4 +16,4 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           push: true
-          tags: youruser/pixel-war:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pixel-war:latest

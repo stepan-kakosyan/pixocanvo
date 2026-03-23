@@ -8,16 +8,23 @@ on:
 
 jobs:
   lint:
+    name: Lint (flake8)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install flake8
-      - run: flake8 .
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 . --exclude=env,migrations,__pycache__,staticfiles
 
   test:
+    name: Django checks & migrate
     runs-on: ubuntu-latest
     needs: lint
 
@@ -26,30 +33,77 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testdb
+          MYSQL_DATABASE: pixelwar_ci
         ports: ["3306:3306"]
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
       redis:
         image: redis:7.2-alpine
         ports: ["6379:6379"]
 
     env:
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/testdb
-      SECRET_KEY: ci-secret-key
-      DEBUG: "True"
-      REDIS_URL: redis://localhost:6379
+      # Django core
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost:8000"
+
+      # Database — local service (not production)
+      MYSQL_DATABASE: pixelwar_ci
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: "3306"
+
+      # Redis
+      REDIS_URL: redis://localhost:6379/1
+      CHANNEL_REDIS_URL: redis://localhost:6379/2
+
+      # Kafka — not started in CI, only used at runtime
+      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+      KAFKA_PIXEL_TOPIC: pixel-updates
+      KAFKA_CHAT_TOPIC: chat-messages
+
+      # Email — use console backend in CI (no real SMTP needed)
+      EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+      EMAIL_HOST: localhost
+      EMAIL_PORT: "25"
+      EMAIL_USE_TLS: "0"
+      EMAIL_USE_SSL: "0"
+      EMAIL_HOST_USER: ""
+      EMAIL_HOST_PASSWORD: ""
+      DEFAULT_FROM_EMAIL: noreply@example.com
+      EMAIL_ACTIVATION_TIMEOUT_SECONDS: "86400"
+      PASSWORD_RESET_LINK_TTL_SECONDS: "1800"
+
+      # S3 — disabled in CI
+      USE_S3: "0"
+
+      # Pixel settings
+      PIXEL_COOLDOWN_SECONDS: "30"
+      PIXEL_GRID_SIZE: "500"
+      COMMUNITY_CREATION_PIXO_COST: "60"
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: python manage.py migrate --noinput
-      - run: python manage.py test
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Django system checks
+        run: python manage.py check
+
+      - name: Run migrations
+        run: python manage.py migrate --noinput
+
+      - name: Run tests
+        run: python manage.py test --verbosity=2
