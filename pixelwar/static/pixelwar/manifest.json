@@ -1,0 +1,21 @@
+{
+  "name": "Pixel War",
+  "short_name": "PixelWar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "description": "Collaborative pixel art game.",
+  "icons": [
+    {
+      "src": "/static/pixelwar/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/pixelwar/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

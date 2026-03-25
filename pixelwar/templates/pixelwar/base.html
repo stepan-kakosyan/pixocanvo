@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{% static 'pixelwar/css/flag-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'pixelwar/css/site.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js" crossorigin="anonymous"></script>
+    <link rel="manifest" href="{% static 'pixelwar/manifest.json' %}">
+    <meta name="theme-color" content="#111827">
     {% block extra_head %}{% endblock %}
 </head>
 <body class="flex min-h-screen flex-col bg-white text-slate-900">
@@ -403,3 +405,15 @@
     {% include "pixelwar/partials/header_user_controls.html" %}
 </div>
 {% endif %}
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('{% static 'pixelwar/service-worker.js' %}')
+                        .then(function(registration) {
+                            // Registration successful
+                        }, function(err) {
+                            // Registration failed
+                        });
+                });
+            }
+        </script>
