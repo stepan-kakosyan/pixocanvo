@@ -1,8 +1,10 @@
 {
-  "name": "Pixel War",
-  "short_name": "PixelWar",
+  "name": "Pixo Canvo",
+  "short_name": "PixoCanvo",
+  "id": "/",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#ffffff",
   "theme_color": "#111827",
   "description": "Collaborative pixel art game.",
@@ -16,6 +18,27 @@
       "src": "/static/pixelwar/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/pixelwar/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Pixel War desktop screenshot"
+    },
+    {
+      "src": "/static/pixelwar/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "label": "Pixel War mobile screenshot"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+pixelwar",
+      "url": "/?handler=%s"
     }
   ]
 }
