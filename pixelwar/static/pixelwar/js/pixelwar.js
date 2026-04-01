@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentUsername = String(app.dataset.currentUsername || '').trim();
     let reconnectDelayMs = 1000;
     let reconnectTimer = null;
+    let snapshotPollTimer = null;
     let cooldownTimer = null;
     let isSyncingCanvasScroll = false;
     let isCanvasWideMode = false;
@@ -137,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isRealtimeConnected = false;
     let hasLoadedSnapshot = false;
     let requestInFlight = false;
+    let lastPointerPlacementAt = 0;
     let selectedColor = '#000000';
     let isChatOpen = false;
     let isChatPinned = false;
@@ -187,6 +189,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let scale = 1;
     const minScale = 1;
     const maxScale = 24;
+    const snapshotPollIntervalMs = 5000;
+
+    if (canvas) {
+        // Reduce delayed synthetic clicks on touch browsers while preserving pan/zoom.
+        canvas.style.touchAction = 'manipulation';
+    }
 
     canvas.width = gridSize;
     canvas.height = gridSize;
@@ -448,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cooldownRemaining = computeCooldownRemainingSeconds();
         if (cooldownRemaining <= 0) {
             cooldownUntilTs = 0;
-            const shouldLock = !isRealtimeConnected || !hasLoadedSnapshot;
+            const shouldLock = !hasLoadedSnapshot;
             setCanvasLocked(shouldLock);
             clearPersistedCooldown();
             setStatus('');
@@ -489,6 +497,26 @@ document.addEventListener('DOMContentLoaded', function () {
         persistCooldownUntil(cooldownUntilTs);
         updateCooldownUi();
         ensureCooldownTicker();
+    }
+
+    function startSnapshotPolling() {
+        if (snapshotPollTimer) {
+            return;
+        }
+        snapshotPollTimer = window.setInterval(() => {
+            if (!hasLoadedSnapshot || requestInFlight) {
+                return;
+            }
+            loadSnapshot().catch(() => {});
+        }, snapshotPollIntervalMs);
+    }
+
+    function stopSnapshotPolling() {
+        if (!snapshotPollTimer) {
+            return;
+        }
+        window.clearInterval(snapshotPollTimer);
+        snapshotPollTimer = null;
     }
 
     function restoreCooldownFromStorage() {
@@ -1214,10 +1242,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function ensureCsrfToken() {
+        let token = getCookie('csrftoken');
+        if (token) {
+            return token;
+        }
+        try {
+            await fetch(pixelSnapshotUrl, {
+                cache: 'no-store',
+                credentials: 'same-origin',
+            });
+        } catch (_error) {
+            // Network errors are handled by caller when POST fails.
+        }
+        token = getCookie('csrftoken');
+        return token;
+    }
+
     async function sendPixel(x, y, color) {
-        const csrfToken = getCookie('csrftoken');
+        const csrfToken = await ensureCsrfToken();
+        if (!csrfToken) {
+            setStatus('Security token missing. Refresh and try again.', 'error');
+            return {
+                ok: false,
+            };
+        }
         const response = await fetch(pixelUpdateUrl, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
@@ -1261,15 +1313,23 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }
 
+        const text = await response.text();
         if (response.status === 403) {
+            if (/csrf/i.test(text)) {
+                setStatus('Security token expired. Refresh and try again.', 'error');
+                return {
+                    ok: false,
+                };
+            }
             setStatus('You no longer have access to this community.', 'error');
-            window.location.href = '/';
+            if (pixelUpdateUrl.includes('/comunity/')) {
+                window.location.href = '/';
+            }
             return {
                 ok: false,
             };
         }
 
-        const text = await response.text();
         setStatus(`Update failed: ${text}`, 'error');
         return {
             ok: false,
@@ -1278,9 +1338,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function connectWebsocket() {
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        const socket = new WebSocket(
-            `${protocol}://${window.location.host}${pixelsWsUrl}`
-        );
+        let socket = null;
+        try {
+            socket = new WebSocket(`${protocol}://${window.location.host}${pixelsWsUrl}`);
+        } catch (_error) {
+            isRealtimeConnected = false;
+            startSnapshotPolling();
+            if (reconnectTimer) {
+                window.clearTimeout(reconnectTimer);
+            }
+            reconnectTimer = window.setTimeout(() => {
+                connectWebsocket();
+            }, reconnectDelayMs);
+            reconnectDelayMs = Math.min(reconnectDelayMs * 2, 10000);
+            return;
+        }
 
         socket.onmessage = (event) => {
             try {
@@ -1313,11 +1385,15 @@ document.addEventListener('DOMContentLoaded', function () {
         socket.onopen = () => {
             reconnectDelayMs = 1000;
             isRealtimeConnected = true;
+            stopSnapshotPolling();
             updateCooldownUi();
         };
         socket.onclose = () => {
             isRealtimeConnected = false;
-            setCanvasLocked(true);
+            if (cooldownRemaining <= 0) {
+                setCanvasLocked(!hasLoadedSnapshot);
+            }
+            startSnapshotPolling();
             if (reconnectTimer) {
                 window.clearTimeout(reconnectTimer);
             }
@@ -1326,6 +1402,50 @@ document.addEventListener('DOMContentLoaded', function () {
             }, reconnectDelayMs);
             reconnectDelayMs = Math.min(reconnectDelayMs * 2, 10000);
         };
+    }
+
+    async function handlePlacePixelEvent(event) {
+        if (!hasLoadedSnapshot) {
+            setCanvasLocked(true);
+            return;
+        }
+        if (requestInFlight || cooldownRemaining > 0) {
+            if (cooldownRemaining > 0) {
+                updateCooldownUi();
+            }
+            return;
+        }
+
+        const { x, y } = clientToGrid(event);
+        if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) {
+            return;
+        }
+
+        requestInFlight = true;
+        playPixelPlacementSound();
+        startCooldown(lastKnownCooldown);
+
+        try {
+            const result = await sendPixel(x, y, selectedColor);
+            if (result && result.ok) {
+                drawPixel(x, y, selectedColor);
+                if (accelerationActive && accelerationPixelsRemaining > 0) {
+                    accelerationPixelsRemaining = Math.max(0, accelerationPixelsRemaining - 1);
+                    if (accelerationPixelsRemaining === 0) {
+                        accelerationActive = false;
+                        window.setTimeout(loadAccelerationStatus, 300);
+                    }
+                    updateAccelerationUI();
+                }
+                lastKnownCooldown = result.cooldown;
+                startCooldown(result.cooldown);
+            }
+        } catch (_error) {
+            startCooldown(0);
+            setStatus('Network error while sending pixel', 'error');
+        } finally {
+            requestInFlight = false;
+        }
     }
 
     function handleChatSocketMessage(event) {
@@ -1415,48 +1535,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    canvas.addEventListener('click', async (event) => {
-        if (!isRealtimeConnected || !hasLoadedSnapshot) {
-            setCanvasLocked(true);
-            return;
-        }
-        if (requestInFlight || cooldownRemaining > 0) {
-            if (cooldownRemaining > 0) {
-                updateCooldownUi();
+    if (window.PointerEvent) {
+        canvas.addEventListener('pointerup', (event) => {
+            if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+                lastPointerPlacementAt = Date.now();
             }
+            handlePlacePixelEvent(event).catch(() => {});
+        });
+    }
+
+    canvas.addEventListener('click', (event) => {
+        if (window.PointerEvent && Date.now() - lastPointerPlacementAt < 600) {
             return;
         }
-
-        const { x, y } = clientToGrid(event);
-        if (x < 0 || y < 0 || x >= gridSize || y >= gridSize) {
-            return;
-        }
-
-        requestInFlight = true;
-        playPixelPlacementSound();
-        startCooldown(lastKnownCooldown);
-
-        try {
-            const result = await sendPixel(x, y, selectedColor);
-            if (result && result.ok) {
-                drawPixel(x, y, selectedColor);
-                if (accelerationActive && accelerationPixelsRemaining > 0) {
-                    accelerationPixelsRemaining = Math.max(0, accelerationPixelsRemaining - 1);
-                    if (accelerationPixelsRemaining === 0) {
-                        accelerationActive = false;
-                        window.setTimeout(loadAccelerationStatus, 300);
-                    }
-                    updateAccelerationUI();
-                }
-                lastKnownCooldown = result.cooldown;
-                startCooldown(result.cooldown);
-            }
-        } catch (error) {
-            startCooldown(0);
-            setStatus('Network error while sending pixel', 'error');
-        } finally {
-            requestInFlight = false;
-        }
+        handlePlacePixelEvent(event).catch(() => {});
     });
 
     if (zoomIn) {

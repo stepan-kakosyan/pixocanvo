@@ -29,6 +29,7 @@ from users.pixo_service import (
 )
 from users.models import ReferralAttribution
 from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django_redis import get_redis_connection
 from kafka.errors import KafkaError, NoBrokersAvailable
 
@@ -675,6 +676,7 @@ def _snapshot_for_community(community: Community) -> JsonResponse:
 
 
 @require_GET
+@ensure_csrf_cookie
 def index(request: HttpRequest) -> HttpResponse:
     community = _global_community(request)
     if community is None:
@@ -1403,6 +1405,7 @@ def remove_community_member(
 
 @require_GET
 @login_required
+@ensure_csrf_cookie
 def community_canvas(request: HttpRequest, slug: str) -> HttpResponse:
     community = _community_for_user(request.user, slug)
     if community is None:
@@ -1646,6 +1649,7 @@ def community_detail(request: HttpRequest, slug: str) -> HttpResponse:
 
 
 @require_GET
+@ensure_csrf_cookie
 def pixel_snapshot(request: HttpRequest) -> JsonResponse:
     community = _global_community(request)
     if community is None:
@@ -1964,6 +1968,7 @@ def _update_pixel_for_community(
 
 @require_GET
 @login_required
+@ensure_csrf_cookie
 def community_pixel_snapshot(request: HttpRequest, slug: str) -> JsonResponse:
     community = _community_for_user(request.user, slug)
     if community is None:
