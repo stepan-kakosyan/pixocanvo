@@ -7,6 +7,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from pixelwar import views as pixelwar_views
 from pixelwar.sitemaps import sitemaps
 
 handler404 = "pixelwar.views.custom_404"
@@ -14,6 +15,11 @@ handler500 = "pixelwar.views.custom_500"
 
 urlpatterns = [
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path(
+        "service-worker.js",
+        pixelwar_views.pwa_service_worker,
+        name="pwa-service-worker",
+    ),
     path(
         "robots.txt",
         TemplateView.as_view(

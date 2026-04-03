@@ -40,6 +40,8 @@ from .models import ChatMessage, Community, CommunityJoinRequest
 from .models import CommunityMembership, Pixel, UserAction
 from .models import compact_legacy_invite_uuid, generate_community_invite_token
 
+PWA_SERVICE_WORKER_IMPORT_URL = "/static/pixelwar/service-worker.js"
+
 HEX_COLOR_RE = re.compile(
     getattr(settings, "PIXEL_HEX_COLOR_REGEX", r"^#[0-9a-fA-F]{6}$")
 )
@@ -108,6 +110,17 @@ def custom_404(request: HttpRequest, exception) -> HttpResponse:
 
 def custom_500(request: HttpRequest) -> HttpResponse:
     return render(request, "errors/500.html", status=500)
+
+
+@require_GET
+def pwa_service_worker(_request: HttpRequest) -> HttpResponse:
+    response = HttpResponse(
+        f"importScripts('{PWA_SERVICE_WORKER_IMPORT_URL}');\n",
+        content_type="application/javascript",
+    )
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response["Service-Worker-Allowed"] = "/"
+    return response
 
 
 def preview_404(request: HttpRequest) -> HttpResponse:

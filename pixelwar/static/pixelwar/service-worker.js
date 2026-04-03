@@ -1,5 +1,7 @@
-const CACHE_VERSION = 'pixelwar-v2';
+const CACHE_VERSION = 'pixelwar-v3';
+const APP_SHELL_URL = '/';
 const PRECACHE_ASSETS = [
+  APP_SHELL_URL,
   '/static/pixelwar/manifest.json',
 ];
 
@@ -44,7 +46,12 @@ self.addEventListener('fetch', function(event) {
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request).catch(function() {
-        return caches.match(request);
+        return caches.match(request).then(function(cachedResponse) {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return caches.match(APP_SHELL_URL);
+        });
       })
     );
     return;

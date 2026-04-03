@@ -23,6 +23,10 @@
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js" crossorigin="anonymous"></script>
     <link rel="manifest" href="{% static 'pixelwar/manifest.json' %}">
     <meta name="theme-color" content="#111827">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="{% static 'pixelwar/icon-192.png' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body class="flex min-h-screen flex-col bg-white text-slate-900">
@@ -408,10 +412,31 @@
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('{% static 'pixelwar/service-worker.js' %}')
+                    navigator.serviceWorker.getRegistrations()
+                        .then(function(registrations) {
+                            return Promise.all(registrations.map(function(reg) {
+                                var worker = reg.active || reg.waiting || reg.installing;
+                                if (!worker) {
+                                    return null;
+                                }
+                                if (worker.scriptURL.indexOf(
+                                    '/static/pixelwar/service-worker.js'
+                                ) !== -1) {
+                                    return reg.unregister();
+                                }
+                                return null;
+                            }));
+                        })
+                        .then(function() {
+                            return navigator.serviceWorker.register(
+                                '/service-worker.js',
+                                { scope: '/' }
+                            );
+                        })
                         .then(function(registration) {
                             // Registration successful
-                        }, function(err) {
+                        })
+                        .catch(function(err) {
                             // Registration failed
                         });
                 });
